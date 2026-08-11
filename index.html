@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Tienda online de productos...">
+  <title>Mi Tienda | Ecommerce</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#contenido-principal">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="header-top">
+      <a class="logo" href="index.html">
+        <img src="img/logo.svg" alt="Mi Tienda - logo">
+        <span>Mi Tienda</span>
+      </a>
+
+      <form class="buscador" action="#" method="get" role="search">
+        <label class="sr-only" for="busqueda">Buscar productos</label>
+        <input type="search" id="busqueda" name="q" placeholder="Buscar productos...">
+        <button type="submit">Buscar</button>
+      </form>
+
+      <nav class="nav-cuenta" aria-label="Acciones de cuenta">
+        <ul>
+          <li><a href="cuenta.html">Mi cuenta</a></li>
+          <li><a href="carrito.html">Carrito</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <nav class="nav-principal" aria-label="Categorías">
+      <ul>
+        <li><a href="categoria.html">Ofertas</a></li>
+        <li><a href="categoria.html">Ropa</a></li>
+        <li><a href="categoria.html">Calzado</a></li>
+        <li><a href="categoria.html">Accesorios</a></li>
+        <li><a href="categoria.html">Tecnología</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="contenido-principal">
+
+    <section class="hero" aria-labelledby="titulo-hero">
+      <h1 id="titulo-hero">Bienvenido a Mi Tienda</h1>
+      <p>Encontrá las mejores ofertas en un solo lugar.</p>
+      <a class="boton" href="categoria.html">Ver ofertas</a>
+    </section>
+
+    <section class="categorias" aria-labelledby="titulo-categorias">
+      <h2 id="titulo-categorias">Categorías</h2>
+      <ul>
+        <li><a href="categoria.html">Ropa</a></li>
+        <li><a href="categoria.html">Calzado</a></li>
+        <li><a href="categoria.html">Accesorios</a></li>
+        <li><a href="categoria.html">Tecnología</a></li>
+      </ul>
+    </section>
+
+    <section class="productos" aria-labelledby="titulo-productos">
+      <h2 id="titulo-productos">Productos destacados</h2>
+
+      <div class="grilla-productos">
+
+        <article class="producto">
+          <figure>
+            <img src="img/producto1.jpg" alt="Remera de algodón negra">
+            <figcaption>Remera de algodón</figcaption>
+          </figure>
+          <p class="precio">$12.000</p>
+          <button type="button">Agregar al carrito</button>
+        </article>
+
+        <article class="producto">
+          <figure>
+            <img src="img/producto2.jpg" alt="Zapatillas urbanas blancas">
+            <figcaption>Zapatillas urbanas</figcaption>
+          </figure>
+          <p class="precio">$45.000</p>
+          <button type="button">Agregar al carrito</button>
+        </article>
+
+        <article class="producto">
+          <figure>
+            <img src="img/producto3.jpg" alt="Mochila impermeable gris">
+            <figcaption>Mochila impermeable</figcaption>
+          </figure>
+          <p class="precio">$28.000</p>
+          <button type="button">Agregar al carrito</button>
+        </article>
+
+        <article class="producto">
+          <figure>
+            <img src="img/producto4.jpg" alt="Auriculares inalámbricos negros">
+            <figcaption>Auriculares inalámbricos</figcaption>
+          </figure>
+          <p class="precio">$35.000</p>
+          <button type="button">Agregar al carrito</button>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="promo" aria-labelledby="titulo-promo">
+      <h2 id="titulo-promo">Envío gratis en compras mayores a $50.000</h2>
+      <a class="boton" href="categoria.html">Comprar ahora</a>
+    </section>
+
+    <section class="newsletter" aria-labelledby="titulo-newsletter">
+      <h2 id="titulo-newsletter">Suscribite a nuestro newsletter</h2>
+      <form action="#" method="post">
+        <label for="email-newsletter">Correo electrónico</label>
+        <input type="email" id="email-newsletter" name="email" placeholder="tucorreo@ejemplo.com" required>
+        <button type="submit">Suscribirme</button>
+      </form>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <nav aria-label="Información de la tienda">
+      <ul>
+        <li><a href="nosotros.html">Nosotros</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+        <li><a href="envios.html">Envíos y devoluciones</a></li>
+        <li><a href="terminos.html">Términos y condiciones</a></li>
+      </ul>
+    </nav>
+
+    <address>
+      Mi Tienda S.A. — Av. Ejemplo 123, Buenos Aires, Argentina<br>
+      <a href="mailto:contacto@mitienda.com">contacto@mitienda.com</a><br>
+      <a href="tel:+5401112345678">+54 11 1234-5678</a>
+    </address>
+
+    <p>&copy; 2026 Mi Tienda. Todos los derechos reservados.</p>
+  </footer>
+
+</body>
+</html>
