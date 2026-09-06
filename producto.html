@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Detalle y especificaciones del producto Zapatillas urbanas blancas">
+  <title>Zapatillas urbanas blancas | Mi Tienda</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#contenido-principal">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="header-top">
+      <a class="logo" href="index.html">
+        <img src="img/logo.svg" alt="Mi Tienda - logo">
+        <span>Mi Tienda</span>
+      </a>
+
+      <form class="buscador" action="#" method="get" role="search">
+        <label class="sr-only" for="busqueda">Buscar productos</label>
+        <input type="search" id="busqueda" name="q" placeholder="Buscar productos...">
+        <button type="submit">Buscar</button>
+      </form>
+
+      <nav class="nav-cuenta" aria-label="Acciones de cuenta">
+        <ul>
+          <li><a href="cuenta.html">Mi cuenta</a></li>
+          <li><a href="carrito.html">Carrito</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <nav class="nav-principal" aria-label="Categorías">
+      <ul>
+        <li><a href="categoria.html">Ofertas</a></li>
+        <li><a href="categoria.html">Ropa</a></li>
+        <li><a href="categoria.html">Calzado</a></li>
+        <li><a href="categoria.html">Accesorios</a></li>
+        <li><a href="categoria.html">Tecnología</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="contenido-principal">
+
+    <nav class="migas-de-pan" aria-label="Ruta de navegación">
+      <ol>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="categoria.html">Calzado</a></li>
+        <li aria-current="page">Zapatillas urbanas blancas</li>
+      </ol>
+    </nav>
+
+    <article class="detalle-producto">
+
+      <section class="galeria-producto" aria-label="Galería del producto">
+        <figure>
+          <img src="img/producto2.jpg" alt="Zapatillas urbanas blancas">
+        </figure>
+      </section>
+
+      <section class="info-producto" aria-labelledby="titulo-producto">
+        <h1 id="titulo-producto">Zapatillas urbanas blancas</h1>
+        <p class="precio">$45.000</p>
+
+        <form class="compra" action="#" method="post">
+          <label for="talle">Talle</label>
+          <select id="talle" name="talle">
+            <option>38</option>
+            <option>39</option>
+            <option>40</option>
+            <option>41</option>
+            <option>42</option>
+          </select>
+
+          <label for="cantidad">Cantidad</label>
+          <input type="number" id="cantidad" name="cantidad" value="1" min="1" max="10">
+
+          <button type="submit">Agregar al carrito</button>
+        </form>
+      </section>
+
+      <section class="descripcion-producto" aria-labelledby="titulo-descripcion">
+        <h2 id="titulo-descripcion">Descripción</h2>
+        <p>Zapatillas urbanas de diseño clásico, ideales para el uso diario. Su capellada de lona resistente y su suela de goma flexible brindan comodidad y durabilidad en cada paso.</p>
+      </section>
+
+      <section class="especificaciones" aria-labelledby="titulo-especificaciones">
+        <h2 id="titulo-especificaciones">Especificaciones</h2>
+
+        <table>
+          <caption class="sr-only">Especificaciones técnicas de las Zapatillas urbanas blancas</caption>
+          <tbody>
+            <tr>
+              <th scope="row">Material capellada</th>
+              <td>Lona de algodón</td>
+            </tr>
+            <tr>
+              <th scope="row">Material suela</th>
+              <td>Goma</td>
+            </tr>
+            <tr>
+              <th scope="row">Color</th>
+              <td>Blanco</td>
+            </tr>
+            <tr>
+              <th scope="row">Cierre</th>
+              <td>Cordones</td>
+            </tr>
+            <tr>
+              <th scope="row">Talles disponibles</th>
+              <td>38 a 42</td>
+            </tr>
+            <tr>
+              <th scope="row">Uso recomendado</th>
+              <td>Urbano / diario</td>
+            </tr>
+            <tr>
+              <th scope="row">Garantía</th>
+              <td>90 días</td>
+            </tr>
+            <tr>
+              <th scope="row">Origen</th>
+              <td>Nacional</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+    </article>
+
+  </main>
+
+  <footer class="site-footer">
+    <nav aria-label="Información de la tienda">
+      <ul>
+        <li><a href="nosotros.html">Nosotros</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+        <li><a href="envios.html">Envíos y devoluciones</a></li>
+        <li><a href="terminos.html">Términos y condiciones</a></li>
+      </ul>
+    </nav>
+
+    <address>
+      Mi Tienda S.A. — Av. Ejemplo 123, Buenos Aires, Argentina<br>
+      <a href="mailto:contacto@mitienda.com">contacto@mitienda.com</a><br>
+      <a href="tel:+5401112345678">+54 11 1234-5678</a>
+    </address>
+
+    <p>&copy; 2026 Mi Tienda. Todos los derechos reservados.</p>
+  </footer>
+
+</body>
+</html>
