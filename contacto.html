@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contactanos - Mi Tienda">
+  <title>Contacto | Mi Tienda</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#contenido-principal">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="header-top">
+      <a class="logo" href="index.html">
+        <img src="img/logo.svg" alt="Mi Tienda - logo">
+        <span>Mi Tienda</span>
+      </a>
+
+      <form class="buscador" action="#" method="get" role="search">
+        <label class="sr-only" for="busqueda">Buscar productos</label>
+        <input type="search" id="busqueda" name="q" placeholder="Buscar productos...">
+        <button type="submit">Buscar</button>
+      </form>
+
+      <nav class="nav-cuenta" aria-label="Acciones de cuenta">
+        <ul>
+          <li><a href="cuenta.html">Mi cuenta</a></li>
+          <li><a href="carrito.html">Carrito</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <nav class="nav-principal" aria-label="Categorías">
+      <ul>
+        <li><a href="categoria.html">Ofertas</a></li>
+        <li><a href="categoria.html">Ropa</a></li>
+        <li><a href="categoria.html">Calzado</a></li>
+        <li><a href="categoria.html">Accesorios</a></li>
+        <li><a href="categoria.html">Tecnología</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="contenido-principal">
+
+    <nav class="migas-de-pan" aria-label="Ruta de navegación">
+      <ol>
+        <li><a href="index.html">Inicio</a></li>
+        <li aria-current="page">Contacto</li>
+      </ol>
+    </nav>
+
+    <h1>Contacto</h1>
+
+    <section class="contacto-info" aria-labelledby="titulo-info">
+      <h2 id="titulo-info">Información de contacto</h2>
+      <address>
+        <p><strong>Mi Tienda S.A.</strong></p>
+        <p>Av. Ejemplo 123, Buenos Aires, Argentina</p>
+        <p><a href="tel:+5401112345678">+54 11 1234-5678</a></p>
+        <p><a href="mailto:contacto@mitienda.com">contacto@mitienda.com</a></p>
+      </address>
+    </section>
+
+    <section class="contacto-formulario" aria-labelledby="titulo-formulario">
+      <h2 id="titulo-formulario">Envianos tu consulta</h2>
+
+      <form action="#" method="post">
+        <div class="campo">
+          <label for="nombre">Nombre</label>
+          <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+        </div>
+
+        <div class="campo">
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" name="email" placeholder="tucorreo@ejemplo.com" required>
+        </div>
+
+        <div class="campo">
+          <label for="asunto">Asunto</label>
+          <input type="text" id="asunto" name="asunto" placeholder="Asunto del mensaje" required>
+        </div>
+
+        <div class="campo">
+          <label for="mensaje">Mensaje</label>
+          <textarea id="mensaje" name="mensaje" rows="6" placeholder="Escribí tu consulta aquí..." required></textarea>
+        </div>
+
+        <button type="submit">Enviar mensaje</button>
+      </form>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <nav aria-label="Información de la tienda">
+      <ul>
+        <li><a href="nosotros.html">Nosotros</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+        <li><a href="envios.html">Envíos y devoluciones</a></li>
+        <li><a href="terminos.html">Términos y condiciones</a></li>
+      </ul>
+    </nav>
+
+    <address>
+      Mi Tienda S.A. — Av. Ejemplo 123, Buenos Aires, Argentina<br>
+      <a href="mailto:contacto@mitienda.com">contacto@mitienda.com</a><br>
+      <a href="tel:+5401112345678">+54 11 1234-5678</a>
+    </address>
+
+    <p>&copy; 2026 Mi Tienda. Todos los derechos reservados.</p>
+  </footer>
+
+</body>
+</html>

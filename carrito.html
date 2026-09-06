@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Carrito de compras - Mi Tienda">
+  <title>Mi Carrito | Mi Tienda</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#contenido-principal">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="header-top">
+      <a class="logo" href="index.html">
+        <img src="img/logo.svg" alt="Mi Tienda - logo">
+        <span>Mi Tienda</span>
+      </a>
+
+      <form class="buscador" action="#" method="get" role="search">
+        <label class="sr-only" for="busqueda">Buscar productos</label>
+        <input type="search" id="busqueda" name="q" placeholder="Buscar productos...">
+        <button type="submit">Buscar</button>
+      </form>
+
+      <nav class="nav-cuenta" aria-label="Acciones de cuenta">
+        <ul>
+          <li><a href="cuenta.html">Mi cuenta</a></li>
+          <li><a href="carrito.html" aria-current="page">Carrito</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <nav class="nav-principal" aria-label="Categorías">
+      <ul>
+        <li><a href="categoria.html">Ofertas</a></li>
+        <li><a href="categoria.html">Ropa</a></li>
+        <li><a href="categoria.html">Calzado</a></li>
+        <li><a href="categoria.html">Accesorios</a></li>
+        <li><a href="categoria.html">Tecnología</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="contenido-principal">
+
+    <nav class="migas-de-pan" aria-label="Ruta de navegación">
+      <ol>
+        <li><a href="index.html">Inicio</a></li>
+        <li aria-current="page">Carrito</li>
+      </ol>
+    </nav>
+
+    <h1>Mi Carrito</h1>
+
+    <section class="carrito" aria-labelledby="titulo-carrito">
+      <h2 id="titulo-carrito" class="sr-only">Productos en el carrito</h2>
+
+      <table class="tabla-carrito">
+        <caption class="sr-only">Listado de productos en el carrito de compras</caption>
+        <thead>
+          <tr>
+            <th scope="col">Producto</th>
+            <th scope="col">Precio</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Subtotal</th>
+            <th scope="col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <figure class="carrito-producto">
+                <img src="img/producto1.jpg" alt="Remera de algodón negra">
+                <figcaption>Remera de algodón</figcaption>
+              </figure>
+            </td>
+            <td>$12.000</td>
+            <td>
+              <label class="sr-only" for="cantidad-1">Cantidad de Remera de algodón</label>
+              <input type="number" id="cantidad-1" name="cantidad" value="2" min="1" max="10">
+            </td>
+            <td>$24.000</td>
+            <td>
+              <button type="button" aria-label="Eliminar Remera de algodón del carrito">Eliminar</button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <figure class="carrito-producto">
+                <img src="img/producto2.jpg" alt="Zapatillas urbanas blancas">
+                <figcaption>Zapatillas urbanas</figcaption>
+              </figure>
+            </td>
+            <td>$45.000</td>
+            <td>
+              <label class="sr-only" for="cantidad-2">Cantidad de Zapatillas urbanas</label>
+              <input type="number" id="cantidad-2" name="cantidad" value="1" min="1" max="10">
+            </td>
+            <td>$45.000</td>
+            <td>
+              <button type="button" aria-label="Eliminar Zapatillas urbanas del carrito">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </section>
+
+    <section class="resumen-carrito" aria-labelledby="titulo-resumen">
+      <h2 id="titulo-resumen">Resumen de compra</h2>
+
+      <dl class="resumen-detalle">
+        <dt>Subtotal</dt>
+        <dd>$69.000</dd>
+
+        <dt>Envío</dt>
+        <dd>Gratis</dd>
+
+        <dt>Total</dt>
+        <dd>$69.000</dd>
+      </dl>
+
+      <a class="boton" href="index.html">Seguir comprando</a>
+      <a class="boton" href="#">Finalizar compra</a>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <nav aria-label="Información de la tienda">
+      <ul>
+        <li><a href="nosotros.html">Nosotros</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+        <li><a href="envios.html">Envíos y devoluciones</a></li>
+        <li><a href="terminos.html">Términos y condiciones</a></li>
+      </ul>
+    </nav>
+
+    <address>
+      Mi Tienda S.A. — Av. Ejemplo 123, Buenos Aires, Argentina<br>
+      <a href="mailto:contacto@mitienda.com">contacto@mitienda.com</a><br>
+      <a href="tel:+5401112345678">+54 11 1234-5678</a>
+    </address>
+
+    <p>&copy; 2026 Mi Tienda. Todos los derechos reservados.</p>
+  </footer>
+
+</body>
+</html>
