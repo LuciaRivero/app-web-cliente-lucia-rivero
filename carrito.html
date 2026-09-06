@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Carrito de compras - Mi Tienda">
-  <title>Mi Carrito | Mi Tienda</title>
+  <meta name="description" content="Mi carrito de merch en Whiplash - Discos y entradas">
+  <title>Mi carrito | Whiplash</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -14,19 +14,20 @@
   <header class="site-header">
     <div class="header-top">
       <a class="logo" href="index.html">
-        <img src="img/logo.svg" alt="Mi Tienda - logo">
-        <span>Mi Tienda</span>
+        <img src="img/logo.svg" alt="Whiplash - logo">
+        <span>Whi<span class="p-acento">p</span>lash</span>
       </a>
 
       <form class="buscador" action="#" method="get" role="search">
-        <label class="sr-only" for="busqueda">Buscar productos</label>
-        <input type="search" id="busqueda" name="q" placeholder="Buscar productos...">
+        <label class="sr-only" for="busqueda">Buscar artistas, tracks o géneros</label>
+        <input type="search" id="busqueda" name="q" placeholder="Buscar artistas, tracks o géneros...">
         <button type="submit">Buscar</button>
       </form>
 
       <nav class="nav-cuenta" aria-label="Acciones de cuenta">
         <ul>
-          <li><a href="cuenta.html">Mi cuenta</a></li>
+          <li><a href="registro.html">Mi cuenta</a></li>
+          <li><a href="artistas.html">Mis artistas</a></li>
           <li><a href="carrito.html" aria-current="page">Carrito</a></li>
         </ul>
       </nav>
@@ -34,11 +35,10 @@
 
     <nav class="nav-principal" aria-label="Categorías">
       <ul>
-        <li><a href="categoria.html">Ofertas</a></li>
-        <li><a href="categoria.html">Ropa</a></li>
-        <li><a href="categoria.html">Calzado</a></li>
-        <li><a href="categoria.html">Accesorios</a></li>
-        <li><a href="categoria.html">Tecnología</a></li>
+        <li><a href="explorar.html">Explorar</a></li>
+        <li><a href="generos.html">Géneros</a></li>
+        <li><a href="merch.html">Merch</a></li>
+        <li><a href="novedades.html">Novedades</a></li>
       </ul>
     </nav>
   </header>
@@ -52,99 +52,112 @@
       </ol>
     </nav>
 
-    <h1>Mi Carrito</h1>
+    <h1>Mi carrito</h1>
+    <p class="subtitulo">Discos y entradas de tus artistas favoritos.</p>
 
-    <section class="carrito" aria-labelledby="titulo-carrito">
-      <h2 id="titulo-carrito" class="sr-only">Productos en el carrito</h2>
+    <div class="cart-container">
 
-      <table class="tabla-carrito">
-        <caption class="sr-only">Listado de productos en el carrito de compras</caption>
-        <thead>
-          <tr>
-            <th scope="col">Producto</th>
-            <th scope="col">Precio</th>
-            <th scope="col">Cantidad</th>
-            <th scope="col">Subtotal</th>
-            <th scope="col">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <figure class="carrito-producto">
-                <img src="img/producto1.jpg" alt="Remera de algodón negra">
-                <figcaption>Remera de algodón</figcaption>
-              </figure>
-            </td>
-            <td>$12.000</td>
-            <td>
-              <label class="sr-only" for="cantidad-1">Cantidad de Remera de algodón</label>
-              <input type="number" id="cantidad-1" name="cantidad" value="2" min="1" max="10">
-            </td>
-            <td>$24.000</td>
-            <td>
-              <button type="button" aria-label="Eliminar Remera de algodón del carrito">Eliminar</button>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <figure class="carrito-producto">
-                <img src="img/producto2.jpg" alt="Zapatillas urbanas blancas">
-                <figcaption>Zapatillas urbanas</figcaption>
-              </figure>
-            </td>
-            <td>$45.000</td>
-            <td>
-              <label class="sr-only" for="cantidad-2">Cantidad de Zapatillas urbanas</label>
-              <input type="number" id="cantidad-2" name="cantidad" value="1" min="1" max="10">
-            </td>
-            <td>$45.000</td>
-            <td>
-              <button type="button" aria-label="Eliminar Zapatillas urbanas del carrito">Eliminar</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <!-- Lista de productos -->
+      <section class="cart-items" aria-labelledby="titulo-items">
 
-    </section>
+        <h2 id="titulo-items" class="sr-only">Productos en el carrito</h2>
 
-    <section class="resumen-carrito" aria-labelledby="titulo-resumen">
-      <h2 id="titulo-resumen">Resumen de compra</h2>
+        <!-- Producto 1 -->
+        <article class="cart-item">
+          <div class="item-image" aria-hidden="true"></div>
+          <div class="item-details">
+            <h2 class="item-title">Vinilo — Los Cráteres</h2>
+            <p class="item-subtitle">180gr, edición limitada</p>
+          </div>
+          <div class="item-controls">
+            <div class="quantity-selector">
+              <button type="button" aria-label="Restar una unidad">-</button>
+              <span>1</span>
+              <button type="button" aria-label="Sumar una unidad">+</button>
+            </div>
+            <span class="item-price">$18.500</span>
+          </div>
+        </article>
 
-      <dl class="resumen-detalle">
-        <dt>Subtotal</dt>
-        <dd>$69.000</dd>
+        <!-- Producto 2 -->
+        <article class="cart-item">
+          <div class="item-image" aria-hidden="true"></div>
+          <div class="item-details">
+            <h2 class="item-title">Remera — Marea Onda</h2>
+            <p class="item-subtitle">Talle M</p>
+          </div>
+          <div class="item-controls">
+            <div class="quantity-selector">
+              <button type="button" aria-label="Restar una unidad">-</button>
+              <span>1</span>
+              <button type="button" aria-label="Sumar una unidad">+</button>
+            </div>
+            <span class="item-price">$12.000</span>
+          </div>
+        </article>
 
-        <dt>Envío</dt>
-        <dd>Gratis</dd>
+        <!-- Producto 3 -->
+        <article class="cart-item">
+          <div class="item-image" aria-hidden="true"></div>
+          <div class="item-details">
+            <h2 class="item-title">Entrada — Show 14/11</h2>
+            <p class="item-subtitle">1 entrada general</p>
+          </div>
+          <div class="item-controls">
+            <div class="quantity-selector">
+              <button type="button" aria-label="Restar una unidad">-</button>
+              <span>1</span>
+              <button type="button" aria-label="Sumar una unidad">+</button>
+            </div>
+            <span class="item-price">$9.500</span>
+          </div>
+        </article>
 
-        <dt>Total</dt>
-        <dd>$69.000</dd>
-      </dl>
+      </section>
 
-      <a class="boton" href="index.html">Seguir comprando</a>
-      <a class="boton" href="#">Finalizar compra</a>
-    </section>
+      <!-- Resumen de compra -->
+      <aside class="cart-summary" aria-labelledby="titulo-resumen">
+        <div>
+          <h2 class="summary-title" id="titulo-resumen">Resumen de compra</h2>
+
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span>$40.000</span>
+          </div>
+
+          <div class="summary-row">
+            <span>Envío</span>
+            <span>$2.500</span>
+          </div>
+
+          <div class="summary-row total">
+            <span>Total</span>
+            <span>$42.500</span>
+          </div>
+        </div>
+        <button type="button" class="checkout-btn">Ir a pagar</button>
+      </aside>
+    </div>
 
   </main>
 
   <footer class="site-footer">
-    <nav aria-label="Información de la tienda">
+    <nav aria-label="Información de la plataforma">
       <ul>
         <li><a href="nosotros.html">Nosotros</a></li>
         <li><a href="contacto.html">Contacto</a></li>
-        <li><a href="envios.html">Envíos y devoluciones</a></li>
+        <li><a href="ayuda.html">Ayuda</a></li>
         <li><a href="terminos.html">Términos y condiciones</a></li>
       </ul>
     </nav>
 
     <address>
-      Mi Tienda S.A. — Av. Ejemplo 123, Buenos Aires, Argentina<br>
-      <a href="mailto:contacto@mitienda.com">contacto@mitienda.com</a><br>
+      Whiplash — Av. Ejemplo 123, Buenos Aires, Argentina<br>
+      <a href="mailto:hola@whiplash.com">hola@whiplash.com</a><br>
       <a href="tel:+5401112345678">+54 11 1234-5678</a>
     </address>
 
-    <p>&copy; 2026 Mi Tienda. Todos los derechos reservados.</p>
+    <p>&copy; 2026 Whiplash. Todos los derechos reservados.</p>
   </footer>
 
 </body>
