@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Mis artistas guardados en Whiplash - Música independiente y merch">
+  <title>Mis artistas | Whiplash</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#contenido-principal">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="header-top">
+      <a class="logo" href="index.html">
+        <img src="img/logo.svg" alt="Whiplash - logo">
+        <span>Whi<span class="p-acento">p</span>lash</span>
+      </a>
+
+      <form class="buscador" action="#" method="get" role="search">
+        <label class="sr-only" for="busqueda">Buscar artistas, tracks o géneros</label>
+        <input type="search" id="busqueda" name="q" placeholder="Buscar artistas, tracks o géneros...">
+        <button type="submit">Buscar</button>
+      </form>
+
+      <nav class="nav-cuenta" aria-label="Acciones de cuenta">
+        <ul>
+          <li><a href="registro.html">Mi cuenta</a></li>
+          <li><a href="artistas.html" aria-current="page">Mis artistas</a></li>
+          <li><a href="carrito.html">Carrito</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <nav class="nav-principal" aria-label="Categorías">
+      <ul>
+        <li><a href="explorar.html">Explorar</a></li>
+        <li><a href="generos.html">Géneros</a></li>
+        <li><a href="merch.html">Merch</a></li>
+        <li><a href="novedades.html">Novedades</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="contenido-principal">
+
+    <nav class="migas-de-pan" aria-label="Ruta de navegación">
+      <ol>
+        <li><a href="index.html">Inicio</a></li>
+        <li aria-current="page">Mis artistas</li>
+      </ol>
+    </nav>
+
+    <h1>Mis artistas</h1>
+    <p class="subtitulo">Las joyas que guardaste para volver a escuchar.</p>
+
+    <section class="mis-artistas" aria-labelledby="titulo-mis-artistas">
+      <h2 id="titulo-mis-artistas" class="sr-only">Lista de artistas guardados</h2>
+
+      <ul class="lista-artistas">
+
+        <li class="artista-guardado">
+          <a href="producto.html" class="artista-guardado-enlace">
+            <img class="avatar" src="img/artista1.jpg" alt="Avatar de Los Cráteres">
+            <span class="artista-guardado-nombre">Los Cráteres</span>
+            <span class="artista-guardado-genero">Rock independiente</span>
+          </a>
+          <button type="button" class="quitar" aria-label="Quitar a Los Cráteres de mis artistas">Quitar</button>
+        </li>
+
+        <li class="artista-guardado">
+          <a href="producto.html" class="artista-guardado-enlace">
+            <img class="avatar" src="img/artista2.jpg" alt="Avatar de Marea Onda">
+            <span class="artista-guardado-nombre">Marea Onda</span>
+            <span class="artista-guardado-genero">Folk indie</span>
+          </a>
+          <button type="button" class="quitar" aria-label="Quitar a Marea Onda de mis artistas">Quitar</button>
+        </li>
+
+        <li class="artista-guardado">
+          <a href="producto.html" class="artista-guardado-enlace">
+            <img class="avatar" src="img/artista3.jpg" alt="Avatar de Valle Silente">
+            <span class="artista-guardado-nombre">Valle Silente</span>
+            <span class="artista-guardado-genero">Electrónica cruda</span>
+          </a>
+          <button type="button" class="quitar" aria-label="Quitar a Valle Silente de mis artistas">Quitar</button>
+        </li>
+
+      </ul>
+
+      <a class="boton boton-inferior" href="explorar.html">Seguir explorando</a>
+    </section>
+
+    <section class="promo" aria-labelledby="titulo-promo">
+      <h2 id="titulo-promo">Comprá el merch de tus artistas</h2>
+      <p>Discos y entradas directo del creador, sin intermediarios.</p>
+      <a class="boton" href="merch.html">Ver merch</a>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <nav aria-label="Información de la plataforma">
+      <ul>
+        <li><a href="nosotros.html">Nosotros</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+        <li><a href="ayuda.html">Ayuda</a></li>
+        <li><a href="terminos.html">Términos y condiciones</a></li>
+      </ul>
+    </nav>
+
+    <address>
+      Whiplash — Av. Ejemplo 123, Buenos Aires, Argentina<br>
+      <a href="mailto:hola@whiplash.com">hola@whiplash.com</a><br>
+      <a href="tel:+5401112345678">+54 11 1234-5678</a>
+    </address>
+
+    <p>&copy; 2026 Whiplash. Todos los derechos reservados.</p>
+  </footer>
+
+</body>
+</html>

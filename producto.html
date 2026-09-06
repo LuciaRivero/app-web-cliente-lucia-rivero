@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Detalle y especificaciones del producto Zapatillas urbanas blancas">
-  <title>Zapatillas urbanas blancas | Mi Tienda</title>
+  <meta name="description" content="Perfil del artista Los Cráteres en Whiplash - Música independiente y merch">
+  <title>Los Cráteres | Whiplash</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -14,19 +14,20 @@
   <header class="site-header">
     <div class="header-top">
       <a class="logo" href="index.html">
-        <img src="img/logo.svg" alt="Mi Tienda - logo">
-        <span>Mi Tienda</span>
+        <img src="img/logo.svg" alt="Whiplash - logo">
+        <span>Whi<span class="p-acento">p</span>lash</span>
       </a>
 
       <form class="buscador" action="#" method="get" role="search">
-        <label class="sr-only" for="busqueda">Buscar productos</label>
-        <input type="search" id="busqueda" name="q" placeholder="Buscar productos...">
+        <label class="sr-only" for="busqueda">Buscar artistas, tracks o géneros</label>
+        <input type="search" id="busqueda" name="q" placeholder="Buscar artistas, tracks o géneros...">
         <button type="submit">Buscar</button>
       </form>
 
       <nav class="nav-cuenta" aria-label="Acciones de cuenta">
         <ul>
-          <li><a href="cuenta.html">Mi cuenta</a></li>
+          <li><a href="registro.html">Mi cuenta</a></li>
+          <li><a href="artistas.html">Mis artistas</a></li>
           <li><a href="carrito.html">Carrito</a></li>
         </ul>
       </nav>
@@ -34,11 +35,10 @@
 
     <nav class="nav-principal" aria-label="Categorías">
       <ul>
-        <li><a href="categoria.html">Ofertas</a></li>
-        <li><a href="categoria.html">Ropa</a></li>
-        <li><a href="categoria.html">Calzado</a></li>
-        <li><a href="categoria.html">Accesorios</a></li>
-        <li><a href="categoria.html">Tecnología</a></li>
+        <li><a href="explorar.html">Explorar</a></li>
+        <li><a href="generos.html">Géneros</a></li>
+        <li><a href="merch.html">Merch</a></li>
+        <li><a href="novedades.html">Novedades</a></li>
       </ul>
     </nav>
   </header>
@@ -48,85 +48,120 @@
     <nav class="migas-de-pan" aria-label="Ruta de navegación">
       <ol>
         <li><a href="index.html">Inicio</a></li>
-        <li><a href="categoria.html">Calzado</a></li>
-        <li aria-current="page">Zapatillas urbanas blancas</li>
+        <li><a href="generos.html">Rock independiente</a></li>
+        <li aria-current="page">Los Cráteres</li>
       </ol>
     </nav>
 
-    <article class="detalle-producto">
+    <article class="perfil-artista">
 
-      <section class="galeria-producto" aria-label="Galería del producto">
-        <figure>
-          <img src="img/producto2.jpg" alt="Zapatillas urbanas blancas">
-        </figure>
+      <section class="portada-artista" aria-label="Portada del artista">
+        <img src="img/artista1.jpg" alt="Portada del artista Los Cráteres">
       </section>
 
-      <section class="info-producto" aria-labelledby="titulo-producto">
-        <h1 id="titulo-producto">Zapatillas urbanas blancas</h1>
-        <p class="precio">$45.000</p>
+      <section class="info-artista" aria-labelledby="titulo-artista">
+        <h1 id="titulo-artista">Los Cráteres</h1>
+        <p class="genero-artista">Rock independiente</p>
 
-        <form class="compra" action="#" method="post">
-          <label for="talle">Talle</label>
-          <select id="talle" name="talle">
-            <option>38</option>
-            <option>39</option>
-            <option>40</option>
-            <option>41</option>
-            <option>42</option>
-          </select>
+        <p class="bio-artista">Banda de rock indie con guitarras crudas y letras que hablan de la ciudad. Desde su primer demo autoeditado, construyeron su propio camino sin intermediarios.</p>
 
-          <label for="cantidad">Cantidad</label>
-          <input type="number" id="cantidad" name="cantidad" value="1" min="1" max="10">
-
-          <button type="submit">Agregar al carrito</button>
-        </form>
+        <div class="acciones-artista">
+          <button type="button" class="boton boton-seguir">Seguir</button>
+          <button type="button" class="boton boton-compartir">Compartir</button>
+        </div>
       </section>
 
-      <section class="descripcion-producto" aria-labelledby="titulo-descripcion">
-        <h2 id="titulo-descripcion">Descripción</h2>
-        <p>Zapatillas urbanas de diseño clásico, ideales para el uso diario. Su capellada de lona resistente y su suela de goma flexible brindan comodidad y durabilidad en cada paso.</p>
+      <section class="tracks" aria-labelledby="titulo-tracks">
+        <h2 id="titulo-tracks">Tracks</h2>
+
+        <ul class="lista-tracks">
+          <li>
+            <button type="button" class="track">
+              <span class="track-num">1</span>
+              <span class="track-info">
+                <span class="track-titulo">Ruido blanco</span>
+                <span class="track-duracion">3:24</span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="track">
+              <span class="track-num">2</span>
+              <span class="track-info">
+                <span class="track-titulo">Andén</span>
+                <span class="track-duracion">4:01</span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="track">
+              <span class="track-num">3</span>
+              <span class="track-info">
+                <span class="track-titulo">Enero</span>
+                <span class="track-duracion">3:47</span>
+              </span>
+            </button>
+          </li>
+        </ul>
       </section>
 
-      <section class="especificaciones" aria-labelledby="titulo-especificaciones">
-        <h2 id="titulo-especificaciones">Especificaciones</h2>
+      <section class="merch-artista" aria-labelledby="titulo-merch">
+        <h2 id="titulo-merch">Merch oficial</h2>
+        <p class="subtitulo">Discos y entradas vendidos directo por el artista.</p>
 
-        <table>
-          <caption class="sr-only">Especificaciones técnicas de las Zapatillas urbanas blancas</caption>
-          <tbody>
-            <tr>
-              <th scope="row">Material capellada</th>
-              <td>Lona de algodón</td>
-            </tr>
-            <tr>
-              <th scope="row">Material suela</th>
-              <td>Goma</td>
-            </tr>
-            <tr>
-              <th scope="row">Color</th>
-              <td>Blanco</td>
-            </tr>
-            <tr>
-              <th scope="row">Cierre</th>
-              <td>Cordones</td>
-            </tr>
-            <tr>
-              <th scope="row">Talles disponibles</th>
-              <td>38 a 42</td>
-            </tr>
-            <tr>
-              <th scope="row">Uso recomendado</th>
-              <td>Urbano / diario</td>
-            </tr>
-            <tr>
-              <th scope="row">Garantía</th>
-              <td>90 días</td>
-            </tr>
-            <tr>
-              <th scope="row">Origen</th>
-              <td>Nacional</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="grilla-merch">
+
+          <article class="producto-merch">
+            <figure>
+              <img src="img/disco1.jpg" alt="Disco Ruido blanco de Los Cráteres">
+              <figcaption>Ruido blanco (EP)</figcaption>
+            </figure>
+            <p class="tipo-merch">Disco</p>
+            <p class="precio">$12.000</p>
+            <form class="compra-merch" action="#" method="post">
+              <label class="sr-only" for="formato-1">Formato de Ruido blanco</label>
+              <select id="formato-1" name="formato">
+                <option>Vinilo</option>
+                <option>CD</option>
+                <option>Digital</option>
+              </select>
+              <button type="submit">Agregar al carrito</button>
+            </form>
+          </article>
+
+          <article class="producto-merch">
+            <figure>
+              <img src="img/disco2.jpg" alt="Disco Andén de Los Cráteres">
+              <figcaption>Andén (LP)</figcaption>
+            </figure>
+            <p class="tipo-merch">Disco</p>
+            <p class="precio">$15.000</p>
+            <form class="compra-merch" action="#" method="post">
+              <label class="sr-only" for="formato-2">Formato de Andén</label>
+              <select id="formato-2" name="formato">
+                <option>CD</option>
+                <option>Vinilo</option>
+                <option>Digital</option>
+              </select>
+              <button type="submit">Agregar al carrito</button>
+            </form>
+          </article>
+
+          <article class="producto-merch">
+            <figure>
+              <img src="img/entrada1.jpg" alt="Entrada al show de Los Cráteres en Vorterix">
+              <figcaption>Show en Vorterix</figcaption>
+            </figure>
+            <p class="tipo-merch">Entrada</p>
+            <p class="precio">$25.000</p>
+            <form class="compra-merch" action="#" method="post">
+              <label class="sr-only" for="cantidad-entrada">Cantidad de entradas para el show</label>
+              <input type="number" id="cantidad-entrada" name="cantidad" value="1" min="1" max="10">
+              <button type="submit">Agregar al carrito</button>
+            </form>
+          </article>
+
+        </div>
       </section>
 
     </article>
@@ -134,22 +169,22 @@
   </main>
 
   <footer class="site-footer">
-    <nav aria-label="Información de la tienda">
+    <nav aria-label="Información de la plataforma">
       <ul>
         <li><a href="nosotros.html">Nosotros</a></li>
         <li><a href="contacto.html">Contacto</a></li>
-        <li><a href="envios.html">Envíos y devoluciones</a></li>
+        <li><a href="ayuda.html">Ayuda</a></li>
         <li><a href="terminos.html">Términos y condiciones</a></li>
       </ul>
     </nav>
 
     <address>
-      Mi Tienda S.A. — Av. Ejemplo 123, Buenos Aires, Argentina<br>
-      <a href="mailto:contacto@mitienda.com">contacto@mitienda.com</a><br>
+      Whiplash — Av. Ejemplo 123, Buenos Aires, Argentina<br>
+      <a href="mailto:hola@whiplash.com">hola@whiplash.com</a><br>
       <a href="tel:+5401112345678">+54 11 1234-5678</a>
     </address>
 
-    <p>&copy; 2026 Mi Tienda. Todos los derechos reservados.</p>
+    <p>&copy; 2026 Whiplash. Todos los derechos reservados.</p>
   </footer>
 
 </body>

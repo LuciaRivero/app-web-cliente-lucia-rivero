@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Contactanos - Mi Tienda">
-  <title>Contacto | Mi Tienda</title>
+  <meta name="description" content="Contactate con Whiplash - Música independiente">
+  <title>Contacto | Whiplash</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -14,19 +14,20 @@
   <header class="site-header">
     <div class="header-top">
       <a class="logo" href="index.html">
-        <img src="img/logo.svg" alt="Mi Tienda - logo">
-        <span>Mi Tienda</span>
+        <img src="img/logo.svg" alt="Whiplash - logo">
+        <span>Whi<span class="p-acento">p</span>lash</span>
       </a>
 
       <form class="buscador" action="#" method="get" role="search">
-        <label class="sr-only" for="busqueda">Buscar productos</label>
-        <input type="search" id="busqueda" name="q" placeholder="Buscar productos...">
+        <label class="sr-only" for="busqueda">Buscar artistas, tracks o géneros</label>
+        <input type="search" id="busqueda" name="q" placeholder="Buscar artistas, tracks o géneros...">
         <button type="submit">Buscar</button>
       </form>
 
       <nav class="nav-cuenta" aria-label="Acciones de cuenta">
         <ul>
-          <li><a href="cuenta.html">Mi cuenta</a></li>
+          <li><a href="registro.html">Mi cuenta</a></li>
+          <li><a href="artistas.html">Mis artistas</a></li>
           <li><a href="carrito.html">Carrito</a></li>
         </ul>
       </nav>
@@ -34,11 +35,10 @@
 
     <nav class="nav-principal" aria-label="Categorías">
       <ul>
-        <li><a href="categoria.html">Ofertas</a></li>
-        <li><a href="categoria.html">Ropa</a></li>
-        <li><a href="categoria.html">Calzado</a></li>
-        <li><a href="categoria.html">Accesorios</a></li>
-        <li><a href="categoria.html">Tecnología</a></li>
+        <li><a href="explorar.html">Explorar</a></li>
+        <li><a href="generos.html">Géneros</a></li>
+        <li><a href="merch.html">Merch</a></li>
+        <li><a href="novedades.html">Novedades</a></li>
       </ul>
     </nav>
   </header>
@@ -57,10 +57,10 @@
     <section class="contacto-info" aria-labelledby="titulo-info">
       <h2 id="titulo-info">Información de contacto</h2>
       <address>
-        <p><strong>Mi Tienda S.A.</strong></p>
+        <p><strong>Whiplash</strong></p>
         <p>Av. Ejemplo 123, Buenos Aires, Argentina</p>
         <p><a href="tel:+5401112345678">+54 11 1234-5678</a></p>
-        <p><a href="mailto:contacto@mitienda.com">contacto@mitienda.com</a></p>
+        <p><a href="mailto:hola@whiplash.com">hola@whiplash.com</a></p>
       </address>
     </section>
 
@@ -79,8 +79,13 @@
         </div>
 
         <div class="campo">
-          <label for="asunto">Asunto</label>
-          <input type="text" id="asunto" name="asunto" placeholder="Asunto del mensaje" required>
+          <label for="asunto">Motivo</label>
+          <select id="asunto" name="asunto">
+            <option>Quiero publicar mi música</option>
+            <option>Reportar un problema</option>
+            <option>Propuesta de artista</option>
+            <option>Otro</option>
+          </select>
         </div>
 
         <div class="campo">
@@ -95,22 +100,22 @@
   </main>
 
   <footer class="site-footer">
-    <nav aria-label="Información de la tienda">
+    <nav aria-label="Información de la plataforma">
       <ul>
         <li><a href="nosotros.html">Nosotros</a></li>
         <li><a href="contacto.html">Contacto</a></li>
-        <li><a href="envios.html">Envíos y devoluciones</a></li>
+        <li><a href="ayuda.html">Ayuda</a></li>
         <li><a href="terminos.html">Términos y condiciones</a></li>
       </ul>
     </nav>
 
     <address>
-      Mi Tienda S.A. — Av. Ejemplo 123, Buenos Aires, Argentina<br>
-      <a href="mailto:contacto@mitienda.com">contacto@mitienda.com</a><br>
+      Whiplash — Av. Ejemplo 123, Buenos Aires, Argentina<br>
+      <a href="mailto:hola@whiplash.com">hola@whiplash.com</a><br>
       <a href="tel:+5401112345678">+54 11 1234-5678</a>
     </address>
 
-    <p>&copy; 2026 Mi Tienda. Todos los derechos reservados.</p>
+    <p>&copy; 2026 Whiplash. Todos los derechos reservados.</p>
   </footer>
 
 </body>

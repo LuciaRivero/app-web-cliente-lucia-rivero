@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Tienda online de productos...">
-  <title>Mi Tienda | Ecommerce</title>
+  <meta name="description" content="Whiplash - Descubrí música independiente organizada por género y comprá merch de tus artistas.">
+  <title>Whiplash | Música independiente y merch</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -14,19 +14,20 @@
   <header class="site-header">
     <div class="header-top">
       <a class="logo" href="index.html">
-        <img src="img/logo.svg" alt="Mi Tienda - logo">
-        <span>Mi Tienda</span>
+        <img src="img/logo.svg" alt="Whiplash - logo">
+        <span>Whi<span class="p-acento">p</span>lash</span>
       </a>
 
       <form class="buscador" action="#" method="get" role="search">
-        <label class="sr-only" for="busqueda">Buscar productos</label>
-        <input type="search" id="busqueda" name="q" placeholder="Buscar productos...">
+        <label class="sr-only" for="busqueda">Buscar artistas, tracks o géneros</label>
+        <input type="search" id="busqueda" name="q" placeholder="Buscar artistas, tracks o géneros...">
         <button type="submit">Buscar</button>
       </form>
 
       <nav class="nav-cuenta" aria-label="Acciones de cuenta">
         <ul>
-          <li><a href="cuenta.html">Mi cuenta</a></li>
+          <li><a href="registro.html">Mi cuenta</a></li>
+          <li><a href="artistas.html">Mis artistas</a></li>
           <li><a href="carrito.html">Carrito</a></li>
         </ul>
       </nav>
@@ -34,11 +35,10 @@
 
     <nav class="nav-principal" aria-label="Categorías">
       <ul>
-        <li><a href="categoria.html">Ofertas</a></li>
-        <li><a href="categoria.html">Ropa</a></li>
-        <li><a href="categoria.html">Calzado</a></li>
-        <li><a href="categoria.html">Accesorios</a></li>
-        <li><a href="categoria.html">Tecnología</a></li>
+        <li><a href="explorar.html">Explorar</a></li>
+        <li><a href="generos.html">Géneros</a></li>
+        <li><a href="merch.html">Merch</a></li>
+        <li><a href="novedades.html">Novedades</a></li>
       </ul>
     </nav>
   </header>
@@ -46,98 +46,158 @@
   <main id="contenido-principal">
 
     <section class="hero" aria-labelledby="titulo-hero">
-      <h1 id="titulo-hero">Bienvenido a Mi Tienda</h1>
-      <p>Encontrá las mejores ofertas en un solo lugar.</p>
-      <a class="boton" href="categoria.html">Ver ofertas</a>
+      <h1 id="titulo-hero">Descubrí la escena independiente</h1>
+      <p>Solo música indie, organizada por género y conectada directo con sus creadores. Y llevate su merch sin intermediarios.</p>
+      <a class="boton" href="explorar.html">Comenzá a explorar</a>
     </section>
 
-    <section class="categorias" aria-labelledby="titulo-categorias">
-      <h2 id="titulo-categorias">Categorías</h2>
-      <ul>
-        <li><a href="categoria.html">Ropa</a></li>
-        <li><a href="categoria.html">Calzado</a></li>
-        <li><a href="categoria.html">Accesorios</a></li>
-        <li><a href="categoria.html">Tecnología</a></li>
-      </ul>
+    <section class="generos-destacados" aria-labelledby="titulo-generos">
+      <h2 id="titulo-generos">Explorá por género</h2>
+
+      <div class="generos-lista">
+        <a class="chip-genero" href="generos.html">Rock independiente</a>
+        <a class="chip-genero" href="generos.html">Folk indie</a>
+        <a class="chip-genero" href="generos.html">Electrónica cruda</a>
+        <a class="chip-genero" href="generos.html">Pop alternativo</a>
+        <a class="chip-genero" href="generos.html">Punk DIY</a>
+        <a class="chip-genero" href="generos.html">Hip-hop under</a>
+      </div>
     </section>
 
-    <section class="productos" aria-labelledby="titulo-productos">
-      <h2 id="titulo-productos">Productos destacados</h2>
+    <section class="artistas" aria-labelledby="titulo-artistas">
+      <h2 id="titulo-artistas">Joyas para descubrir</h2>
 
-      <div class="grilla-productos">
+      <div class="grilla-artistas">
 
-        <article class="producto">
-          <figure>
-            <img src="img/producto1.jpg" alt="Remera de algodón negra">
-            <figcaption>Remera de algodón</figcaption>
-          </figure>
+        <article class="artista-card">
+          <a href="producto.html">
+            <figure>
+              <img src="img/artista1.jpg" alt="Imagen de Los Cráteres">
+              <figcaption>Los Cráteres</figcaption>
+            </figure>
+          </a>
+          <p class="genero-artista">Rock independiente</p>
+          <button type="button">Seguir</button>
+        </article>
+
+        <article class="artista-card">
+          <a href="producto.html">
+            <figure>
+              <img src="img/artista2.jpg" alt="Imagen de Marea Onda">
+              <figcaption>Marea Onda</figcaption>
+            </figure>
+          </a>
+          <p class="genero-artista">Folk indie</p>
+          <button type="button">Seguir</button>
+        </article>
+
+        <article class="artista-card">
+          <a href="producto.html">
+            <figure>
+              <img src="img/artista3.jpg" alt="Imagen de Valle Silente">
+              <figcaption>Valle Silente</figcaption>
+            </figure>
+          </a>
+          <p class="genero-artista">Electrónica cruda</p>
+          <button type="button">Seguir</button>
+        </article>
+
+        <article class="artista-card">
+          <a href="producto.html">
+            <figure>
+              <img src="img/artista4.jpg" alt="Imagen de Tejido Rojo">
+              <figcaption>Tejido Rojo</figcaption>
+            </figure>
+          </a>
+          <p class="genero-artista">Pop alternativo</p>
+          <button type="button">Seguir</button>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="merch-destacado" aria-labelledby="titulo-merch">
+      <h2 id="titulo-merch">Merch de tus artistas</h2>
+      <p class="subtitulo">Discos y entradas directo del creador, sin intermediarios.</p>
+
+      <div class="grilla-merch">
+
+        <article class="producto-merch">
+          <a href="producto.html">
+            <figure>
+              <img src="img/disco1.jpg" alt="Disco Ruido blanco de Los Cráteres">
+              <figcaption>Ruido blanco (EP)</figcaption>
+            </figure>
+          </a>
+          <p class="tipo-merch">Disco</p>
           <p class="precio">$12.000</p>
-          <button type="button">Agregar al carrito</button>
+          <a class="boton boton-compra" href="producto.html">Ver producto</a>
         </article>
 
-        <article class="producto">
-          <figure>
-            <img src="img/producto2.jpg" alt="Zapatillas urbanas blancas">
-            <figcaption>Zapatillas urbanas</figcaption>
-          </figure>
-          <p class="precio">$45.000</p>
-          <button type="button">Agregar al carrito</button>
+        <article class="producto-merch">
+          <a href="producto.html">
+            <figure>
+              <img src="img/disco2.jpg" alt="Disco Andén de Los Cráteres">
+              <figcaption>Andén (LP)</figcaption>
+            </figure>
+          </a>
+          <p class="tipo-merch">Disco</p>
+          <p class="precio">$15.000</p>
+          <a class="boton boton-compra" href="producto.html">Ver producto</a>
         </article>
 
-        <article class="producto">
-          <figure>
-            <img src="img/producto3.jpg" alt="Mochila impermeable gris">
-            <figcaption>Mochila impermeable</figcaption>
-          </figure>
-          <p class="precio">$28.000</p>
-          <button type="button">Agregar al carrito</button>
+        <article class="producto-merch">
+          <a href="producto.html">
+            <figure>
+              <img src="img/entrada1.jpg" alt="Entrada al show de Los Cráteres en Vorterix">
+              <figcaption>Show en Vorterix</figcaption>
+            </figure>
+          </a>
+          <p class="tipo-merch">Entrada</p>
+          <p class="precio">$25.000</p>
+          <a class="boton boton-compra" href="producto.html">Ver producto</a>
         </article>
 
-        <article class="producto">
-          <figure>
-            <img src="img/producto4.jpg" alt="Auriculares inalámbricos negros">
-            <figcaption>Auriculares inalámbricos</figcaption>
-          </figure>
-          <p class="precio">$35.000</p>
-          <button type="button">Agregar al carrito</button>
+        <article class="producto-merch">
+          <a href="producto.html">
+            <figure>
+              <img src="img/disco3.jpg" alt="Disco Marea Onda de Marea Onda">
+              <figcaption>Marea Onda (EP)</figcaption>
+            </figure>
+          </a>
+          <p class="tipo-merch">Disco</p>
+          <p class="precio">$10.000</p>
+          <a class="boton boton-compra" href="producto.html">Ver producto</a>
         </article>
 
       </div>
     </section>
 
     <section class="promo" aria-labelledby="titulo-promo">
-      <h2 id="titulo-promo">Envío gratis en compras mayores a $50.000</h2>
-      <a class="boton" href="categoria.html">Comprar ahora</a>
-    </section>
-
-    <section class="newsletter" aria-labelledby="titulo-newsletter">
-      <h2 id="titulo-newsletter">Suscribite a nuestro newsletter</h2>
-      <form action="#" method="post">
-        <label for="email-newsletter">Correo electrónico</label>
-        <input type="email" id="email-newsletter" name="email" placeholder="tucorreo@ejemplo.com" required>
-        <button type="submit">Suscribirme</button>
-      </form>
+      <h2 id="titulo-promo">Encontrá la joya entre el montón</h2>
+      <p>Guardá artistas, compartilos con amigos y volvé siempre.</p>
+      <a class="boton" href="artistas.html">Ver mis artistas</a>
     </section>
 
   </main>
 
   <footer class="site-footer">
-    <nav aria-label="Información de la tienda">
+    <nav aria-label="Información de la plataforma">
       <ul>
         <li><a href="nosotros.html">Nosotros</a></li>
         <li><a href="contacto.html">Contacto</a></li>
-        <li><a href="envios.html">Envíos y devoluciones</a></li>
+        <li><a href="ayuda.html">Ayuda</a></li>
         <li><a href="terminos.html">Términos y condiciones</a></li>
       </ul>
     </nav>
 
     <address>
-      Mi Tienda S.A. — Av. Ejemplo 123, Buenos Aires, Argentina<br>
-      <a href="mailto:contacto@mitienda.com">contacto@mitienda.com</a><br>
+      Whiplash — Av. Ejemplo 123, Buenos Aires, Argentina<br>
+      <a href="mailto:hola@whiplash.com">hola@whiplash.com</a><br>
       <a href="tel:+5401112345678">+54 11 1234-5678</a>
     </address>
 
-    <p>&copy; 2026 Mi Tienda. Todos los derechos reservados.</p>
+    <p>&copy; 2026 Whiplash. Todos los derechos reservados.</p>
   </footer>
 
 </body>
