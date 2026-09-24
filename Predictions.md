@@ -2,4 +2,6 @@
 
 2. Quiero crear la pagina de detalle del producto donde se puedan ver especificaciones del mismo
 
-3. Quiero crear pantalla de carrito y contacto del ecommerce
+3. Quiero crear pantalla de carrito.
+
+4. Voy agregar formulario de contacto.

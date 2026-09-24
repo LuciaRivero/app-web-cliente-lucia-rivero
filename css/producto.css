@@ -1,0 +1,137 @@
+/* =========================================================
+   Whiplash — Página Perfil de artista
+   ========================================================= */
+
+.perfil-artista {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espaciado-grande);
+}
+
+.portada-artista {
+  background-color: var(--color-gris-oscuro);
+  border: var(--borde);
+  border-radius: var(--radio-amplio);
+  overflow: hidden;
+}
+
+.portada-artista img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.info-artista h1 {
+  font-size: 44px;
+  margin-bottom: 8px;
+}
+
+.info-artista .genero-artista {
+  color: var(--color-accento);
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--espaciado);
+}
+
+.bio-artista {
+  color: var(--color-texto-dim);
+  font-size: 15px;
+  margin-bottom: var(--espaciado);
+}
+
+.acciones-artista {
+  display: flex;
+  gap: 12px;
+}
+
+.boton-seguir {
+  background-color: var(--color-primario);
+}
+
+.boton-compartir {
+  background-color: var(--color-gris-suave);
+  border: var(--borde);
+}
+
+.boton-compartir:hover {
+  background-color: var(--color-gris-oscuro);
+}
+
+.tracks {
+  grid-column: 1 / -1;
+  margin-top: var(--espaciado-grande);
+  background-color: var(--color-gris-oscuro);
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  padding: var(--espaciado);
+}
+
+.tracks h2 {
+  font-size: 24px;
+  margin-bottom: var(--espaciado);
+}
+
+.lista-tracks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.track {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: none;
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  padding: 12px 16px;
+  color: var(--color-texto);
+  font-family: var(--fuente-cuerpo);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.track:hover,
+.track:focus {
+  border-color: var(--color-primario);
+  background-color: var(--color-gris-suave);
+}
+
+.track-num {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-gris-suave);
+  border-radius: 999px;
+  color: var(--color-texto-dim);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.track-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.track-titulo {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.track-duracion {
+  color: var(--color-texto-dim);
+  font-size: 13px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .perfil-artista {
+    grid-template-columns: 1fr;
+  }
+}

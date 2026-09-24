@@ -1,0 +1,89 @@
+/* =========================================================
+   Whiplash — Página Mis artistas
+   ========================================================= */
+
+.mis-artistas {
+  margin-bottom: var(--espaciado-grande);
+}
+
+.lista-artistas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: var(--espaciado-grande);
+}
+
+.artista-guardado {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: var(--color-gris-oscuro);
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  padding: 12px 16px;
+  transition: border-color 0.2s ease;
+}
+
+.artista-guardado:hover {
+  border-color: var(--color-primario);
+}
+
+.artista-guardado-enlace {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  object-fit: cover;
+  background-color: var(--color-gris-suave);
+}
+
+.artista-guardado-nombre {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.artista-guardado-genero {
+  display: block;
+  color: var(--color-texto-dim);
+  font-size: 13px;
+}
+
+.quitar {
+  background: none;
+  border: var(--borde);
+  color: var(--color-texto-dim);
+  border-radius: var(--radio-base);
+  padding: 8px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.quitar:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.boton-inferior {
+  display: block;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .artista-guardado {
+    flex-wrap: wrap;
+  }
+
+  .artista-guardado-enlace {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}

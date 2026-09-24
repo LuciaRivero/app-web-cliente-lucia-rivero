@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Trabajá con nosotros en Whiplash - Publicá tu música, cargá tus datos y postulate en la plataforma de música independiente.">
+  <title>Trabajá con nosotros | Whiplash</title>
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/nosotros.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#contenido-principal">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="header-top">
+      <a class="logo" href="index.html">
+        <img src="img/logo.svg" alt="Whiplash - logo">
+        <span>Whi<span class="p-acento">p</span>lash</span>
+      </a>
+
+      <form class="buscador" action="#" method="get" role="search">
+        <label class="sr-only" for="busqueda">Buscar artistas, tracks o géneros</label>
+        <input type="search" id="busqueda" name="q" placeholder="Buscar artistas, tracks o géneros...">
+        <button type="submit">Buscar</button>
+      </form>
+
+      <nav class="nav-cuenta" aria-label="Acciones de cuenta">
+        <ul>
+          <li><a href="registro.html">Mi cuenta</a></li>
+          <li><a href="artistas.html">Mis artistas</a></li>
+          <li><a href="carrito.html">Carrito</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <nav class="nav-principal" aria-label="Categorías">
+      <ul>
+        <li><a href="explorar.html">Explorar</a></li>
+        <li><a href="generos.html">Géneros</a></li>
+        <li><a href="merch.html">Merch</a></li>
+        <li><a href="novedades.html">Novedades</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="contenido-principal">
+
+    <nav class="migas-de-pan" aria-label="Ruta de navegación">
+      <ol>
+        <li><a href="index.html">Inicio</a></li>
+        <li aria-current="page">Trabajá con nosotros</li>
+      </ol>
+    </nav>
+
+    <h1>Trabajá con nosotros</h1>
+    <p class="subtitulo">Cargá tu información y postulate para formar parte de la escena independiente.</p>
+
+    <section class="postular-intro" aria-labelledby="titulo-intro">
+      <h2 id="titulo-intro" class="sr-only">¿Por qué sumarte a Whiplash?</h2>
+
+      <div class="grilla-beneficios">
+
+        <article class="beneficio">
+          <h3>Regalías reales</h3>
+          <p>Recibís el 85% de las regalías generadas por cada reproducción de tu música.</p>
+        </article>
+
+        <article class="beneficio">
+          <h3>Sin intermediarios</h3>
+          <p>Publicás tus tracks y los manejás directo, sin sellos ni distribuidoras de por medio.</p>
+        </article>
+
+        <article class="beneficio">
+          <h3>Merch propio</h3>
+          <p>Vendés tus discos y entradas con una comisión mínima y transparente.</p>
+        </article>
+
+        <article class="beneficio">
+          <h3>Datos claros</h3>
+          <p>Métricas de reproducciones y pagos detalladas, para que siempre sepas cuánto y por qué cobrás.</p>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="postular-formulario" aria-labelledby="titulo-postulacion">
+      <h2 id="titulo-postulacion">Postulate</h2>
+      <p class="subtitulo">Completá el formulario y nuestro equipo te va a contactar.</p>
+
+      <form action="#" method="post">
+
+        <div class="campo">
+          <label for="nombre">Nombre y apellido</label>
+          <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+        </div>
+
+        <div class="campo">
+          <label for="artistico">Nombre artístico / banda</label>
+          <input type="text" id="artistico" name="artistico" placeholder="Tu nombre artístico" required>
+        </div>
+
+        <div class="campo">
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" name="email" placeholder="tucorreo@ejemplo.com" required>
+        </div>
+
+        <div class="campo">
+          <label for="telefono">Teléfono</label>
+          <input type="tel" id="telefono" name="telefono" placeholder="+54 11 1234-5678">
+        </div>
+
+        <div class="campo">
+          <label for="rol">Rol al que te postulás</label>
+          <select id="rol" name="rol">
+            <option>Artista / banda</option>
+            <option>Ingeniería de sonido</option>
+            <option>Diseño gráfico</option>
+            <option>Marketing y prensa</option>
+            <option>Comunicación y redes</option>
+            <option>Otro</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="genero">Género musical</label>
+          <select id="genero" name="genero">
+            <option>Rock independiente</option>
+            <option>Folk indie</option>
+            <option>Electrónica cruda</option>
+            <option>Pop alternativo</option>
+            <option>Punk DIY</option>
+            <option>Hip-hop under</option>
+            <option>No aplica / otra disciplina</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="demo">Link a tu música o demo</label>
+          <input type="url" id="demo" name="demo" placeholder="https://soundcloud.com/tu-demo">
+        </div>
+
+        <div class="campo">
+          <label for="bio">Contanos sobre vos</label>
+          <textarea id="bio" name="bio" rows="6" placeholder="Trayectoria, proyectos actuales, por qué querés sumarte a Whiplash..." required></textarea>
+        </div>
+
+        <div class="campo">
+          <label class="checkbox-legal">
+            <input type="checkbox" name="acepta-terminos" required>
+            <span>Declaro que soy titular de los derechos de la música que publico y acepto los <a href="terminos.html">términos y condiciones</a>.</span>
+          </label>
+        </div>
+
+        <button type="submit">Enviar postulación</button>
+      </form>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <nav aria-label="Información de la plataforma">
+      <ul>
+        <li><a href="nosotros.html">Trabajá con nosotros</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+        <li><a href="ayuda.html">Ayuda</a></li>
+        <li><a href="terminos.html">Términos y condiciones</a></li>
+      </ul>
+    </nav>
+
+    <address>
+      Whiplash — Av. Ejemplo 123, Buenos Aires, Argentina<br>
+      <a href="mailto:hola@whiplash.com">hola@whiplash.com</a><br>
+      <a href="tel:+5401112345678">+54 11 1234-5678</a>
+    </address>
+
+    <p>&copy; 2026 Whiplash. Todos los derechos reservados.</p>
+  </footer>
+
+</body>
+</html>

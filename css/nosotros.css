@@ -1,0 +1,67 @@
+/* =========================================================
+   Whiplash — Página Trabajá con nosotros
+   ========================================================= */
+
+.postular-intro {
+  margin-bottom: var(--espaciado-grande);
+}
+
+.postular-intro > .subtitulo {
+  color: var(--color-texto-dim);
+}
+
+.grilla-beneficios {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--espaciado);
+}
+
+.beneficio {
+  background-color: var(--color-gris-oscuro);
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  padding: var(--espaciado);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.beneficio:hover {
+  border-color: var(--color-primario);
+  box-shadow: var(--sombra-glow);
+}
+
+.beneficio h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: var(--color-accento);
+}
+
+.beneficio p {
+  font-size: 14px;
+  color: var(--color-texto-dim);
+  margin: 0;
+}
+
+/* ---------- Formulario (específico de la postulación) ---------- */
+.postular-formulario .checkbox-legal {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-texto-dim);
+}
+
+.postular-formulario .checkbox-legal input {
+  margin-top: 3px;
+  accent-color: var(--color-primario);
+}
+
+.postular-formulario .checkbox-legal a {
+  color: var(--color-primario);
+  text-decoration: underline;
+}
+
+.postular-formulario .checkbox-legal a:hover {
+  color: var(--color-accento);
+}
