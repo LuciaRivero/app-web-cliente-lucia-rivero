@@ -1,0 +1,14 @@
+/* =========================================================
+   Whiplash — Página Explorar
+   ========================================================= */
+
+.barra-filtros .info-filtro {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--color-texto-dim);
+}
+
+.explorar-resultados {
+  margin-bottom: var(--espaciado-grande);
+}

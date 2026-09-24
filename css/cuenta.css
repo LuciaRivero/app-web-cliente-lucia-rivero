@@ -1,0 +1,33 @@
+/* =========================================================
+   Whiplash — Página Mi cuenta (registro / ingreso)
+   ========================================================= */
+
+.cuenta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espaciado);
+  align-items: start;
+  margin-bottom: var(--espaciado-grande);
+}
+
+.cuenta-grid .formulario-cuenta {
+  margin-bottom: 0;
+}
+
+.formulario-cuenta .enlace-olvido {
+  align-self: flex-start;
+  font-size: 13px;
+  color: var(--color-texto-dim);
+  transition: color 0.2s ease;
+}
+
+.formulario-cuenta .enlace-olvido:hover {
+  color: var(--color-accento);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .cuenta-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Explorá la escena independiente en Whiplash - Filtrá por género, ordená y descubrí artistas.">
+  <title>Explorar | Whiplash</title>
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/explorar.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#contenido-principal">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="header-top">
+      <a class="logo" href="index.html">
+        <img src="img/logo.svg" alt="Whiplash - logo">
+        <span>Whi<span class="p-acento">p</span>lash</span>
+      </a>
+
+      <form class="buscador" action="#" method="get" role="search">
+        <label class="sr-only" for="busqueda">Buscar artistas, tracks o géneros</label>
+        <input type="search" id="busqueda" name="q" placeholder="Buscar artistas, tracks o géneros...">
+        <button type="submit">Buscar</button>
+      </form>
+
+      <nav class="nav-cuenta" aria-label="Acciones de cuenta">
+        <ul>
+          <li><a class="ir-cuenta" href="registro.html" aria-label="Mi cuenta"><img class="icono-usuario" src="img/icono-usuario.svg" alt=""></a></li>
+          <li><a class="ir-carrito" href="carrito.html" aria-label="Carrito"><img class="icono-carrito" src="img/icono-carrito.svg" alt=""></a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <nav class="nav-principal" aria-label="Categorías">
+      <ul>
+        <li><a href="artistas.html">Mis artistas</a></li>
+        <li><a href="explorar.html" aria-current="page">Explorar</a></li>
+        <li><a href="generos.html">Géneros</a></li>
+        <li><a href="merch.html">Merch</a></li>
+        <li><a href="novedades.html">Novedades</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="contenido-principal">
+
+    <nav class="migas-de-pan" aria-label="Ruta de navegación">
+      <ol>
+        <li><a href="index.html">Inicio</a></li>
+        <li aria-current="page">Explorar</li>
+      </ol>
+    </nav>
+
+    <h1>Explorar</h1>
+    <p class="subtitulo">Descubrí la escena independiente y encontrá tu próxima joya.</p>
+
+    <section class="barra-filtros" aria-label="Filtros de búsqueda">
+      <div>
+        <span class="info-filtro">Filtrar por género</span>
+        <div class="grupo-filtros">
+          <button type="button" class="chip-genero" aria-pressed="true">Todos</button>
+          <button type="button" class="chip-genero" aria-pressed="false">Rock independiente</button>
+          <button type="button" class="chip-genero" aria-pressed="false">Folk indie</button>
+          <button type="button" class="chip-genero" aria-pressed="false">Electrónica cruda</button>
+          <button type="button" class="chip-genero" aria-pressed="false">Pop alternativo</button>
+        </div>
+      </div>
+    </section>
+
+    <p class="info-resultados">Mostrando 6 artistas</p>
+
+    <section class="explorar-resultados" aria-labelledby="titulo-resultados">
+      <h2 id="titulo-resultados" class="sr-only">Resultados de exploración</h2>
+
+      <div class="grilla-artistas">
+
+        <article class="artista-card">
+          <a href="producto.html">
+            <figure>
+              <img src="img/artista1.jpg" alt="Imagen de Los Cráteres">
+              <figcaption>Los Cráteres</figcaption>
+            </figure>
+          </a>
+          <p class="genero-artista">Rock independiente</p>
+          <button type="button">Seguir</button>
+        </article>
+
+        <article class="artista-card">
+          <a href="producto.html">
+            <figure>
+              <img src="img/artista2.jpg" alt="Imagen de Marea Onda">
+              <figcaption>Marea Onda</figcaption>
+            </figure>
+          </a>
+          <p class="genero-artista">Folk indie</p>
+          <button type="button">Seguir</button>
+        </article>
+
+        <article class="artista-card">
+          <a href="producto.html">
+            <figure>
+              <img src="img/artista3.jpg" alt="Imagen de Valle Silente">
+              <figcaption>Valle Silente</figcaption>
+            </figure>
+          </a>
+          <p class="genero-artista">Electrónica cruda</p>
+          <button type="button">Seguir</button>
+        </article>
+
+        <article class="artista-card">
+          <a href="producto.html">
+            <figure>
+              <img src="img/artista4.jpg" alt="Imagen de Tejido Rojo">
+              <figcaption>Tejido Rojo</figcaption>
+            </figure>
+          </a>
+          <p class="genero-artista">Pop alternativo</p>
+          <button type="button">Seguir</button>
+        </article>
+
+        <article class="artista-card">
+          <a href="producto.html">
+            <figure>
+              <img src="img/artista2.jpg" alt="Imagen de Risa Cósmica">
+              <figcaption>Risa Cósmica</figcaption>
+            </figure>
+          </a>
+          <p class="genero-artista">Punk DIY</p>
+          <button type="button">Seguir</button>
+        </article>
+
+        <article class="artista-card">
+          <a href="producto.html">
+            <figure>
+              <img src="img/artista3.jpg" alt="Imagen de Norte Adentro">
+              <figcaption>Norte Adentro</figcaption>
+            </figure>
+          </a>
+          <p class="genero-artista">Hip-hop under</p>
+          <button type="button">Seguir</button>
+        </article>
+
+      </div>
+    </section>
+
+    <a class="boton boton-inferior" href="explorar.html">Cargar más</a>
+
+  </main>
+
+  <footer class="site-footer">
+    <nav aria-label="Información de la plataforma">
+      <ul>
+        <li><a href="nosotros.html">Trabajá con nosotros</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+        <li><a href="ayuda.html">Ayuda</a></li>
+        <li><a href="terminos.html">Términos y condiciones</a></li>
+      </ul>
+    </nav>
+
+    <address>
+      Whiplash — Av. Ejemplo 123, Buenos Aires, Argentina<br>
+      <a href="mailto:hola@whiplash.com">hola@whiplash.com</a><br>
+      <a href="tel:+5401112345678">+54 11 1234-5678</a>
+    </address>
+
+    <p>&copy; 2026 Whiplash. Todos los derechos reservados.</p>
+  </footer>
+
+</body>
+</html>

@@ -158,6 +158,12 @@ p {
   transform: translateY(-2px);
 }
 
+.boton-inferior {
+  display: block;
+  width: fit-content;
+  margin: 0 auto;
+}
+
 /* ---------- Header ---------- */
 .site-header {
   background-color: var(--color-base);
@@ -249,6 +255,19 @@ p {
 .nav-cuenta a:focus,
 .nav-cuenta a[aria-current="page"] {
   color: var(--color-accento);
+}
+
+.nav-cuenta a.ir-carrito,
+.nav-cuenta a.ir-cuenta {
+  display: inline-flex;
+  align-items: center;
+}
+
+.icono-carrito,
+.icono-usuario {
+  width: 30px;
+  height: 30px;
+  display: block;
 }
 
 .nav-principal {
@@ -388,6 +407,157 @@ main > .subtitulo {
   margin: 0;
 }
 
+/* ---------- Géneros (chips) y filtros (compartido) ---------- */
+.generos-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.chip-genero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  background-color: transparent;
+  border: 2px solid var(--color-primario);
+  border-radius: 999px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--color-accento);
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.chip-genero:hover,
+.chip-genero:focus,
+.chip-genero[aria-pressed="true"] {
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+  color: var(--color-texto);
+}
+
+.barra-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--espaciado);
+  background-color: var(--color-gris-oscuro);
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  padding: var(--espaciado);
+  margin-bottom: var(--espaciado-grande);
+}
+
+.barra-filtros > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.barra-filtros label {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--color-texto-dim);
+}
+
+.barra-filtros select {
+  background-color: var(--color-base);
+  color: var(--color-texto);
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  padding: 10px 12px;
+  font-family: var(--fuente-cuerpo);
+  font-size: 14px;
+}
+
+.barra-filtros select:focus {
+  outline: 2px solid var(--color-primario);
+}
+
+.grupo-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-resultados {
+  color: var(--color-texto-dim);
+  font-size: 14px;
+  margin-bottom: var(--espaciado);
+}
+
+/* ---------- Artistas (grilla de cards) (compartido) ---------- */
+.grilla-artistas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--espaciado);
+}
+
+.artista-card {
+  background-color: var(--color-gris-oscuro);
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.artista-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sombra-glow);
+}
+
+.artista-card figure {
+  background-color: var(--color-gris-suave);
+  overflow: hidden;
+}
+
+.artista-card img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.artista-card:hover img {
+  transform: scale(1.05);
+}
+
+.artista-card figcaption {
+  padding: var(--espaciado) var(--espaciado) 0;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.artista-card .genero-artista {
+  color: var(--color-texto-dim);
+  font-size: 13px;
+  padding: 2px var(--espaciado);
+  margin-bottom: 8px;
+}
+
+.artista-card button {
+  margin-top: auto;
+  margin: var(--espaciado);
+  background-color: var(--color-primario);
+  color: var(--color-texto);
+  border: none;
+  border-radius: var(--radio-base);
+  padding: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.artista-card button:hover {
+  background-color: #7c4be0;
+}
+
 /* ---------- Merch (compartido entre Inicio y Perfil de artista) ---------- */
 .merch-destacado {
   margin-bottom: var(--espaciado-grande);
@@ -521,9 +691,10 @@ main > .subtitulo {
   margin-bottom: var(--espaciado);
 }
 
-/* ---------- Formularios (compartido entre Contacto y Trabajá con nosotros) ---------- */
+/* ---------- Formularios (compartido entre Contacto, Trabajá con nosotros y Mi cuenta) ---------- */
 .contacto-formulario,
-.postular-formulario {
+.postular-formulario,
+.formulario-cuenta {
   background-color: var(--color-gris-oscuro);
   border: var(--borde);
   border-radius: var(--radio-base);
@@ -532,13 +703,15 @@ main > .subtitulo {
 }
 
 .contacto-formulario h2,
-.postular-formulario h2 {
+.postular-formulario h2,
+.formulario-cuenta h2 {
   font-size: 24px;
   margin-bottom: 12px;
 }
 
 .contacto-formulario form,
-.postular-formulario form {
+.postular-formulario form,
+.formulario-cuenta form {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -546,14 +719,17 @@ main > .subtitulo {
 }
 
 .contacto-formulario .campo,
-.postular-formulario .campo {
+.postular-formulario .campo,
+.formulario-cuenta .campo,
+.formulario-cuenta .consentimiento {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
 .contacto-formulario label,
-.postular-formulario label {
+.postular-formulario label,
+.formulario-cuenta label {
   font-weight: 600;
   font-size: 14px;
 }
@@ -563,7 +739,9 @@ main > .subtitulo {
 .contacto-formulario select,
 .postular-formulario input,
 .postular-formulario textarea,
-.postular-formulario select {
+.postular-formulario select,
+.formulario-cuenta input,
+.formulario-cuenta select {
   background-color: var(--color-base);
   color: var(--color-texto);
   border: var(--borde);
@@ -577,7 +755,8 @@ main > .subtitulo {
 .contacto-formulario input::placeholder,
 .contacto-formulario textarea::placeholder,
 .postular-formulario input::placeholder,
-.postular-formulario textarea::placeholder {
+.postular-formulario textarea::placeholder,
+.formulario-cuenta input::placeholder {
   color: var(--color-texto-dim);
 }
 
@@ -586,12 +765,15 @@ main > .subtitulo {
 .contacto-formulario select:focus,
 .postular-formulario input:focus,
 .postular-formulario textarea:focus,
-.postular-formulario select:focus {
+.postular-formulario select:focus,
+.formulario-cuenta input:focus,
+.formulario-cuenta select:focus {
   outline: 2px solid var(--color-primario);
 }
 
 .contacto-formulario button,
-.postular-formulario button {
+.postular-formulario button,
+.formulario-cuenta button {
   align-self: flex-start;
   background-color: var(--color-primario);
   color: var(--color-texto);
@@ -605,8 +787,39 @@ main > .subtitulo {
 }
 
 .contacto-formulario button:hover,
-.postular-formulario button:hover {
+.postular-formulario button:hover,
+.formulario-cuenta button:hover {
   background-color: #7c4be0;
+}
+
+.formulario-cuenta .consentimiento {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-texto-dim);
+}
+
+.formulario-cuenta .consentimiento label {
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.formulario-cuenta .consentimiento input {
+  margin-top: 3px;
+  accent-color: var(--color-primario);
+}
+
+.formulario-cuenta .consentimiento a {
+  color: var(--color-primario);
+  text-decoration: underline;
+}
+
+.formulario-cuenta .consentimiento a:hover {
+  color: var(--color-accento);
 }
 
 /* ---------- Responsive (base) ---------- */

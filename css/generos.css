@@ -1,0 +1,71 @@
+/* =========================================================
+   Whiplash — Página Géneros
+   ========================================================= */
+
+.indice-generos {
+  margin-bottom: var(--espaciado-grande);
+}
+
+.grilla-generos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--espaciado);
+  margin-bottom: var(--espaciado-grande);
+}
+
+.grilla-generos > h2 {
+  grid-column: 1 / -1;
+  font-size: 32px;
+  margin-bottom: var(--espaciado);
+}
+
+.tarjeta-genero {
+  background-color: var(--color-gris-oscuro);
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  padding: var(--espaciado);
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tarjeta-genero:hover {
+  border-color: var(--color-primario);
+  box-shadow: var(--sombra-glow);
+}
+
+.tarjeta-genero h3 {
+  font-size: 22px;
+  margin-bottom: 12px;
+  color: var(--color-accento);
+}
+
+.tarjeta-genero ul {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: var(--espaciado);
+}
+
+.tarjeta-genero ul li::before {
+  content: "\203A";
+  margin-right: 8px;
+  color: var(--color-primario);
+}
+
+.tarjeta-genero ul a {
+  color: var(--color-texto-dim);
+  font-size: 14px;
+  transition: color 0.2s ease;
+}
+
+.tarjeta-genero ul a:hover {
+  color: var(--color-texto);
+}
+
+.tarjeta-genero .boton {
+  margin-top: auto;
+  align-self: flex-start;
+  font-size: 14px;
+  padding: 10px 18px;
+}

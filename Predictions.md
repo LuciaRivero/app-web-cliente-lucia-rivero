@@ -5,3 +5,5 @@
 3. Quiero crear pantalla de carrito.
 
 4. Voy agregar formulario de contacto.
+
+5. Voy a agregar las pantallas que me faltan desarrollar como mi cuenta, Explorar, Géneros, Merch, Novedades

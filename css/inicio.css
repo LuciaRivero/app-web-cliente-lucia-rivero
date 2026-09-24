@@ -33,7 +33,7 @@
   background-color: #d4fb4d;
 }
 
-/* ---------- Géneros ---------- */
+/* ---------- Géneros (contenedor de la home) ---------- */
 .generos-destacados {
   margin-bottom: var(--espaciado-grande);
 }
@@ -43,36 +43,7 @@
   margin-bottom: var(--espaciado);
 }
 
-.generos-lista {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.chip-genero {
-  background-color: var(--color-gris-oscuro);
-  border: var(--borde);
-  border-radius: 999px;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 600;
-  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
-}
-
-.chip-genero:hover,
-.chip-genero:focus {
-  border-color: var(--color-primario);
-  color: var(--color-accento);
-  background-color: var(--color-gris-suave);
-}
-
-.chip-genero[aria-pressed="true"] {
-  background-color: var(--color-primario);
-  border-color: var(--color-primario);
-  color: var(--color-texto);
-}
-
-/* ---------- Artistas (grilla de cards) ---------- */
+/* ---------- Artistas (contenedor de la home) ---------- */
 .artistas {
   margin-bottom: var(--espaciado-grande);
 }
@@ -80,73 +51,6 @@
 .artistas h2 {
   font-size: 32px;
   margin-bottom: var(--espaciado);
-}
-
-.grilla-artistas {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: var(--espaciado);
-}
-
-.artista-card {
-  background-color: var(--color-gris-oscuro);
-  border: var(--borde);
-  border-radius: var(--radio-base);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.artista-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--sombra-glow);
-}
-
-.artista-card figure {
-  background-color: var(--color-gris-suave);
-  overflow: hidden;
-}
-
-.artista-card img {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.artista-card:hover img {
-  transform: scale(1.05);
-}
-
-.artista-card figcaption {
-  padding: var(--espaciado) var(--espaciado) 0;
-  font-weight: 700;
-  font-size: 16px;
-}
-
-.artista-card .genero-artista {
-  color: var(--color-texto-dim);
-  font-size: 13px;
-  padding: 2px var(--espaciado);
-  margin-bottom: 8px;
-}
-
-.artista-card button {
-  margin-top: auto;
-  margin: var(--espaciado);
-  background-color: var(--color-primario);
-  color: var(--color-texto);
-  border: none;
-  border-radius: var(--radio-base);
-  padding: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.artista-card button:hover {
-  background-color: #7c4be0;
 }
 
 /* ---------- Responsive ---------- */
