@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Merch de tus artistas favoritos en Whiplash - Discos, entradas y más directo del creador.">
+  <title>Merch | Whiplash</title>
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/merch.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#contenido-principal">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="header-top">
+      <a class="logo" href="index.html">
+        <img src="img/logo.svg" alt="Whiplash - logo">
+        <span>Whi<span class="p-acento">p</span>lash</span>
+      </a>
+
+      <form class="buscador" action="#" method="get" role="search">
+        <label class="sr-only" for="busqueda">Buscar artistas, tracks o géneros</label>
+        <input type="search" id="busqueda" name="q" placeholder="Buscar artistas, tracks o géneros...">
+        <button type="submit">Buscar</button>
+      </form>
+
+      <nav class="nav-cuenta" aria-label="Acciones de cuenta">
+        <ul>
+          <li><a class="ir-cuenta" href="registro.html" aria-label="Mi cuenta"><img class="icono-usuario" src="img/icono-usuario.svg" alt=""></a></li>
+          <li><a class="ir-carrito" href="carrito.html" aria-label="Carrito"><img class="icono-carrito" src="img/icono-carrito.svg" alt=""></a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <nav class="nav-principal" aria-label="Categorías">
+      <ul>
+        <li><a href="artistas.html">Mis artistas</a></li>
+        <li><a href="explorar.html">Explorar</a></li>
+        <li><a href="generos.html">Géneros</a></li>
+        <li><a href="merch.html" aria-current="page">Merch</a></li>
+        <li><a href="novedades.html">Novedades</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="contenido-principal">
+
+    <nav class="migas-de-pan" aria-label="Ruta de navegación">
+      <ol>
+        <li><a href="index.html">Inicio</a></li>
+        <li aria-current="page">Merch</li>
+      </ol>
+    </nav>
+
+    <h1>Merch</h1>
+    <p class="subtitulo">Discos, entradas y más, directo de tus artistas favoritos.</p>
+
+    <section class="barra-filtros" aria-label="Filtros de merch">
+      <div>
+        <span class="info-filtro">Tipo de producto</span>
+        <div class="grupo-filtros">
+          <button type="button" class="chip-genero" aria-pressed="true">Todos</button>
+          <button type="button" class="chip-genero" aria-pressed="false">Discos</button>
+          <button type="button" class="chip-genero" aria-pressed="false">Entradas</button>
+          <button type="button" class="chip-genero" aria-pressed="false">Remeras</button>
+        </div>
+      </div>
+    </section>
+
+    <p class="info-resultados">Mostrando 6 productos</p>
+
+    <section class="catalogo-merch" aria-labelledby="titulo-catalogo">
+      <h2 id="titulo-catalogo" class="sr-only">Catálogo de merch</h2>
+
+      <div class="grilla-merch">
+
+        <article class="producto-merch">
+          <a href="producto.html">
+            <figure>
+              <img src="img/disco1.jpg" alt="Disco Ruido blanco de Los Cráteres">
+              <figcaption>Ruido blanco (EP)</figcaption>
+            </figure>
+          </a>
+          <p class="tipo-merch">Disco</p>
+          <p class="precio">$12.000</p>
+          <a class="boton boton-compra" href="producto.html">Ver producto</a>
+        </article>
+
+        <article class="producto-merch">
+          <a href="producto.html">
+            <figure>
+              <img src="img/disco2.jpg" alt="Disco Andén de Los Cráteres">
+              <figcaption>Andén (LP)</figcaption>
+            </figure>
+          </a>
+          <p class="tipo-merch">Disco</p>
+          <p class="precio">$15.000</p>
+          <a class="boton boton-compra" href="producto.html">Ver producto</a>
+        </article>
+
+        <article class="producto-merch">
+          <a href="producto.html">
+            <figure>
+              <img src="img/entrada1.jpg" alt="Entrada al show de Los Cráteres en Vorterix">
+              <figcaption>Show en Vorterix</figcaption>
+            </figure>
+          </a>
+          <p class="tipo-merch">Entrada</p>
+          <p class="precio">$25.000</p>
+          <a class="boton boton-compra" href="producto.html">Ver producto</a>
+        </article>
+
+        <article class="producto-merch">
+          <a href="producto.html">
+            <figure>
+              <img src="img/disco3.jpg" alt="Disco Marea Onda de Marea Onda">
+              <figcaption>Marea Onda (EP)</figcaption>
+            </figure>
+          </a>
+          <p class="tipo-merch">Disco</p>
+          <p class="precio">$10.000</p>
+          <a class="boton boton-compra" href="producto.html">Ver producto</a>
+        </article>
+
+        <article class="producto-merch">
+          <a href="producto.html">
+            <figure>
+              <img src="img/disco1.jpg" alt="Remera de Los Cráteres">
+              <figcaption>Remera "Andén"</figcaption>
+            </figure>
+          </a>
+          <p class="tipo-merch">Remera</p>
+          <p class="precio">$9.500</p>
+          <a class="boton boton-compra" href="producto.html">Ver producto</a>
+        </article>
+
+        <article class="producto-merch">
+          <a href="producto.html">
+            <figure>
+              <img src="img/disco3.jpg" alt="Entrada al show de Marea Onda en Niceto">
+              <figcaption>Show en Niceto</figcaption>
+            </figure>
+          </a>
+          <p class="tipo-merch">Entrada</p>
+          <p class="precio">$18.000</p>
+          <a class="boton boton-compra" href="producto.html">Ver producto</a>
+        </article>
+
+      </div>
+    </section>
+
+    <a class="boton boton-inferior" href="merch.html">Ver más merch</a>
+
+  </main>
+
+  <footer class="site-footer">
+    <nav aria-label="Información de la plataforma">
+      <ul>
+        <li><a href="nosotros.html">Trabajá con nosotros</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+        <li><a href="ayuda.html">Ayuda</a></li>
+        <li><a href="terminos.html">Términos y condiciones</a></li>
+      </ul>
+    </nav>
+
+    <address>
+      Whiplash — Av. Ejemplo 123, Buenos Aires, Argentina<br>
+      <a href="mailto:hola@whiplash.com">hola@whiplash.com</a><br>
+      <a href="tel:+5401112345678">+54 11 1234-5678</a>
+    </address>
+
+    <p>&copy; 2026 Whiplash. Todos los derechos reservados.</p>
+  </footer>
+
+</body>
+</html>

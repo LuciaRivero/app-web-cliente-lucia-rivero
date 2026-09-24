@@ -1,0 +1,137 @@
+/* =========================================================
+   Whiplash — Página Novedades
+   ========================================================= */
+
+/* ---------- Novedad destacada ---------- */
+.destacado-novedad {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espaciado);
+  background-color: var(--color-gris-oscuro);
+  border: var(--borde);
+  border-radius: var(--radio-amplio);
+  padding: var(--espaciado);
+  margin-bottom: var(--espaciado-grande);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.destacado-novedad:hover {
+  border-color: var(--color-primario);
+  box-shadow: var(--sombra-glow);
+}
+
+.destacado-cover {
+  background: linear-gradient(135deg, var(--color-primario) 0%, #5b21b6 100%);
+  border-radius: var(--radio-base);
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.destacado-cover span {
+  font-family: var(--fuente-display);
+  font-size: 40px;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--color-accento);
+  line-height: 1.1;
+}
+
+.destacado-contenido {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.destacado-contenido time {
+  font-size: 13px;
+  color: var(--color-primario);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.destacado-contenido h2 {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.destacado-contenido p {
+  color: var(--color-texto-dim);
+  margin-bottom: var(--espaciado);
+}
+
+.destacado-contenido .boton {
+  align-self: flex-start;
+}
+
+/* ---------- Lanzamientos ---------- */
+.lanzamientos {
+  margin-bottom: var(--espaciado-grande);
+}
+
+.lanzamientos h2,
+.noticias h2 {
+  font-size: 32px;
+  margin-bottom: var(--espaciado);
+}
+
+/* ---------- Noticias ---------- */
+.noticias {
+  margin-bottom: var(--espaciado-grande);
+}
+
+.lista-novedades {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 820px;
+}
+
+.novedad {
+  background-color: var(--color-gris-oscuro);
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  padding: var(--espaciado);
+  transition: border-color 0.2s ease;
+}
+
+.novedad:hover {
+  border-color: var(--color-primario);
+}
+
+.novedad time {
+  font-size: 13px;
+  color: var(--color-texto-dim);
+  margin-bottom: 4px;
+  display: block;
+}
+
+.novedad h3 {
+  font-size: 20px;
+  margin-bottom: 6px;
+  color: var(--color-texto);
+}
+
+.novedad p {
+  color: var(--color-texto-dim);
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.novedad a {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-primario);
+}
+
+.novedad a:hover {
+  color: var(--color-accento);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .destacado-novedad {
+    grid-template-columns: 1fr;
+  }
+}

@@ -70,12 +70,6 @@
   color: #ef4444;
 }
 
-.boton-inferior {
-  display: block;
-  width: fit-content;
-  margin: 0 auto;
-}
-
 /* ---------- Responsive ---------- */
 @media (max-width: 768px) {
   .artista-guardado {

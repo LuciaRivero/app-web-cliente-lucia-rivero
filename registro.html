@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Mi cuenta en Whiplash - Ingresá o creá tu cuenta para guardar artistas y comprar merch.">
+  <title>Mi cuenta | Whiplash</title>
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/cuenta.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#contenido-principal">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="header-top">
+      <a class="logo" href="index.html">
+        <img src="img/logo.svg" alt="Whiplash - logo">
+        <span>Whi<span class="p-acento">p</span>lash</span>
+      </a>
+
+      <form class="buscador" action="#" method="get" role="search">
+        <label class="sr-only" for="busqueda">Buscar artistas, tracks o géneros</label>
+        <input type="search" id="busqueda" name="q" placeholder="Buscar artistas, tracks o géneros...">
+        <button type="submit">Buscar</button>
+      </form>
+
+      <nav class="nav-cuenta" aria-label="Acciones de cuenta">
+        <ul>
+          <li><a class="ir-cuenta" href="registro.html" aria-current="page" aria-label="Mi cuenta"><img class="icono-usuario" src="img/icono-usuario.svg" alt=""></a></li>
+          <li><a class="ir-carrito" href="carrito.html" aria-label="Carrito"><img class="icono-carrito" src="img/icono-carrito.svg" alt=""></a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <nav class="nav-principal" aria-label="Categorías">
+      <ul>
+        <li><a href="artistas.html">Mis artistas</a></li>
+        <li><a href="explorar.html">Explorar</a></li>
+        <li><a href="generos.html">Géneros</a></li>
+        <li><a href="merch.html">Merch</a></li>
+        <li><a href="novedades.html">Novedades</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="contenido-principal">
+
+    <nav class="migas-de-pan" aria-label="Ruta de navegación">
+      <ol>
+        <li><a href="index.html">Inicio</a></li>
+        <li aria-current="page">Mi cuenta</li>
+      </ol>
+    </nav>
+
+    <h1>Mi cuenta</h1>
+    <p class="subtitulo">Ingresá o creá tu cuenta para guardar artistas, seguir tus favoritos y comprar merch.</p>
+
+    <section class="cuenta-grid" aria-labelledby="titulo-cuenta">
+      <h2 id="titulo-cuenta" class="sr-only">Acceso a tu cuenta</h2>
+
+      <article class="formulario-cuenta" aria-labelledby="titulo-ingreso">
+        <h2 id="titulo-ingreso">Ingresá a tu cuenta</h2>
+
+        <form action="#" method="post">
+          <div class="campo">
+            <label for="login-email">Correo electrónico</label>
+            <input type="email" id="login-email" name="email" placeholder="tucorreo@ejemplo.com" required>
+          </div>
+
+          <div class="campo">
+            <label for="login-password">Contraseña</label>
+            <input type="password" id="login-password" name="password" placeholder="Tu contraseña" required>
+          </div>
+
+          <a class="enlace-olvido" href="registro.html">¿Olvidaste tu contraseña?</a>
+
+          <button type="submit">Ingresar</button>
+        </form>
+      </article>
+
+      <article class="formulario-cuenta" aria-labelledby="titulo-registro">
+        <h2 id="titulo-registro">Creá tu cuenta</h2>
+
+        <form action="#" method="post">
+          <div class="campo">
+            <label for="reg-nombre">Nombre</label>
+            <input type="text" id="reg-nombre" name="nombre" placeholder="Tu nombre" required>
+          </div>
+
+          <div class="campo">
+            <label for="reg-email">Correo electrónico</label>
+            <input type="email" id="reg-email" name="email" placeholder="tucorreo@ejemplo.com" required>
+          </div>
+
+          <div class="campo">
+            <label for="reg-password">Contraseña</label>
+            <input type="password" id="reg-password" name="password" placeholder="Mínimo 8 caracteres" required>
+          </div>
+
+          <div class="campo">
+            <label for="reg-password2">Repetí tu contraseña</label>
+            <input type="password" id="reg-password2" name="password2" placeholder="Repetí tu contraseña" required>
+          </div>
+
+          <div class="consentimiento">
+            <input type="checkbox" id="acepta-terminos" name="acepta-terminos" required>
+            <label for="acepta-terminos">Acepto los <a href="terminos.html">términos y condiciones</a> y el tratamiento de mis datos personales.</label>
+          </div>
+
+          <button type="submit">Crear cuenta</button>
+        </form>
+      </article>
+    </section>
+
+    <section class="promo" aria-labelledby="titulo-promo">
+      <h2 id="titulo-promo">¿Sos artista?</h2>
+      <p>Postulate y cobrá por cada reproducción de tu música.</p>
+      <a class="boton" href="nosotros.html">Trabajá con nosotros</a>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <nav aria-label="Información de la plataforma">
+      <ul>
+        <li><a href="nosotros.html">Trabajá con nosotros</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+        <li><a href="ayuda.html">Ayuda</a></li>
+        <li><a href="terminos.html">Términos y condiciones</a></li>
+      </ul>
+    </nav>
+
+    <address>
+      Whiplash — Av. Ejemplo 123, Buenos Aires, Argentina<br>
+      <a href="mailto:hola@whiplash.com">hola@whiplash.com</a><br>
+      <a href="tel:+5401112345678">+54 11 1234-5678</a>
+    </address>
+
+    <p>&copy; 2026 Whiplash. Todos los derechos reservados.</p>
+  </footer>
+
+</body>
+</html>
