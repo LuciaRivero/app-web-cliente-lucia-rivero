@@ -1,0 +1,64 @@
+/* =========================================================
+   Whiplash — Página Ayuda (preguntas frecuentes)
+   ========================================================= */
+
+.faq {
+  max-width: 820px;
+  margin-bottom: var(--espaciado-grande);
+}
+
+.faq-item {
+  background-color: var(--color-gris-oscuro);
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.faq-item:hover,
+.faq-item[open] {
+  border-color: var(--color-primario);
+}
+
+.faq-item summary {
+  list-style: none;
+  cursor: pointer;
+  padding: var(--espaciado);
+  font-weight: 700;
+  font-size: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  transition: color 0.2s ease;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary::after {
+  content: "+";
+  font-size: 26px;
+  line-height: 1;
+  font-weight: 400;
+  color: var(--color-primario);
+  transition: transform 0.2s ease;
+}
+
+.faq-item summary:hover,
+.faq-item[open] summary {
+  color: var(--color-accento);
+}
+
+.faq-item[open] summary::after {
+  content: "\2013";
+}
+
+.faq-respuesta {
+  padding: 0 var(--espaciado) var(--espaciado);
+  color: var(--color-texto-dim);
+  font-size: 15px;
+  margin: 0;
+}

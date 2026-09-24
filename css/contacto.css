@@ -1,0 +1,40 @@
+/* =========================================================
+   Whiplash — Página Contacto
+   ========================================================= */
+
+.contacto-info {
+  background-color: var(--color-gris-oscuro);
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  padding: var(--espaciado);
+  margin-bottom: var(--espaciado);
+}
+
+.contacto-info h2 {
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+
+.contacto-info address {
+  font-style: normal;
+  color: var(--color-texto-dim);
+}
+
+.contacto-info address p {
+  margin-bottom: 8px;
+}
+
+.contacto-info address strong {
+  color: var(--color-texto);
+  font-family: var(--fuente-display);
+  font-size: 18px;
+  text-transform: uppercase;
+}
+
+.contacto-info address a {
+  color: var(--color-primario);
+}
+
+.contacto-info address a:hover {
+  color: var(--color-accento);
+}
