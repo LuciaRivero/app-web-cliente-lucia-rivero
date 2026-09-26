@@ -1,192 +1,227 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Perfil del artista Los Cráteres en Whiplash - Música independiente y merch">
-  <title>Los Cráteres | Whiplash</title>
-  <link rel="stylesheet" href="css/index.css">
-  <link rel="stylesheet" href="css/producto.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Perfil del artista Los Cráteres en Whiplash - Música independiente y merch"
+    />
+    <title>Los Cráteres | Whiplash</title>
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="css/producto.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido-principal">Saltar al contenido</a>
 
-  <a class="skip-link" href="#contenido-principal">Saltar al contenido</a>
+    <header class="site-header">
+      <div class="header-top">
+        <a class="logo" href="index.html">
+          <img src="img/logo.svg" alt="Whiplash - logo" />
+          <span>Whi<span class="p-acento">p</span>lash</span>
+        </a>
 
-  <header class="site-header">
-    <div class="header-top">
-      <a class="logo" href="index.html">
-        <img src="img/logo.svg" alt="Whiplash - logo">
-        <span>Whi<span class="p-acento">p</span>lash</span>
-      </a>
+        <form class="buscador" action="#" method="get" role="search">
+          <label class="sr-only" for="busqueda"
+            >Buscar artistas, tracks o géneros</label
+          >
+          <input
+            type="search"
+            id="busqueda"
+            name="q"
+            placeholder="Buscar artistas, tracks o géneros..."
+          />
+          <button type="submit">Buscar</button>
+        </form>
 
-      <form class="buscador" action="#" method="get" role="search">
-        <label class="sr-only" for="busqueda">Buscar artistas, tracks o géneros</label>
-        <input type="search" id="busqueda" name="q" placeholder="Buscar artistas, tracks o géneros...">
-        <button type="submit">Buscar</button>
-      </form>
+        <nav class="nav-cuenta" aria-label="Acciones de cuenta">
+          <ul>
+            <li>
+              <a class="ir-cuenta" href="registro.html" aria-label="Mi cuenta"
+                ><img class="icono-usuario" src="img/icono-usuario.svg" alt=""
+              /></a>
+            </li>
+            <li>
+              <a class="ir-carrito" href="carrito.html" aria-label="Carrito"
+                ><img class="icono-carrito" src="img/icono-carrito.svg" alt=""
+              /></a>
+            </li>
+          </ul>
+        </nav>
+      </div>
 
-      <nav class="nav-cuenta" aria-label="Acciones de cuenta">
+      <nav class="nav-principal" aria-label="Categorías">
         <ul>
-          <li><a class="ir-cuenta" href="registro.html" aria-label="Mi cuenta"><img class="icono-usuario" src="img/icono-usuario.svg" alt=""></a></li>
-          <li><a class="ir-carrito" href="carrito.html" aria-label="Carrito"><img class="icono-carrito" src="img/icono-carrito.svg" alt=""></a></li>
+          <li><a href="artistas.html">Mis artistas</a></li>
+          <li><a href="explorar.html">Explorar</a></li>
+          <li><a href="generos.html">Géneros</a></li>
+          <li><a href="merch.html">Merch</a></li>
+          <li><a href="novedades.html">Novedades</a></li>
         </ul>
       </nav>
-    </div>
+    </header>
 
-    <nav class="nav-principal" aria-label="Categorías">
-      <ul>
-        <li><a href="artistas.html">Mis artistas</a></li>
-        <li><a href="explorar.html">Explorar</a></li>
-        <li><a href="generos.html">Géneros</a></li>
-        <li><a href="merch.html">Merch</a></li>
-        <li><a href="novedades.html">Novedades</a></li>
-      </ul>
-    </nav>
-  </header>
+    <main id="contenido-principal">
+      <nav class="breadcrumb" aria-label="Ruta de navegación">
+        <ol>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="generos.html">Rock independiente</a></li>
+          <li aria-current="page">Los Cráteres</li>
+        </ol>
+      </nav>
 
-  <main id="contenido-principal">
+      <article class="perfil-artista">
+        <section class="portada-artista" aria-label="Portada del artista">
+          <img src="img/artista1.jpg" alt="Portada del artista Los Cráteres" />
+        </section>
 
-    <nav class="migas-de-pan" aria-label="Ruta de navegación">
-      <ol>
-        <li><a href="index.html">Inicio</a></li>
-        <li><a href="generos.html">Rock independiente</a></li>
-        <li aria-current="page">Los Cráteres</li>
-      </ol>
-    </nav>
+        <section class="info-artista" aria-labelledby="titulo-artista">
+          <h1 id="titulo-artista">Los Cráteres</h1>
+          <p class="genero-artista">Rock independiente</p>
 
-    <article class="perfil-artista">
+          <p class="bio-artista">
+            Banda de rock indie con guitarras crudas y letras que hablan de la
+            ciudad. Desde su primer demo autoeditado, construyeron su propio
+            camino sin intermediarios.
+          </p>
 
-      <section class="portada-artista" aria-label="Portada del artista">
-        <img src="img/artista1.jpg" alt="Portada del artista Los Cráteres">
-      </section>
-
-      <section class="info-artista" aria-labelledby="titulo-artista">
-        <h1 id="titulo-artista">Los Cráteres</h1>
-        <p class="genero-artista">Rock independiente</p>
-
-        <p class="bio-artista">Banda de rock indie con guitarras crudas y letras que hablan de la ciudad. Desde su primer demo autoeditado, construyeron su propio camino sin intermediarios.</p>
-
-        <div class="acciones-artista">
-          <button type="button" class="boton boton-seguir">Seguir</button>
-          <button type="button" class="boton boton-compartir">Compartir</button>
-        </div>
-      </section>
-
-      <section class="tracks" aria-labelledby="titulo-tracks">
-        <h2 id="titulo-tracks">Tracks</h2>
-
-        <ul class="lista-tracks">
-          <li>
-            <button type="button" class="track">
-              <span class="track-num">1</span>
-              <span class="track-info">
-                <span class="track-titulo">Ruido blanco</span>
-                <span class="track-duracion">3:24</span>
-              </span>
+          <div class="acciones-artista">
+            <button type="button" class="boton boton-seguir">Seguir</button>
+            <button type="button" class="boton boton-compartir">
+              Compartir
             </button>
-          </li>
-          <li>
-            <button type="button" class="track">
-              <span class="track-num">2</span>
-              <span class="track-info">
-                <span class="track-titulo">Andén</span>
-                <span class="track-duracion">4:01</span>
-              </span>
-            </button>
-          </li>
-          <li>
-            <button type="button" class="track">
-              <span class="track-num">3</span>
-              <span class="track-info">
-                <span class="track-titulo">Enero</span>
-                <span class="track-duracion">3:47</span>
-              </span>
-            </button>
-          </li>
+          </div>
+        </section>
+
+        <section class="tracks" aria-labelledby="titulo-tracks">
+          <h2 id="titulo-tracks">Tracks</h2>
+
+          <ul class="lista-tracks">
+            <li>
+              <button type="button" class="track">
+                <span class="track-num">1</span>
+                <span class="track-info">
+                  <span class="track-titulo">Ruido blanco</span>
+                  <span class="track-duracion">3:24</span>
+                </span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="track">
+                <span class="track-num">2</span>
+                <span class="track-info">
+                  <span class="track-titulo">Andén</span>
+                  <span class="track-duracion">4:01</span>
+                </span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="track">
+                <span class="track-num">3</span>
+                <span class="track-info">
+                  <span class="track-titulo">Enero</span>
+                  <span class="track-duracion">3:47</span>
+                </span>
+              </button>
+            </li>
+          </ul>
+        </section>
+
+        <section class="merch-artista" aria-labelledby="titulo-merch">
+          <h2 id="titulo-merch">Merch oficial</h2>
+          <p class="subtitulo">
+            Discos y entradas vendidos directo por el artista.
+          </p>
+
+          <div class="grilla-merch">
+            <article class="producto-merch">
+              <figure>
+                <img
+                  src="img/disco1.jpg"
+                  alt="Disco Ruido blanco de Los Cráteres"
+                />
+                <figcaption>Ruido blanco (EP)</figcaption>
+              </figure>
+              <p class="tipo-merch">Disco</p>
+              <p class="precio">$12.000</p>
+              <form class="compra-merch" action="#" method="post">
+                <label class="sr-only" for="formato-1"
+                  >Formato de Ruido blanco</label
+                >
+                <select id="formato-1" name="formato">
+                  <option>Vinilo</option>
+                  <option>CD</option>
+                  <option>Digital</option>
+                </select>
+                <button type="submit">Agregar al carrito</button>
+              </form>
+            </article>
+
+            <article class="producto-merch">
+              <figure>
+                <img src="img/disco2.jpg" alt="Disco Andén de Los Cráteres" />
+                <figcaption>Andén (LP)</figcaption>
+              </figure>
+              <p class="tipo-merch">Disco</p>
+              <p class="precio">$15.000</p>
+              <form class="compra-merch" action="#" method="post">
+                <label class="sr-only" for="formato-2">Formato de Andén</label>
+                <select id="formato-2" name="formato">
+                  <option>CD</option>
+                  <option>Vinilo</option>
+                  <option>Digital</option>
+                </select>
+                <button type="submit">Agregar al carrito</button>
+              </form>
+            </article>
+
+            <article class="producto-merch">
+              <figure>
+                <img
+                  src="img/entrada1.jpg"
+                  alt="Entrada al show de Los Cráteres en Vorterix"
+                />
+                <figcaption>Show en Vorterix</figcaption>
+              </figure>
+              <p class="tipo-merch">Entrada</p>
+              <p class="precio">$25.000</p>
+              <form class="compra-merch" action="#" method="post">
+                <label class="sr-only" for="cantidad-entrada"
+                  >Cantidad de entradas para el show</label
+                >
+                <input
+                  type="number"
+                  id="cantidad-entrada"
+                  name="cantidad"
+                  value="1"
+                  min="1"
+                  max="10"
+                />
+                <button type="submit">Agregar al carrito</button>
+              </form>
+            </article>
+          </div>
+        </section>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <nav aria-label="Información de la plataforma">
+        <ul>
+          <li><a href="nosotros.html">Trabajá con nosotros</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+          <li><a href="ayuda.html">Ayuda</a></li>
+          <li><a href="terminos.html">Términos y condiciones</a></li>
         </ul>
-      </section>
+      </nav>
 
-      <section class="merch-artista" aria-labelledby="titulo-merch">
-        <h2 id="titulo-merch">Merch oficial</h2>
-        <p class="subtitulo">Discos y entradas vendidos directo por el artista.</p>
+      <address>
+        Whiplash — Av. Ejemplo 123, Buenos Aires, Argentina<br />
+        <a href="mailto:hola@whiplash.com">hola@whiplash.com</a><br />
+        <a href="tel:+5401112345678">+54 11 1234-5678</a>
+      </address>
 
-        <div class="grilla-merch">
-
-          <article class="producto-merch">
-            <figure>
-              <img src="img/disco1.jpg" alt="Disco Ruido blanco de Los Cráteres">
-              <figcaption>Ruido blanco (EP)</figcaption>
-            </figure>
-            <p class="tipo-merch">Disco</p>
-            <p class="precio">$12.000</p>
-            <form class="compra-merch" action="#" method="post">
-              <label class="sr-only" for="formato-1">Formato de Ruido blanco</label>
-              <select id="formato-1" name="formato">
-                <option>Vinilo</option>
-                <option>CD</option>
-                <option>Digital</option>
-              </select>
-              <button type="submit">Agregar al carrito</button>
-            </form>
-          </article>
-
-          <article class="producto-merch">
-            <figure>
-              <img src="img/disco2.jpg" alt="Disco Andén de Los Cráteres">
-              <figcaption>Andén (LP)</figcaption>
-            </figure>
-            <p class="tipo-merch">Disco</p>
-            <p class="precio">$15.000</p>
-            <form class="compra-merch" action="#" method="post">
-              <label class="sr-only" for="formato-2">Formato de Andén</label>
-              <select id="formato-2" name="formato">
-                <option>CD</option>
-                <option>Vinilo</option>
-                <option>Digital</option>
-              </select>
-              <button type="submit">Agregar al carrito</button>
-            </form>
-          </article>
-
-          <article class="producto-merch">
-            <figure>
-              <img src="img/entrada1.jpg" alt="Entrada al show de Los Cráteres en Vorterix">
-              <figcaption>Show en Vorterix</figcaption>
-            </figure>
-            <p class="tipo-merch">Entrada</p>
-            <p class="precio">$25.000</p>
-            <form class="compra-merch" action="#" method="post">
-              <label class="sr-only" for="cantidad-entrada">Cantidad de entradas para el show</label>
-              <input type="number" id="cantidad-entrada" name="cantidad" value="1" min="1" max="10">
-              <button type="submit">Agregar al carrito</button>
-            </form>
-          </article>
-
-        </div>
-      </section>
-
-    </article>
-
-  </main>
-
-  <footer class="site-footer">
-    <nav aria-label="Información de la plataforma">
-      <ul>
-        <li><a href="nosotros.html">Trabajá con nosotros</a></li>
-        <li><a href="contacto.html">Contacto</a></li>
-        <li><a href="ayuda.html">Ayuda</a></li>
-        <li><a href="terminos.html">Términos y condiciones</a></li>
-      </ul>
-    </nav>
-
-    <address>
-      Whiplash — Av. Ejemplo 123, Buenos Aires, Argentina<br>
-      <a href="mailto:hola@whiplash.com">hola@whiplash.com</a><br>
-      <a href="tel:+5401112345678">+54 11 1234-5678</a>
-    </address>
-
-    <p>&copy; 2026 Whiplash. Todos los derechos reservados.</p>
-  </footer>
-
-</body>
+      <p>&copy; 2026 Whiplash. Todos los derechos reservados.</p>
+    </footer>
+  </body>
 </html>

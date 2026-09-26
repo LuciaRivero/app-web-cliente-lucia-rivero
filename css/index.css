@@ -5,24 +5,25 @@
 
 /* ---------- Fuentes ---------- */
 @font-face {
-  font-family: 'Anton';
-  src: url('../Fonts/Anton-Regular.ttf') format('truetype');
+  font-family: "Anton";
+  src: url("../Fonts/Anton-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Inter';
-  src: url('../Fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype');
+  font-family: "Inter";
+  src: url("../Fonts/Inter-VariableFont_opsz,wght.ttf") format("truetype");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Inter';
-  src: url('../Fonts/Inter-Italic-VariableFont_opsz,wght.ttf') format('truetype');
+  font-family: "Inter";
+  src: url("../Fonts/Inter-Italic-VariableFont_opsz,wght.ttf")
+    format("truetype");
   font-weight: 100 900;
   font-style: italic;
   font-display: swap;
@@ -31,17 +32,17 @@
 /* ---------- Tokens del diseño (custom properties) ---------- */
 :root {
   /* Colores */
-  --color-base: #0A0A0A;
-  --color-primario: #8B5CF6;
-  --color-accento: #C6F135;
-  --color-texto: #F4F1EA;
-  --color-gris-oscuro: #1A1A1A;
-  --color-gris-suave: #2A2A2A;
-  --color-texto-dim: #A8A29E;
+  --color-base: #0a0a0a;
+  --color-primario: #8b5cf6;
+  --color-accento: #c6f135;
+  --color-texto: #f4f1ea;
+  --color-gris-oscuro: #1a1a1a;
+  --color-gris-suave: #2a2a2a;
+  --color-texto-dim: #a8a29e;
 
   /* Tipografía */
-  --fuente-display: 'Anton', 'Arial Narrow', sans-serif;
-  --fuente-cuerpo: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --fuente-display: "Anton", "Arial Narrow", sans-serif;
+  --fuente-cuerpo: "Inter", "Helvetica Neue", Arial, sans-serif;
 
   /* Bordes y radios */
   --radio-base: 12px;
@@ -149,7 +150,9 @@ p {
   border: none;
   border-radius: var(--radio-base);
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .boton:hover,
@@ -314,7 +317,7 @@ main > .subtitulo {
 }
 
 /* ---------- Breadcrumb (migas de pan) ---------- */
-.migas-de-pan ol {
+.breadcrumb ol {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -323,17 +326,17 @@ main > .subtitulo {
   margin-bottom: var(--espaciado-grande);
 }
 
-.migas-de-pan li + li::before {
+.breadcrumb li + li::before {
   content: "/";
   margin-right: 8px;
   color: var(--color-texto-dim);
 }
 
-.migas-de-pan a:hover {
+.breadcrumb a:hover {
   color: var(--color-primario);
 }
 
-.migas-de-pan [aria-current="page"] {
+.breadcrumb [aria-current="page"] {
   color: var(--color-texto);
 }
 
@@ -427,7 +430,10 @@ main > .subtitulo {
   font-weight: 600;
   line-height: 1;
   color: var(--color-accento);
-  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .chip-genero:hover,
@@ -504,7 +510,9 @@ main > .subtitulo {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .artista-card:hover {
@@ -587,7 +595,9 @@ main > .subtitulo {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .producto-merch:hover {
