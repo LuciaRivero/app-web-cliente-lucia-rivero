@@ -16,6 +16,11 @@
 
     <header class="site-header">
       <div class="header-top">
+        <button class="boton-menu" type="button" aria-label="Abrir menú"
+          aria-expanded="false" aria-controls="menu-principal">
+          <img class="icono-menu" src="img/icono-menu.svg" alt="" />
+        </button>
+
         <a class="logo" href="index.html">
           <img src="img/logo.svg" alt="Whiplash - logo" />
           <span>Whi<span class="p-acento">p</span>lash</span>
@@ -34,6 +39,10 @@
           <button type="submit">Buscar</button>
         </form>
 
+        <button class="boton-buscar" type="button" aria-label="Buscar">
+          <img class="icono-buscar" src="img/icono-buscar.svg" alt="" />
+        </button>
+
         <nav class="nav-cuenta" aria-label="Acciones de cuenta">
           <ul>
             <li>
@@ -50,7 +59,7 @@
         </nav>
       </div>
 
-      <nav class="nav-principal" aria-label="Categorías">
+      <nav class="nav-principal" id="menu-principal" aria-label="Categorías">
         <ul>
           <li><a href="artistas.html" aria-current="page">Mis artistas</a></li>
           <li><a href="explorar.html">Explorar</a></li>

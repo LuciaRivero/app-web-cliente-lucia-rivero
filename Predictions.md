@@ -7,3 +7,5 @@
 4. Voy agregar formulario de contacto.
 
 5. Voy a agregar las pantallas que me faltan desarrollar como mi cuenta, Explorar, Géneros, Merch, Novedades
+
+6. Voy a adaptar a mobile el header y el menu hambuguesa.
