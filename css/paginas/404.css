@@ -1,0 +1,482 @@
+/* =========================================================
+   Whiplash — Página 404 (no encontrada)
+   ========================================================= */
+
+.pagina-404 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--espaciado-grande) 0;
+}
+
+.pagina-404 h1 {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.pagina-404 p {
+  color: var(--color-texto-dim);
+  max-width: 520px;
+}
+
+.acciones-404 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--espaciado);
+}
+
+/* ---------- Televisor retro ----------
+   Diseño tomado de Uiverse.io (Praashoo7), inspirado en un diseño de
+   Stefan Devai en Dribbble. Se mantiene la forma y se cambian los
+   colores por los de Whiplash. Todo está medido en em: cambiando el
+   font-size de .tele-404 se escala el televisor entero. */
+.tele-404 {
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30em;
+  height: 30em;
+  position: relative;
+  isolation: isolate;
+}
+
+.tele-404 .tele {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5em;
+}
+
+/* Antena */
+.tele-404 .antena {
+  width: 5em;
+  height: 5em;
+  border-radius: 50%;
+  border: 2px solid var(--color-base);
+  background-color: var(--color-acento);
+  margin-bottom: -6em;
+  z-index: -1;
+}
+
+.tele-404 .antena-sombra {
+  position: absolute;
+  background-color: transparent;
+  width: 3.125em;
+  height: 3.5em;
+  margin-left: 1.68em;
+  border-radius: 45%;
+  transform: rotate(140deg);
+  border: 4px solid transparent;
+  box-shadow:
+    inset 0 1em var(--color-acento-oscuro),
+    inset 0 1em 1px 1px var(--color-acento-oscuro);
+}
+
+.tele-404 .antena::after {
+  content: "";
+  position: absolute;
+  margin-top: -9.4em;
+  margin-left: 0.4em;
+  transform: rotate(-25deg);
+  width: 1em;
+  height: 0.5em;
+  border-radius: 50%;
+  background-color: var(--color-acento-hover);
+}
+
+.tele-404 .antena::before {
+  content: "";
+  position: absolute;
+  margin-top: 0.2em;
+  margin-left: 1.25em;
+  transform: rotate(-20deg);
+  width: 1.5em;
+  height: 0.8em;
+  border-radius: 50%;
+  background-color: var(--color-acento-hover);
+}
+
+.tele-404 .varilla-1 {
+  position: relative;
+  top: -102%;
+  left: -130%;
+  width: 12em;
+  height: 5.5em;
+  border-radius: 50px;
+  background-image: linear-gradient(
+    var(--color-gris-oscuro),
+    var(--color-gris-oscuro),
+    var(--color-gris-suave),
+    var(--color-gris-suave),
+    var(--color-gris-oscuro)
+  );
+  transform: rotate(-29deg);
+  clip-path: polygon(50% 0%, 49% 100%, 52% 100%);
+}
+
+.tele-404 .punta-1 {
+  position: relative;
+  top: -211%;
+  left: -35%;
+  transform: rotate(45deg);
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+  border: 2px solid var(--color-base);
+  background-color: var(--color-texto-dim);
+  z-index: 99;
+}
+
+.tele-404 .varilla-2 {
+  position: relative;
+  top: -210%;
+  left: -10%;
+  width: 12em;
+  height: 4em;
+  border-radius: 50px;
+  background-image: linear-gradient(
+    var(--color-gris-oscuro),
+    var(--color-gris-oscuro),
+    var(--color-gris-suave),
+    var(--color-gris-suave),
+    var(--color-gris-oscuro)
+  );
+  margin-right: 5em;
+  clip-path: polygon(
+    47% 0,
+    47% 0,
+    34% 34%,
+    54% 25%,
+    32% 100%,
+    29% 96%,
+    49% 32%,
+    30% 38%
+  );
+  transform: rotate(-8deg);
+}
+
+.tele-404 .punta-2 {
+  position: relative;
+  top: -294%;
+  left: 94%;
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+  border: 2px solid var(--color-base);
+  background-color: var(--color-texto-dim);
+  z-index: 99;
+}
+
+/* Caja del televisor */
+.tele-404 .tele-caja {
+  width: 17em;
+  height: 9em;
+  margin-top: 3em;
+  border-radius: 15px;
+  background-color: var(--color-primario);
+  display: flex;
+  justify-content: center;
+  border: 2px solid var(--color-base);
+  box-shadow: inset 0.2em 0.2em var(--color-primario-claro);
+}
+
+/* Textura granulada sobre la caja */
+.tele-404 .tele-caja::after {
+  content: "";
+  position: absolute;
+  width: 17em;
+  height: 9em;
+  border-radius: 15px;
+  background:
+    repeating-radial-gradient(
+        var(--color-primario) 0 0.0001%,
+        var(--color-base) 0 0.0002%
+      )
+      50% 0 / 2500px 2500px,
+    repeating-conic-gradient(
+        var(--color-primario) 0 0.0001%,
+        var(--color-base) 0 0.0002%
+      )
+      60% 60% / 2500px 2500px;
+  background-blend-mode: difference;
+  opacity: 0.09;
+}
+
+.tele-404 .curva-svg {
+  position: absolute;
+  margin-top: 0.25em;
+  margin-left: -0.25em;
+  height: 0.75em;
+  width: 0.75em;
+  fill: var(--color-texto);
+}
+
+/* Pantalla con estática */
+.tele-404 .pantalla-marco {
+  display: flex;
+  align-items: center;
+  align-self: center;
+  justify-content: center;
+  border-radius: 15px;
+  box-shadow: 3.5px 3.5px 0 var(--color-primario-claro);
+}
+
+.tele-404 .pantalla-borde {
+  border-radius: 10px;
+}
+
+.tele-404 .pantalla-interior {
+  width: 11em;
+  height: 7.75em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.tele-404 .pantalla {
+  width: 13em;
+  height: 7.85em;
+  font-family: var(--fuente-cuerpo);
+  border: 2px solid var(--color-base);
+  background:
+    repeating-radial-gradient(
+        var(--color-base) 0 0.0001%,
+        var(--color-texto) 0 0.0002%
+      )
+      50% 0 / 2500px 2500px,
+    repeating-conic-gradient(
+        var(--color-base) 0 0.0001%,
+        var(--color-texto) 0 0.0002%
+      )
+      60% 60% / 2500px 2500px;
+  background-blend-mode: difference;
+  animation: estatica 0.2s infinite alternate;
+  border-radius: 10px;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-align: center;
+}
+
+@keyframes estatica {
+  100% {
+    background-position:
+      50% 0,
+      60% 50%;
+  }
+}
+
+.tele-404 .pantalla-texto {
+  background-color: var(--color-base);
+  padding: 0 0.3em;
+  font-size: 0.75em;
+  color: var(--color-acento);
+  letter-spacing: 0;
+  border-radius: 5px;
+  z-index: 10;
+}
+
+/* Rayitas debajo de la pantalla */
+.tele-404 .rayas {
+  display: flex;
+  column-gap: 0.1em;
+  align-self: flex-end;
+}
+
+.tele-404 .raya-1,
+.tele-404 .raya-3 {
+  width: 2px;
+  height: 0.5em;
+  background-color: var(--color-base);
+  border-radius: 25px 25px 0 0;
+  margin-top: 0.5em;
+}
+
+.tele-404 .raya-2 {
+  flex-grow: 1;
+  width: 2px;
+  height: 1em;
+  background-color: var(--color-base);
+  border-radius: 25px 25px 0 0;
+}
+
+/* Panel de perillas y parlante */
+.tele-404 .panel {
+  width: 4.25em;
+  align-self: center;
+  height: 8em;
+  background-color: var(--color-primario-claro);
+  border: 2px solid var(--color-base);
+  padding: 0.6em;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  row-gap: 0.75em;
+  box-shadow: 3px 3px 0 var(--color-primario-claro);
+}
+
+.tele-404 .perilla-1,
+.tele-404 .perilla-2 {
+  width: 1.65em;
+  height: 1.65em;
+  border-radius: 50%;
+  background-color: var(--color-primario-oscuro);
+  border: 2px solid var(--color-base);
+  box-shadow:
+    inset 2px 2px 1px var(--color-primario),
+    -2px 0 var(--color-base),
+    -2px 0 0 1px var(--color-base);
+}
+
+.tele-404 .perilla-1::before {
+  content: "";
+  position: absolute;
+  margin-top: 1em;
+  margin-left: 0.5em;
+  transform: rotate(47deg);
+  border-radius: 5px;
+  width: 0.1em;
+  height: 0.4em;
+  background-color: var(--color-base);
+}
+
+.tele-404 .perilla-1::after {
+  content: "";
+  position: absolute;
+  margin-top: 0.9em;
+  margin-left: 0.8em;
+  transform: rotate(47deg);
+  border-radius: 5px;
+  width: 0.1em;
+  height: 0.55em;
+  background-color: var(--color-base);
+}
+
+.tele-404 .perilla-1 div {
+  position: absolute;
+  margin-top: -0.1em;
+  margin-left: 0.65em;
+  transform: rotate(45deg);
+  width: 0.15em;
+  height: 1.5em;
+  background-color: var(--color-base);
+}
+
+.tele-404 .perilla-2::before {
+  content: "";
+  position: absolute;
+  margin-top: 1.05em;
+  margin-left: 0.8em;
+  transform: rotate(-45deg);
+  border-radius: 5px;
+  width: 0.15em;
+  height: 0.4em;
+  background-color: var(--color-base);
+}
+
+.tele-404 .perilla-2::after {
+  content: "";
+  position: absolute;
+  margin-top: -0.1em;
+  margin-left: 0.65em;
+  transform: rotate(-45deg);
+  width: 0.15em;
+  height: 1.5em;
+  background-color: var(--color-base);
+}
+
+.tele-404 .parlante {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.5em;
+}
+
+.tele-404 .parlante-agujeros {
+  display: flex;
+  column-gap: 0.25em;
+}
+
+.tele-404 .agujero {
+  width: 0.65em;
+  height: 0.65em;
+  border-radius: 50%;
+  background-color: var(--color-primario-oscuro);
+  border: 2px solid var(--color-base);
+  box-shadow: inset 1.25px 1.25px 1px var(--color-primario);
+}
+
+.tele-404 .parlante-linea {
+  height: 2px;
+  background-color: var(--color-gris-oscuro);
+}
+
+/* Patas */
+.tele-404 .patas {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 8.7em;
+}
+
+.tele-404 .pata {
+  height: 1em;
+  width: 2em;
+  border: 2px solid var(--color-gris-oscuro);
+  background-color: var(--color-gris-suave);
+  margin-top: -0.15em;
+  z-index: -1;
+}
+
+.tele-404 .piso {
+  position: absolute;
+  height: 0.15em;
+  width: 17.5em;
+  background-color: var(--color-gris-suave);
+  margin-top: 0.8em;
+}
+
+/* "404" gigante de fondo */
+.tele-404 .numero-404 {
+  position: absolute;
+  display: flex;
+  column-gap: 6em;
+  z-index: -5;
+  margin-bottom: 2em;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+  font-family: var(--fuente-cuerpo);
+  color: var(--color-primario-oscuro);
+}
+
+.tele-404 .digito {
+  transform: scaleY(24.5) scaleX(9);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tele-404 .pantalla {
+    animation: none;
+  }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .pagina-404 h1 {
+    font-size: 32px;
+  }
+
+  .tele-404 {
+    font-size: 11px;
+  }
+}

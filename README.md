@@ -12,6 +12,7 @@ o usá la extensión **Live Server** de VS Code para que se recargue solo al gua
 
 ```
 ├── index.html              Página de inicio
+├── 404.html                Página no encontrada (GitHub Pages la muestra sola)
 ├── pages/                  Resto de las páginas (carrito, merch, contacto, ...)
 ├── css/
 │   ├── main.css            Punto de entrada: importa base, layout y componentes

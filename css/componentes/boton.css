@@ -28,3 +28,58 @@
   width: fit-content;
   margin: 0 auto;
 }
+
+/* Variante secundaria: solo el borde; al pasar el mouse dos mitades
+   entran en diagonal desde los costados y se juntan en el centro.
+   Idea tomada de Uiverse.io (nikk7007), reinterpretada. */
+.boton-contorno {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background-color: transparent;
+  border: 2px solid var(--color-primario);
+  /* El borde suma 2px por lado: se descuentan del padding de .boton
+     para que mida lo mismo que un botón relleno */
+  padding: 10px 22px;
+}
+
+.boton-contorno::before,
+.boton-contorno::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 65%;
+  z-index: -1;
+  background-color: var(--color-primario);
+  transition: transform 0.4s ease-out;
+}
+
+.boton-contorno::before {
+  left: -10%;
+  transform: skewX(-20deg) translateX(-110%);
+}
+
+.boton-contorno::after {
+  right: -10%;
+  transform: skewX(-20deg) translateX(110%);
+}
+
+.boton-contorno:hover,
+.boton-contorno:focus {
+  background-color: transparent;
+}
+
+.boton-contorno:hover::before,
+.boton-contorno:focus::before,
+.boton-contorno:hover::after,
+.boton-contorno:focus::after {
+  transform: skewX(-20deg) translateX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boton-contorno::before,
+  .boton-contorno::after {
+    transition: none;
+  }
+}
