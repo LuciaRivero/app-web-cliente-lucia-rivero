@@ -1,0 +1,26 @@
+/* =========================================================
+   Whiplash — Banner promocional
+   ========================================================= */
+
+.promo {
+  background-color: var(--color-acento);
+  color: var(--color-base);
+  border-radius: var(--radio-amplio);
+  padding: 40px var(--espaciado-grande);
+  text-align: center;
+  margin-bottom: var(--espaciado-grande);
+}
+
+.promo h2 {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.promo p {
+  margin-bottom: var(--espaciado);
+}
+
+.promo .boton {
+  background-color: var(--color-base);
+  color: var(--color-texto);
+}

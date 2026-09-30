@@ -1,0 +1,138 @@
+/* =========================================================
+   Whiplash — Grilla y tarjeta de producto de merch
+   (Inicio, Merch y Perfil de artista)
+   ========================================================= */
+
+.merch-destacado {
+  margin-bottom: var(--espaciado-grande);
+}
+
+.merch-destacado h2,
+.merch-artista h2 {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.merch-destacado > .subtitulo {
+  color: var(--color-texto-dim);
+  margin-bottom: var(--espaciado);
+}
+
+.grilla-merch {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--espaciado);
+}
+
+.producto-merch {
+  background-color: var(--color-gris-oscuro);
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.producto-merch:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sombra-glow);
+}
+
+.producto-merch figure {
+  background-color: var(--color-gris-suave);
+  overflow: hidden;
+}
+
+.producto-merch img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.producto-merch:hover img {
+  transform: scale(1.05);
+}
+
+.producto-merch figcaption {
+  padding: var(--espaciado) var(--espaciado) 0;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.producto-merch .tipo-merch {
+  color: var(--color-acento);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 6px var(--espaciado) 0;
+  margin: 0;
+}
+
+.producto-merch .precio {
+  font-size: 18px;
+  font-weight: 700;
+  padding: 4px var(--espaciado);
+  margin-bottom: 8px;
+}
+
+.compra-merch {
+  margin-top: auto;
+  margin: auto var(--espaciado) var(--espaciado);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.compra-merch select,
+.compra-merch input[type="number"] {
+  background-color: var(--color-base);
+  color: var(--color-texto);
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  padding: 10px 12px;
+  font-family: var(--fuente-cuerpo);
+  font-size: 14px;
+  width: 100%;
+}
+
+.compra-merch select:focus,
+.compra-merch input[type="number"]:focus {
+  outline: 2px solid var(--color-primario);
+}
+
+.compra-merch button,
+.boton-compra {
+  background-color: var(--color-primario);
+  color: var(--color-texto);
+  border: none;
+  border-radius: var(--radio-base);
+  padding: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  font-size: 14px;
+}
+
+.compra-merch button:hover {
+  background-color: var(--color-primario-hover);
+}
+
+.merch-artista {
+  grid-column: 1 / -1;
+  margin-top: var(--espaciado-grande);
+  background-color: var(--color-gris-oscuro);
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  padding: var(--espaciado);
+}
+
+.merch-artista > .subtitulo {
+  color: var(--color-texto-dim);
+  margin-bottom: var(--espaciado);
+}

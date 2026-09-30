@@ -1,0 +1,48 @@
+/* =========================================================
+   Whiplash — Pie del sitio (footer)
+   ========================================================= */
+
+.pie-sitio {
+  border-top: var(--borde);
+  background-color: var(--color-base);
+  padding: var(--espaciado-grande) var(--espaciado);
+  text-align: center;
+}
+
+.pie-sitio nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--espaciado);
+  margin-bottom: var(--espaciado);
+}
+
+.pie-sitio nav a {
+  color: var(--color-texto-dim);
+  font-size: 14px;
+}
+
+.pie-sitio nav a:hover {
+  color: var(--color-primario);
+}
+
+.pie-sitio address {
+  font-style: normal;
+  color: var(--color-texto-dim);
+  font-size: 14px;
+  margin-bottom: var(--espaciado);
+}
+
+.pie-sitio address a {
+  color: var(--color-texto-dim);
+}
+
+.pie-sitio address a:hover {
+  color: var(--color-acento);
+}
+
+.pie-sitio p {
+  color: var(--color-texto-dim);
+  font-size: 12px;
+  margin: 0;
+}

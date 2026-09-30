@@ -1,0 +1,61 @@
+/* =========================================================
+   Whiplash — Página de inicio
+   ========================================================= */
+
+/* ---------- Portada ---------- */
+.portada-inicio {
+  background: var(--degradado-primario);
+  border-radius: var(--radio-amplio);
+  padding: 64px var(--espaciado-grande);
+  text-align: center;
+  margin-bottom: var(--espaciado-grande);
+}
+
+.portada-inicio h1 {
+  font-size: 48px;
+  color: var(--color-texto);
+  margin-bottom: 12px;
+}
+
+.portada-inicio p {
+  font-size: 18px;
+  color: rgba(244, 241, 234, 0.9);
+  max-width: 680px;
+  margin: 0 auto var(--espaciado);
+}
+
+.portada-inicio .boton {
+  background-color: var(--color-acento);
+  color: var(--color-base);
+}
+
+.portada-inicio .boton:hover {
+  background-color: var(--color-acento-hover);
+}
+
+/* ---------- Géneros (contenedor de la home) ---------- */
+.generos-destacados {
+  margin-bottom: var(--espaciado-grande);
+}
+
+.generos-destacados h2 {
+  font-size: 32px;
+  margin-bottom: var(--espaciado);
+}
+
+/* ---------- Artistas (contenedor de la home) ---------- */
+.artistas {
+  margin-bottom: var(--espaciado-grande);
+}
+
+.artistas h2 {
+  font-size: 32px;
+  margin-bottom: var(--espaciado);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .portada-inicio h1 {
+    font-size: 32px;
+  }
+}

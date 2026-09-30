@@ -1,0 +1,19 @@
+/* =========================================================
+   Whiplash — Contenido principal (main)
+   ========================================================= */
+
+main {
+  max-width: var(--ancho-maximo);
+  margin: 0 auto;
+  padding: var(--espaciado-grande) var(--espaciado);
+}
+
+main > h1 {
+  font-size: 40px;
+  margin-bottom: 8px;
+}
+
+main > .subtitulo {
+  color: var(--color-texto-dim);
+  margin-bottom: var(--espaciado-grande);
+}

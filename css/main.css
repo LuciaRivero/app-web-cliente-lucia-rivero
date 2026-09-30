@@ -1,0 +1,28 @@
+/* =========================================================
+   Whiplash — Hoja de estilos principal
+   Punto de entrada compartido por todas las páginas.
+   Cada página suma además su propia hoja en css/paginas/.
+
+   El orden importa: base → layout → componentes.
+   ========================================================= */
+
+/* ---------- Base ---------- */
+@import url("base/fuentes.css");
+@import url("base/tokens.css");
+@import url("base/reset.css");
+@import url("base/base.css");
+@import url("base/utilidades.css");
+
+/* ---------- Layout ---------- */
+@import url("layout/encabezado.css");
+@import url("layout/contenido.css");
+@import url("layout/migas-de-pan.css");
+@import url("layout/pie.css");
+
+/* ---------- Componentes ---------- */
+@import url("componentes/boton.css");
+@import url("componentes/promo.css");
+@import url("componentes/filtros.css");
+@import url("componentes/tarjeta-artista.css");
+@import url("componentes/producto-merch.css");
+@import url("componentes/formulario.css");

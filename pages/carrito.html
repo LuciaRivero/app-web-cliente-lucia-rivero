@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Mi carrito de merch en Whiplash - Discos y entradas"
+    />
+    <title>Mi carrito | Whiplash</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/paginas/carrito.css" />
+  </head>
+  <body>
+    <a class="enlace-saltar" href="#contenido-principal">Saltar al contenido</a>
+
+    <header class="encabezado-sitio">
+      <div class="encabezado-superior">
+        <button class="boton-menu" type="button" aria-label="Abrir menú"
+          aria-expanded="false" aria-controls="menu-principal">
+          <img class="icono-menu" src="../assets/img/iconos/icono-menu.svg" alt="" />
+        </button>
+
+        <a class="logo" href="../index.html">
+          <img src="../assets/img/logo.svg" alt="Whiplash - logo" />
+          <span>Whi<span class="p-acento">p</span>lash</span>
+        </a>
+
+        <form class="buscador" action="#" method="get" role="search">
+          <label class="sr-only" for="busqueda"
+            >Buscar artistas, tracks o géneros</label
+          >
+          <input
+            type="search"
+            id="busqueda"
+            name="q"
+            placeholder="Buscar artistas, tracks o géneros..."
+          />
+          <button type="submit">Buscar</button>
+        </form>
+
+        <button class="boton-buscar" type="button" aria-label="Buscar">
+          <img class="icono-buscar" src="../assets/img/iconos/icono-buscar.svg" alt="" />
+        </button>
+
+        <nav class="nav-cuenta" aria-label="Acciones de cuenta">
+          <ul>
+            <li>
+              <a class="ir-cuenta" href="registro.html" aria-label="Mi cuenta"
+                ><img class="icono-usuario" src="../assets/img/iconos/icono-usuario.svg" alt=""
+              /></a>
+            </li>
+            <li>
+              <a
+                class="ir-carrito"
+                href="carrito.html"
+                aria-current="page"
+                aria-label="Carrito"
+                ><img class="icono-carrito" src="../assets/img/iconos/icono-carrito.svg" alt=""
+              /></a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <nav class="nav-principal" id="menu-principal" aria-label="Categorías">
+        <ul>
+          <li><a href="artistas.html">Mis artistas</a></li>
+          <li><a href="explorar.html">Explorar</a></li>
+          <li><a href="generos.html">Géneros</a></li>
+          <li><a href="merch.html">Merch</a></li>
+          <li><a href="novedades.html">Novedades</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="contenido-principal">
+      <nav class="migas-de-pan" aria-label="Ruta de navegación">
+        <ol>
+          <li><a href="../index.html">Inicio</a></li>
+          <li aria-current="page">Carrito</li>
+        </ol>
+      </nav>
+
+      <h1>Mi carrito</h1>
+      <p class="subtitulo">Discos y entradas de tus artistas favoritos.</p>
+
+      <div class="carrito-contenedor">
+        <!-- Lista de productos -->
+        <section class="carrito-lista" aria-labelledby="titulo-items">
+          <h2 id="titulo-items" class="sr-only">Productos en el carrito</h2>
+
+          <!-- Producto 1 -->
+          <article class="carrito-item">
+            <div class="item-imagen" aria-hidden="true"></div>
+            <div class="item-detalle">
+              <h2 class="item-titulo">Vinilo — Los Cráteres</h2>
+              <p class="item-subtitulo">180gr, edición limitada</p>
+            </div>
+            <div class="item-controles">
+              <div class="selector-cantidad">
+                <button type="button" aria-label="Restar una unidad">-</button>
+                <span>1</span>
+                <button type="button" aria-label="Sumar una unidad">+</button>
+              </div>
+              <span class="item-precio">$18.500</span>
+            </div>
+          </article>
+
+          <!-- Producto 2 -->
+          <article class="carrito-item">
+            <div class="item-imagen" aria-hidden="true"></div>
+            <div class="item-detalle">
+              <h2 class="item-titulo">Remera — Marea Onda</h2>
+              <p class="item-subtitulo">Talle M</p>
+            </div>
+            <div class="item-controles">
+              <div class="selector-cantidad">
+                <button type="button" aria-label="Restar una unidad">-</button>
+                <span>1</span>
+                <button type="button" aria-label="Sumar una unidad">+</button>
+              </div>
+              <span class="item-precio">$12.000</span>
+            </div>
+          </article>
+
+          <!-- Producto 3 -->
+          <article class="carrito-item">
+            <div class="item-imagen" aria-hidden="true"></div>
+            <div class="item-detalle">
+              <h2 class="item-titulo">Entrada — Show 14/11</h2>
+              <p class="item-subtitulo">1 entrada general</p>
+            </div>
+            <div class="item-controles">
+              <div class="selector-cantidad">
+                <button type="button" aria-label="Restar una unidad">-</button>
+                <span>1</span>
+                <button type="button" aria-label="Sumar una unidad">+</button>
+              </div>
+              <span class="item-precio">$9.500</span>
+            </div>
+          </article>
+        </section>
+
+        <!-- Resumen de compra -->
+        <aside class="carrito-resumen" aria-labelledby="titulo-resumen">
+          <div>
+            <h2 class="resumen-titulo" id="titulo-resumen">Resumen de compra</h2>
+
+            <div class="resumen-fila">
+              <span>Subtotal</span>
+              <span>$40.000</span>
+            </div>
+
+            <div class="resumen-fila">
+              <span>Envío</span>
+              <span>$2.500</span>
+            </div>
+
+            <div class="resumen-fila total">
+              <span>Total</span>
+              <span>$42.500</span>
+            </div>
+          </div>
+          <button type="button" class="boton-pagar">Ir a pagar</button>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="pie-sitio">
+      <nav aria-label="Información de la plataforma">
+        <ul>
+          <li><a href="nosotros.html">Trabajá con nosotros</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+          <li><a href="ayuda.html">Ayuda</a></li>
+          <li><a href="terminos.html">Términos y condiciones</a></li>
+        </ul>
+      </nav>
+
+      <address>
+        Whiplash — Av. Ejemplo 123, Buenos Aires, Argentina<br />
+        <a href="mailto:hola@whiplash.com">hola@whiplash.com</a><br />
+        <a href="tel:+5401112345678">+54 11 1234-5678</a>
+      </address>
+
+      <p>&copy; 2026 Whiplash. Todos los derechos reservados.</p>
+    </footer>
+  </body>
+</html>
