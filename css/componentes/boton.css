@@ -1,0 +1,30 @@
+/* =========================================================
+   Whiplash — Botones
+   ========================================================= */
+
+.boton {
+  display: inline-block;
+  background-color: var(--color-primario);
+  color: var(--color-texto);
+  font-family: var(--fuente-cuerpo);
+  font-weight: 600;
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radio-base);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.boton:hover,
+.boton:focus {
+  background-color: var(--color-primario-hover);
+  transform: translateY(-2px);
+}
+
+.boton-inferior {
+  display: block;
+  width: fit-content;
+  margin: 0 auto;
+}

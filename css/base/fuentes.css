@@ -1,0 +1,27 @@
+/* =========================================================
+   Whiplash — Fuentes
+   ========================================================= */
+
+@font-face {
+  font-family: "Anton";
+  src: url("../../assets/fuentes/anton-regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("../../assets/fuentes/inter-variable.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("../../assets/fuentes/inter-italic-variable.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}

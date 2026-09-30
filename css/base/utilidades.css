@@ -1,0 +1,30 @@
+/* =========================================================
+   Whiplash — Utilidades
+   ========================================================= */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.enlace-saltar {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background-color: var(--color-primario);
+  color: var(--color-texto);
+  padding: 12px 20px;
+  z-index: 100;
+  border-radius: 0 0 var(--radio-base) 0;
+}
+
+.enlace-saltar:focus {
+  left: 0;
+}

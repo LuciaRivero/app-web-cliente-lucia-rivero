@@ -1,0 +1,26 @@
+/* =========================================================
+   Whiplash — Migas de pan (ruta de navegación)
+   ========================================================= */
+
+.migas-de-pan ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--color-texto-dim);
+  margin-bottom: var(--espaciado-grande);
+}
+
+.migas-de-pan li + li::before {
+  content: "/";
+  margin-right: 8px;
+  color: var(--color-texto-dim);
+}
+
+.migas-de-pan a:hover {
+  color: var(--color-primario);
+}
+
+.migas-de-pan [aria-current="page"] {
+  color: var(--color-texto);
+}

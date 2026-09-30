@@ -1,0 +1,134 @@
+/* =========================================================
+   Whiplash — Formularios
+   (Contacto, Trabajá con nosotros y Mi cuenta)
+   ========================================================= */
+
+.contacto-formulario,
+.postular-formulario,
+.formulario-cuenta {
+  background-color: var(--color-gris-oscuro);
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  padding: var(--espaciado);
+  margin-bottom: var(--espaciado);
+}
+
+.contacto-formulario h2,
+.postular-formulario h2,
+.formulario-cuenta h2 {
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+
+.contacto-formulario form,
+.postular-formulario form,
+.formulario-cuenta form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 640px;
+}
+
+.contacto-formulario .campo,
+.postular-formulario .campo,
+.formulario-cuenta .campo,
+.formulario-cuenta .consentimiento {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.contacto-formulario label,
+.postular-formulario label,
+.formulario-cuenta label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.contacto-formulario input,
+.contacto-formulario textarea,
+.contacto-formulario select,
+.postular-formulario input,
+.postular-formulario textarea,
+.postular-formulario select,
+.formulario-cuenta input,
+.formulario-cuenta select {
+  background-color: var(--color-base);
+  color: var(--color-texto);
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  padding: 12px 14px;
+  font-family: var(--fuente-cuerpo);
+  font-size: 14px;
+  resize: vertical;
+}
+
+.contacto-formulario input::placeholder,
+.contacto-formulario textarea::placeholder,
+.postular-formulario input::placeholder,
+.postular-formulario textarea::placeholder,
+.formulario-cuenta input::placeholder {
+  color: var(--color-texto-dim);
+}
+
+.contacto-formulario input:focus,
+.contacto-formulario textarea:focus,
+.contacto-formulario select:focus,
+.postular-formulario input:focus,
+.postular-formulario textarea:focus,
+.postular-formulario select:focus,
+.formulario-cuenta input:focus,
+.formulario-cuenta select:focus {
+  outline: 2px solid var(--color-primario);
+}
+
+.contacto-formulario button,
+.postular-formulario button,
+.formulario-cuenta button {
+  align-self: flex-start;
+  background-color: var(--color-primario);
+  color: var(--color-texto);
+  border: none;
+  border-radius: var(--radio-base);
+  padding: 14px 28px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.contacto-formulario button:hover,
+.postular-formulario button:hover,
+.formulario-cuenta button:hover {
+  background-color: var(--color-primario-hover);
+}
+
+.formulario-cuenta .consentimiento {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-texto-dim);
+}
+
+.formulario-cuenta .consentimiento label {
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.formulario-cuenta .consentimiento input {
+  margin-top: 3px;
+  accent-color: var(--color-primario);
+}
+
+.formulario-cuenta .consentimiento a {
+  color: var(--color-primario);
+  text-decoration: underline;
+}
+
+.formulario-cuenta .consentimiento a:hover {
+  color: var(--color-acento);
+}

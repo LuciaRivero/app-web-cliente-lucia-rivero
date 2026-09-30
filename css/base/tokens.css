@@ -1,0 +1,51 @@
+/* =========================================================
+   Whiplash — Tokens del diseño (custom properties)
+   Identidad visual: Dark Mode / Neo-Brutalisme suavizado
+   ========================================================= */
+
+:root {
+  /* Colores */
+  --color-base: #0a0a0a;
+  --color-primario: #8b5cf6;
+  --color-primario-hover: #7c4be0;
+  --color-primario-oscuro: #5b21b6;
+  --color-acento: #c6f135;
+  --color-acento-hover: #d4fb4d;
+  --color-texto: #f4f1ea;
+  --color-gris-oscuro: #1a1a1a;
+  --color-gris-suave: #2a2a2a;
+  --color-texto-dim: #a8a29e;
+  --color-error: #ef4444;
+
+  /* Degradados */
+  --degradado-primario: linear-gradient(
+    135deg,
+    var(--color-primario) 0%,
+    var(--color-primario-oscuro) 100%
+  );
+
+  /* Tipografía */
+  --fuente-display: "Anton", "Arial Narrow", sans-serif;
+  --fuente-cuerpo: "Inter", "Helvetica Neue", Arial, sans-serif;
+
+  /* Bordes y radios */
+  --radio-base: 12px;
+  --radio-amplio: 16px;
+  --radio-pildora: 999px;
+  --borde: 1px solid var(--color-gris-oscuro);
+
+  /* Sombras */
+  --sombra: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --sombra-glow: 0 0 24px rgba(139, 92, 246, 0.35);
+
+  /* Espaciado */
+  --espaciado: 16px;
+  --espaciado-grande: 32px;
+
+  /* Layout */
+  --ancho-maximo: 1200px;
+}
+
+/* Breakpoints (las media queries no aceptan custom properties,
+   así que se documentan acá y se usan con el valor literal):
+   - Mobile: max-width 768px */

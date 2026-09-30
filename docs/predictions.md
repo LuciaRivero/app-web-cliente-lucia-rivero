@@ -1,0 +1,13 @@
+1. Quiero hacer la estructura base de mi index.html con un encabezado, filtro de categorias, catalogo cetral y footer.
+
+2. Quiero crear la pagina de detalle del producto donde se puedan ver especificaciones del mismo
+
+3. Quiero crear pantalla de carrito.
+
+4. Voy agregar formulario de contacto.
+
+5. Voy a agregar las pantallas que me faltan desarrollar como mi cuenta, Explorar, Géneros, Merch, Novedades
+
+6. Voy a adaptar a mobile el header y el menu hambuguesa.
+
+7. Voy a reorganizar la estructura del proyecto (carpetas, CSS por capas, nombres en español y tokens) para que sea más mantenible y escalable.
