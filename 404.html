@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Whiplash - La página que buscás no existe o se mudó."
+    />
+    <title>Whiplash | Página no encontrada</title>
+    <!-- GitHub Pages muestra esta página para cualquier dirección que no
+         exista, aunque esté dentro de carpetas (por ejemplo /pages/x/y).
+         Para que las rutas relativas sigan funcionando, se fija la raíz
+         del sitio antes de cargar los estilos. Con esa raíz, el enlace
+         "#contenido-principal" apuntaría a la home, así que se corrige. -->
+    <script>
+      if (location.hostname.endsWith("github.io")) {
+        const base = document.createElement("base");
+        base.href = "/app-web-cliente-lucia-rivero/";
+        document.head.append(base);
+
+        document.addEventListener("DOMContentLoaded", () => {
+          const saltar = document.querySelector(".enlace-saltar");
+          saltar.href = location.pathname + "#contenido-principal";
+        });
+      }
+    </script>
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/paginas/404.css" />
+  </head>
+  <body>
+    <a class="enlace-saltar" href="#contenido-principal">Saltar al contenido</a>
+
+    <header class="encabezado-sitio">
+      <div class="encabezado-superior">
+        <button class="boton-menu" type="button" aria-label="Abrir menú"
+          aria-expanded="false" aria-controls="menu-principal">
+          <img class="icono-menu" src="assets/img/iconos/icono-menu.svg" alt="" />
+        </button>
+
+        <a class="logo" href="index.html">
+          <img src="assets/img/logo.svg" alt="Whiplash - logo" />
+          <span>Whi<span class="p-acento">p</span>lash</span>
+        </a>
+
+        <form class="buscador" action="#" method="get" role="search">
+          <label class="sr-only" for="busqueda"
+            >Buscar artistas, tracks o géneros</label
+          >
+          <input
+            type="search"
+            id="busqueda"
+            name="q"
+            placeholder="Buscar artistas, tracks o géneros..."
+          />
+          <button type="submit">Buscar</button>
+        </form>
+
+        <button class="boton-buscar" type="button" aria-label="Buscar">
+          <img class="icono-buscar" src="assets/img/iconos/icono-buscar.svg" alt="" />
+        </button>
+
+        <nav class="nav-cuenta" aria-label="Acciones de cuenta">
+          <ul>
+            <li><a class="ir-cuenta" href="pages/registro.html" aria-label="Mi cuenta"><img class="icono-usuario" src="assets/img/iconos/icono-usuario.svg" alt=""></a></li>
+            <li><a class="ir-carrito" href="pages/carrito.html" aria-label="Carrito"><img class="icono-carrito" src="assets/img/iconos/icono-carrito.svg" alt=""></a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <nav class="nav-principal" id="menu-principal" aria-label="Categorías">
+        <ul>
+          <li><a href="pages/artistas.html">Mis artistas</a></li>
+          <li><a href="pages/explorar.html">Explorar</a></li>
+          <li><a href="pages/generos.html">Géneros</a></li>
+          <li><a href="pages/merch.html">Merch</a></li>
+          <li><a href="pages/novedades.html">Novedades</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="contenido-principal">
+      <section class="pagina-404" aria-labelledby="titulo-404">
+        <div class="tele-404" aria-hidden="true">
+          <div class="tele">
+            <div class="antena">
+              <div class="antena-sombra"></div>
+              <div class="varilla-1"></div>
+              <div class="punta-1"></div>
+              <div class="varilla-2"></div>
+              <div class="punta-2"></div>
+            </div>
+            <div class="tele-caja">
+              <svg class="curva-svg" viewBox="0 0 189.929 189.929">
+                <path
+                  d="M70.343,70.343c-30.554,30.553-44.806,72.7-39.102,115.635l-29.738,3.951C-5.442,137.659,11.917,86.34,49.129,49.13C86.34,11.918,137.664-5.445,189.928,1.502l-3.95,29.738C143.041,25.54,100.895,39.789,70.343,70.343z"
+                />
+              </svg>
+              <div class="pantalla-marco">
+                <div class="pantalla-borde">
+                  <div class="pantalla-interior">
+                    <div class="pantalla">
+                      <span class="pantalla-texto">SIN SEÑAL</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="rayas">
+                <div class="raya-1"></div>
+                <div class="raya-2"></div>
+                <div class="raya-3"></div>
+              </div>
+              <div class="panel">
+                <div class="perilla-1"><div></div></div>
+                <div class="perilla-2"></div>
+                <div class="parlante">
+                  <div class="parlante-agujeros">
+                    <div class="agujero"></div>
+                    <div class="agujero"></div>
+                    <div class="agujero"></div>
+                  </div>
+                  <div class="parlante-linea"></div>
+                  <div class="parlante-linea"></div>
+                </div>
+              </div>
+            </div>
+            <div class="patas">
+              <div class="pata"></div>
+              <div class="pata"></div>
+              <div class="piso"></div>
+            </div>
+          </div>
+          <div class="numero-404">
+            <div class="digito">4</div>
+            <div class="digito">0</div>
+            <div class="digito">4</div>
+          </div>
+        </div>
+
+        <h1 id="titulo-404">Página no encontrada</h1>
+        <p>
+          Este tema no está en la lista: la página que buscás no existe o se
+          mudó. Volvé al inicio o seguí descubriendo artistas.
+        </p>
+        <div class="acciones-404">
+          <a class="boton" href="index.html">Volver al inicio</a>
+          <a class="boton boton-contorno" href="pages/explorar.html">Explorar artistas</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="pie-sitio">
+      <nav aria-label="Información de la plataforma">
+        <ul>
+          <li><a href="pages/nosotros.html">Trabajá con nosotros</a></li>
+          <li><a href="pages/contacto.html">Contacto</a></li>
+          <li><a href="pages/ayuda.html">Ayuda</a></li>
+          <li><a href="pages/terminos.html">Términos y condiciones</a></li>
+        </ul>
+      </nav>
+
+      <address>
+        Whiplash — Av. Ejemplo 123, Buenos Aires, Argentina<br />
+        <a href="mailto:hola@whiplash.com">hola@whiplash.com</a><br />
+        <a href="tel:+5401112345678">+54 11 1234-5678</a>
+      </address>
+
+      <p>&copy; 2026 Whiplash. Todos los derechos reservados.</p>
+    </footer>
+  </body>
+</html>

@@ -8,10 +8,24 @@
   gap: var(--espaciado);
 }
 
+/* Ángulo animable del borde: @property permite que el navegador
+   interpole el valor y así el degradé puede girar. */
+@property --giro-borde {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* El borde es transparente y deja ver la capa de fondo "border-box".
+   En reposo esa capa es del mismo gris que la tarjeta; al pasar el mouse
+   pasa a ser un degradé violeta/lima que gira como una luz de escenario.
+   Idea tomada de Uiverse.io (Tiagoadag), reinterpretada. */
 .tarjeta-artista {
-  background-color: var(--color-gris-oscuro);
-  border: var(--borde);
+  border: 2px solid transparent;
   border-radius: var(--radio-base);
+  background:
+    linear-gradient(var(--color-gris-oscuro) 0 0) padding-box,
+    linear-gradient(var(--color-gris-oscuro) 0 0) border-box;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -23,6 +37,29 @@
 .tarjeta-artista:hover {
   transform: translateY(-4px);
   box-shadow: var(--sombra-glow);
+  background:
+    linear-gradient(var(--color-gris-oscuro) 0 0) padding-box,
+    conic-gradient(
+        from var(--giro-borde),
+        var(--color-primario),
+        var(--color-acento),
+        var(--color-primario-oscuro),
+        var(--color-primario)
+      )
+      border-box;
+  animation: girar-borde 3s linear infinite;
+}
+
+@keyframes girar-borde {
+  to {
+    --giro-borde: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tarjeta-artista:hover {
+    animation: none;
+  }
 }
 
 .tarjeta-artista figure {

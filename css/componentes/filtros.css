@@ -1,6 +1,6 @@
 /* =========================================================
    Whiplash — Chips de género y barra de filtros
-   (Inicio, Explorar, Merch)
+   (Inicio, Explorar, Géneros, Merch)
    ========================================================= */
 
 .generos-lista {
@@ -22,10 +22,12 @@
   font-weight: 600;
   line-height: 1;
   color: var(--color-acento);
+  position: relative;
   transition:
     border-color 0.2s ease,
     color 0.2s ease,
-    background-color 0.2s ease;
+    background-color 0.2s ease,
+    box-shadow 0.3s ease;
 }
 
 .chip-genero:hover,
@@ -34,6 +36,72 @@
   background-color: var(--color-primario);
   border-color: var(--color-primario);
   color: var(--color-texto);
+}
+
+/* Destello: al pasar el mouse salen volando estrellitas
+   desde el centro del chip. Cada pseudo-elemento dibuja 3 estrellas
+   (una por capa de máscara), así no hace falta sumar HTML.
+   Idea tomada de Uiverse.io (MuhammadHasann), reinterpretada. */
+.chip-genero {
+  --estrella: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 0C11.4 6.3 6.3 11.4 0 12c6.3.6 11.4 5.7 12 12 .6-6.3 5.7-11.4 12-12C17.7 11.4 12.6 6.3 12 0z'/%3E%3C/svg%3E");
+}
+
+.chip-genero::before,
+.chip-genero::after {
+  content: "";
+  position: absolute;
+  inset: -18px -22px;
+  pointer-events: none;
+  opacity: 0;
+  mask-image: var(--estrella), var(--estrella), var(--estrella);
+  mask-repeat: no-repeat;
+  mask-position: center, center, center;
+  mask-size: 0 0, 0 0, 0 0;
+}
+
+/* Estrellas lima: salen rápido */
+.chip-genero::before {
+  background-color: var(--color-acento);
+  filter: drop-shadow(0 0 4px var(--color-acento));
+  transition:
+    mask-position 0.6s cubic-bezier(0.05, 0.83, 0.43, 0.96),
+    mask-size 0.6s cubic-bezier(0.05, 0.83, 0.43, 0.96),
+    opacity 0.2s ease;
+}
+
+/* Estrellas crema: salen un poco después */
+.chip-genero::after {
+  background-color: var(--color-texto);
+  transition:
+    mask-position 0.8s cubic-bezier(0, 0.4, 0, 1.01),
+    mask-size 0.8s cubic-bezier(0, 0.4, 0, 1.01),
+    opacity 0.2s ease;
+}
+
+.chip-genero:hover,
+.chip-genero:focus {
+  box-shadow: var(--sombra-glow);
+}
+
+.chip-genero:hover::before,
+.chip-genero:focus-visible::before {
+  opacity: 1;
+  mask-position: 0% 0%, 100% 25%, 70% 100%;
+  mask-size: 14px 14px, 10px 10px, 7px 7px;
+}
+
+.chip-genero:hover::after,
+.chip-genero:focus-visible::after {
+  opacity: 1;
+  mask-position: 18% 100%, 42% 0%, 96% 88%;
+  mask-size: 8px 8px, 6px 6px, 9px 9px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip-genero::before,
+  .chip-genero::after {
+    transition: opacity 0.2s ease;
+  }
 }
 
 .barra-filtros {

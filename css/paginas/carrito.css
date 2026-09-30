@@ -108,6 +108,95 @@
   text-align: right;
 }
 
+/* Botón eliminar: en reposo es solo el tacho; al pasar el mouse se
+   estira, se pone rojo, muestra el texto y el tacho abre la tapa.
+   Idea tomada de Uiverse.io (vinodjangid07), reinterpretada. */
+
+/* Lugar reservado con el ancho del botón ya estirado: el botón crece
+   hacia la izquierda dentro de este espacio y la fila no se mueve. */
+.item-eliminar {
+  display: flex;
+  justify-content: flex-end;
+  min-width: 116px;
+}
+
+.boton-eliminar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  height: 36px;
+  padding: 0 8px;
+  background-color: var(--color-base);
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  color: var(--color-texto-dim);
+  font-family: var(--fuente-cuerpo);
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    gap 0.3s ease,
+    padding 0.3s ease,
+    transform 0.1s ease;
+}
+
+.icono-eliminar {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.tapa-eliminar {
+  transform-box: fill-box;
+  transform-origin: right bottom;
+  transition: transform 0.3s ease;
+}
+
+.texto-eliminar {
+  max-width: 0;
+  opacity: 0;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    max-width 0.3s ease,
+    opacity 0.2s ease;
+}
+
+.boton-eliminar:hover,
+.boton-eliminar:focus-visible {
+  background-color: var(--color-error);
+  border-color: var(--color-error);
+  color: var(--color-texto);
+  gap: 8px;
+  padding: 0 14px;
+}
+
+.boton-eliminar:hover .tapa-eliminar,
+.boton-eliminar:focus-visible .tapa-eliminar {
+  transform: rotate(20deg);
+}
+
+.boton-eliminar:hover .texto-eliminar,
+.boton-eliminar:focus-visible .texto-eliminar {
+  max-width: 80px;
+  opacity: 1;
+}
+
+.boton-eliminar:active {
+  transform: scale(0.96);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boton-eliminar,
+  .tapa-eliminar,
+  .texto-eliminar {
+    transition: none;
+  }
+}
+
 .carrito-resumen {
   position: sticky;
   top: 140px;
