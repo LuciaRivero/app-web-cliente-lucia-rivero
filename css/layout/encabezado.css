@@ -2,6 +2,13 @@
    Whiplash — Encabezado del sitio (logo, buscador, navegación)
    ========================================================= */
 
+/* Mientras carga el JS, <site-header> reserva el alto del
+   encabezado para que el contenido no salte al aparecer. */
+site-header:not(:defined) {
+  display: block;
+  min-height: 120px;
+}
+
 .encabezado-sitio {
   background-color: var(--color-base);
   border-bottom: var(--borde);
@@ -266,6 +273,10 @@
 
 /* ---------- Responsive ---------- */
 @media (max-width: 768px) {
+  site-header:not(:defined) {
+    min-height: 65px;
+  }
+
   .encabezado-superior {
     display: grid;
     grid-template-columns: 40px 1fr 40px;
@@ -307,6 +318,17 @@
   .nav-cuenta,
   .nav-principal {
     display: none;
+  }
+
+  /* El botón de menú (.boton-menu) agrega esta clase desde
+     js/componentes/menu.js y la navegación aparece en columna. */
+  .encabezado-sitio.menu-abierto .nav-principal {
+    display: block;
+  }
+
+  .nav-principal ul {
+    flex-direction: column;
+    gap: var(--espaciado);
   }
 
   /* La lupa (.boton-buscar) agrega esta clase desde el JS

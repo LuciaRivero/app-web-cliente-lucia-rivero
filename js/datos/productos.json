@@ -38,5 +38,21 @@
     "precio": 10000,
     "artista_id": 3,
     "imagen": "assets/img/productos/disco4.jpg"
+  },
+  {
+    "id": 6,
+    "titulo": "Remera \"Andén\"",
+    "tipo": "Remera",
+    "precio": 9500,
+    "artista_id": 1,
+    "imagen": "assets/img/productos/disco1.jpg"
+  },
+  {
+    "id": 7,
+    "titulo": "Show en Niceto",
+    "tipo": "Entrada",
+    "precio": 18000,
+    "artista_id": 2,
+    "imagen": "assets/img/productos/disco3.jpg"
   }
 ]

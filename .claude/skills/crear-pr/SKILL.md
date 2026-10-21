@@ -1,6 +1,6 @@
 ---
 name: crear-pr
-description: Crea un Pull Request en GitHub completando la plantilla del proyecto (.github/pull_request_template.md). Usar siempre que el usuario diga que quiere hacer/crear/abrir/subir un PR o pull request.
+description: Crea un Pull Request en GitHub completando la plantilla del proyecto (.github/pull_request_template.md). Antes de crearlo reescribe los prompts de la sesión en formato técnico y los registra en docs/predictions.md. Usar siempre que el usuario diga que quiere hacer/crear/abrir/subir un PR o pull request.
 ---
 
 # Crear PR con la plantilla del proyecto
@@ -11,22 +11,74 @@ Seguí estos pasos en orden. Todo el texto del PR va en español.
 
 - `git status`, `git branch --show-current`, `git log main..HEAD --oneline` y `git diff main...HEAD --stat`.
 - Si estás en `main`: creá una rama nueva con nombre `feature/<descripcion-corta-en-kebab-case>` (según los cambios) antes de seguir. Nunca crear el PR desde `main`.
-- Si hay cambios sin commitear: mostralos al usuario y commitealos en la rama (mensaje claro en inglés, como los commits existentes) salvo que el usuario diga lo contrario.
-- Si no hay commits nuevos respecto de `main`, avisá y no crees el PR.
+- Si no hay commits nuevos respecto de `main` ni cambios sin commitear, avisá y no crees el PR.
 
-## 2. Leer la plantilla
+## 2. Reescribir los prompts en formato técnico
+
+El historial del PR y el registro del proyecto no llevan los prompts textuales: cada prompt del usuario relacionado con estos cambios se reescribe en formato técnico. El texto original no se incluye.
+
+### Cómo reescribir cada prompt
+
+- Mantené la intención del usuario: no agregues pedidos que no hizo ni quites los que sí hizo. Las decisiones que tomó durante la sesión (respuestas a preguntas, correcciones, aprobaciones de planes) se incorporan al prompt que corresponda.
+- Usá vocabulario técnico concreto: nombres de archivos, componentes, APIs del navegador (`customElements`, `matchMedia`, `fetch`...), atributos ARIA, propiedades CSS.
+- Corregí ortografía y redacción; escribí en infinitivo o imperativo, sin muletillas ("quiero", "me gustaría").
+- Los mensajes que solo confirman ("sí", "dale") no son prompts propios: su contenido se suma al prompt anterior.
+
+Formato de cada prompt dentro del bloque de código del PR:
+
+```
+### Prompt N — <título corto>
+Objetivo: <qué se busca lograr, en una o dos oraciones>
+Alcance: <páginas, archivos o componentes afectados>
+Restricciones: <tecnologías permitidas, convenciones, lo que queda afuera>
+Criterios de aceptación: <cómo se verifica que está bien>
+Resultado del agente: <qué hizo el agente, archivos creados/modificados y cómo lo verificó>
+```
+
+Ejemplo (prompt original: "agrega un spinner para la carga para que se vea mas fluida"):
+
+```
+### Prompt 1 — Indicador de carga en grillas
+Objetivo: Mostrar un indicador de carga mientras se obtienen los datos JSON y suavizar la entrada del contenido.
+Alcance: DataGrid (artist-grid, product-grid, genre-chips) y la búsqueda de Explorar.
+Restricciones: JS vanilla, HTML y CSS, sin librerías; respetar prefers-reduced-motion.
+Criterios de aceptación: el indicador se ve solo si la carga tarda; las tarjetas entran con animación escalonada; sin errores en consola.
+Resultado del agente: creó css/componentes/cargando.css y crearCargando() en js/utilidades/dom.js; DataGrid muestra el indicador y aplica aria-busy. Verificado en Edge reteniendo los JSON.
+```
+
+Si los cambios se hicieron en otra sesión y no tenés el historial, preguntale al usuario si quiere pegarlo para reescribirlo; si no, dejá `(pegar acá)` y avisale.
+
+### Confirmar con el usuario
+
+Mostrale el historial reescrito antes de seguir y esperá su confirmación o correcciones. Es su registro de trabajo para el profesor.
+
+### Registrar en `docs/predictions.md`
+
+Por cada prompt reescrito agregá al final de `docs/predictions.md` una entrada numerada que continúe la numeración existente, con este formato:
+
+```
+N. **<Título corto>** — <Objetivo en una oración>. Alcance: <archivos o componentes>. Restricciones: <las principales>.
+```
+
+Leé el archivo en el momento para continuar la numeración y no duplicar entradas que ya existan.
+
+## 3. Commitear
+
+- Si hay cambios sin commitear (incluido `docs/predictions.md`): mostralos al usuario y commitealos en la rama (mensaje claro en inglés, como los commits existentes) salvo que el usuario diga lo contrario.
+
+## 4. Leer la plantilla
 
 Leé `.github/pull_request_template.md` en el momento (puede haber cambiado) y respetá exactamente sus secciones y su orden.
 
-## 3. Completar cada sección
+## 5. Completar cada sección
 
 - **Descripción**: resumen breve de qué se hizo + lista de archivos modificados/agregados (a partir del diff contra `main`), con una línea explicando cada uno.
-- **Cómo probarlo**: pasos concretos para que el profesor revise el cambio (ej.: abrir `index.html` en el navegador, qué página visitar, qué probar en mobile/desktop, etc.).
-- **Prompt usado y historial con Open Code**: pegá dentro del bloque de código el historial de mensajes con el agente de IA relacionados con estos cambios: los prompts del usuario textuales y un resumen de lo que respondió/hizo el agente en cada paso. Si los cambios se hicieron en otra sesión y no tenés el historial, preguntale al usuario si quiere pegarlo; si no, dejá `(pegar acá)` y avisale.
+- **Cómo probarlo**: pasos concretos para que el profesor revise el cambio (ej.: abrir `index.html` con Live Server, qué página visitar, qué probar en mobile/desktop, etc.).
+- **Prompt usado y historial con Open Code**: pegá dentro del bloque de código el historial reescrito y confirmado en el paso 2.
 - **Checklist antes de enviar**: marcá con `[x]` solo lo que sea verdad (rama propia si no es `main`, PR dentro del propio repo si el remote es del usuario, plantilla completa). "Probé que mi código funciona" marcalo solo si se verificó o el usuario lo confirma.
 - **Comentarios adicionales**: dudas o aclaraciones relevantes; si no hay, dejar "Ninguno."
 
-## 4. Crear el PR
+## 6. Crear el PR
 
 - `git push -u origin <rama>`.
 - Título: corto y descriptivo, en español.
@@ -34,6 +86,6 @@ Leé `.github/pull_request_template.md` en el momento (puede haber cambiado) y r
   `gh pr create --base main --head <rama> --title "<título>" --body-file <archivo>`
 - Si `gh` no está instalado o autenticado, indicá cómo resolverlo (`winget install GitHub.cli` y `gh auth login`) y mostrá el título y el cuerpo listos para pegar en GitHub.
 
-## 5. Informar
+## 7. Informar
 
 Devolvé la URL del PR creado y un resumen breve de lo completado.
