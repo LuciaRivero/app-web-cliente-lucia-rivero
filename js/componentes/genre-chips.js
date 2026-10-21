@@ -24,6 +24,10 @@ class GenreChips extends DataGrid {
     return this.esFiltro ? "grupo-filtros" : "generos-lista";
   }
 
+  get cargandoChico() {
+    return true;
+  }
+
   connectedCallback() {
     super.connectedCallback();
     if (this.esFiltro && !this.escuchando) {

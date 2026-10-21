@@ -26,3 +26,14 @@ export function leerConsulta() {
   return new URLSearchParams(location.search).get("q")?.trim() ?? "";
 }
 
+// Indicador de carga: un disco de vinilo que gira (estilos en
+// css/componentes/cargando.css). `chico` es la versión en línea
+// para lugares angostos, como la fila de chips de género.
+export function crearCargando(texto = "Cargando…", { chico = false } = {}) {
+  return crearElemento(
+    "div",
+    { clase: chico ? "cargando cargando-chico" : "cargando", atributos: { role: "status" } },
+    crearElemento("span", { clase: "spinner-disco", atributos: { "aria-hidden": "true" } }),
+    crearElemento("span", { texto }),
+  );
+}

@@ -64,6 +64,9 @@ mismos estilos de `css/` que el HTML escrito a mano.
 
 Los links del encabezado y el pie se editan en un solo lugar: `js/componentes/navigation.js`.
 
+Mientras llegan los datos, las grillas y los chips muestran un disco girando (`css/componentes/cargando.css`)
+y después las tarjetas entran con un fundido escalonado. Con `prefers-reduced-motion` no hay animaciones.
+
 Los íconos SVG que se repiten viven en `assets/img/iconos/iconos.svg` y se usan con
 `<use href=".../iconos.svg#id" />`.
 
