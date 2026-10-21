@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <!-- Íconos reutilizables. Se usan con <use href="iconos.svg#id" />.
+       El tacho va en dos partes para que el CSS pueda girar la tapa
+       (.tapa-eliminar) al pasar el mouse. El color sale de currentColor. -->
+  <symbol id="eliminar-tapa" viewBox="0 0 32 32" fill="none" stroke="currentColor"
+    stroke-width="2.67" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5.33 8h21.34M12 8V5.33C12 4.6 12.6 4 13.33 4h5.34C19.4 4 20 4.6 20 5.33V8" />
+  </symbol>
+  <symbol id="eliminar-cuerpo" viewBox="0 0 32 32" fill="none" stroke="currentColor"
+    stroke-width="2.67" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M24 8l-1.1 18.1a2.67 2.67 0 0 1-2.66 2.57h-8.48a2.67 2.67 0 0 1-2.66-2.57L8 8M13.33 14.67v8M18.67 14.67v8" />
+  </symbol>
+</svg>

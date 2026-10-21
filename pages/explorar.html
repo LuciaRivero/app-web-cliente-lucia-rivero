@@ -8,6 +8,15 @@
       content="Explorá la escena independiente en Whiplash - Filtrá por género, ordená y descubrí artistas."
     />
     <title>Explorar | Whiplash</title>
+    <!-- Precarga: fuentes y módulos compartidos se piden en paralelo
+         en vez de esperar a que los descubra main.css / main.js. -->
+    <link rel="preload" href="../assets/fuentes/anton-regular.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="preload" href="../assets/fuentes/inter-variable.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="modulepreload" href="../js/servicios/datos.js" />
+    <link rel="modulepreload" href="../js/utilidades/dom.js" />
+    <link rel="modulepreload" href="../js/componentes/navigation.js" />
+    <link rel="modulepreload" href="../js/componentes/tarjetas.js" />
+    <link rel="modulepreload" href="../js/componentes/data-grid.js" />
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/paginas/explorar.css" />
     <script type="module" src="../js/main.js"></script>
@@ -29,23 +38,7 @@
       <section class="barra-filtros" aria-label="Filtros de búsqueda">
         <div>
           <span class="info-filtro">Filtrar por género</span>
-          <div class="grupo-filtros">
-            <button type="button" class="chip-genero" aria-pressed="true">
-              Todos
-            </button>
-            <button type="button" class="chip-genero" aria-pressed="false">
-              Rock independiente
-            </button>
-            <button type="button" class="chip-genero" aria-pressed="false">
-              Folk indie
-            </button>
-            <button type="button" class="chip-genero" aria-pressed="false">
-              Electrónica cruda
-            </button>
-            <button type="button" class="chip-genero" aria-pressed="false">
-              Pop alternativo
-            </button>
-          </div>
+          <genre-chips filter limit="4"></genre-chips>
         </div>
       </section>
 

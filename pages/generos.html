@@ -8,6 +8,15 @@
       content="Explorá la música independiente por género en Whiplash - Rock, folk, electrónica y más."
     />
     <title>Géneros | Whiplash</title>
+    <!-- Precarga: fuentes y módulos compartidos se piden en paralelo
+         en vez de esperar a que los descubra main.css / main.js. -->
+    <link rel="preload" href="../assets/fuentes/anton-regular.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="preload" href="../assets/fuentes/inter-variable.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="modulepreload" href="../js/servicios/datos.js" />
+    <link rel="modulepreload" href="../js/utilidades/dom.js" />
+    <link rel="modulepreload" href="../js/componentes/navigation.js" />
+    <link rel="modulepreload" href="../js/componentes/tarjetas.js" />
+    <link rel="modulepreload" href="../js/componentes/data-grid.js" />
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/paginas/generos.css" />
     <script type="module" src="../js/main.js"></script>
@@ -26,14 +35,7 @@
       <section class="indice-generos" aria-labelledby="titulo-indice">
         <h2 id="titulo-indice" class="sr-only">Índice de géneros</h2>
 
-        <div class="generos-lista">
-          <a class="chip-genero" href="explorar.html">Rock independiente</a>
-          <a class="chip-genero" href="explorar.html">Folk indie</a>
-          <a class="chip-genero" href="explorar.html">Electrónica cruda</a>
-          <a class="chip-genero" href="explorar.html">Pop alternativo</a>
-          <a class="chip-genero" href="explorar.html">Punk DIY</a>
-          <a class="chip-genero" href="explorar.html">Hip-hop under</a>
-        </div>
+        <genre-chips></genre-chips>
       </section>
 
       <section class="grilla-generos" aria-labelledby="titulo-todos-generos">

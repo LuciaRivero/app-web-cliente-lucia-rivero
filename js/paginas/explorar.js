@@ -1,10 +1,12 @@
 /* =========================================================
    Whiplash — Página Explorar
-   Si la URL trae ?q=..., reemplaza la grilla general por
-   los artistas y el merch que coinciden con la búsqueda.
+   - Los chips de <genre-chips filter> filtran la grilla
+     de artistas por género.
+   - Si la URL trae ?q=..., reemplaza la grilla general por
+     los artistas y el merch que coinciden con la búsqueda.
    ========================================================= */
 
-import { buscar } from "../servicios/datos.js";
+import { buscar, obtenerArtistas } from "../servicios/datos.js";
 import { crearProductoMerch } from "../componentes/tarjetas.js";
 import { crearElemento, leerConsulta, textoResultados } from "../utilidades/dom.js";
 
@@ -48,4 +50,30 @@ async function mostrarBusqueda() {
   }
 }
 
+function iniciarFiltroGenero() {
+  const info = document.querySelector(".info-resultados");
+  const grillaArtistas = document.querySelector(".explorar-resultados artist-grid");
+
+  document.addEventListener("genre-change", async ({ detail }) => {
+    let artistas;
+    try {
+      artistas = await obtenerArtistas();
+    } catch (error) {
+      console.error(error);
+      info.textContent = "No pudimos cargar los artistas. Probá de nuevo en un rato.";
+      return;
+    }
+
+    // "Todos" vuelve al listado inicial, con el mismo límite que la grilla.
+    const limite = Number(grillaArtistas.getAttribute("limit")) || artistas.length;
+    const lista = detail.genre
+      ? artistas.filter((artista) => artista.genero === detail.genre)
+      : artistas.slice(0, limite);
+
+    grillaArtistas.mostrar(lista);
+    info.textContent = `Mostrando ${lista.length} ${lista.length === 1 ? "artista" : "artistas"}`;
+  });
+}
+
+iniciarFiltroGenero();
 mostrarBusqueda();
