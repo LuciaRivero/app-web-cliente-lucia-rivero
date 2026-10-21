@@ -23,12 +23,18 @@ async function mostrarBusqueda() {
   document.querySelector(".barra-filtros")?.setAttribute("hidden", "");
   document.querySelector(".boton-inferior")?.setAttribute("hidden", "");
 
+  // Mientras busca, la grilla muestra el disco de carga en lugar
+  // del listado general.
+  info.textContent = `Buscando “${termino}”…`;
+  grillaArtistas.mostrarCargando("Buscando…");
+
   let resultados;
   try {
     resultados = await buscar(termino);
   } catch (error) {
     console.error(error);
     info.textContent = "No pudimos cargar los resultados. Probá de nuevo en un rato.";
+    grillaArtistas.mostrar([]);
     return;
   }
 
@@ -45,7 +51,15 @@ async function mostrarBusqueda() {
   if (productos.length) {
     seccion.append(
       crearElemento("h2", { clase: "titulo-resultados-merch", texto: "Merch" }),
-      crearElemento("div", { clase: "grilla-merch" }, ...productos.map((p) => crearProductoMerch(p))),
+      crearElemento(
+        "div",
+        { clase: "grilla-merch" },
+        ...productos.map((producto, indice) => {
+          const tarjeta = crearProductoMerch(producto);
+          tarjeta.style.setProperty("--orden", indice);
+          return tarjeta;
+        }),
+      ),
     );
   }
 }

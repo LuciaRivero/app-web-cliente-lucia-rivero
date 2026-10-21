@@ -80,32 +80,101 @@
   margin-bottom: 8px;
 }
 
+/* ---------- Formulario de compra (perfil del artista) ----------
+   Lo arma crearFormularioCompra() de js/componentes/tarjetas.js. */
 .compra-merch {
-  margin-top: auto;
   margin: auto var(--espaciado) var(--espaciado);
   display: flex;
   flex-direction: column;
+  gap: 12px;
+}
+
+.titulo-opcion {
+  display: block;
+  padding: 0;
+  margin-bottom: 8px;
+  color: var(--color-texto-dim);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.opciones-compra {
+  border: none;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.lista-opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Cada opción es una pastilla. El radio queda encima, invisible,
+   para que el clic y el teclado sigan siendo los nativos. */
+.opcion-compra {
+  position: relative;
+  flex: 1 1 auto;
+}
+
+.opcion-compra input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.opcion-compra span {
+  display: block;
+  padding: 7px 10px;
+  border: 1px solid var(--color-gris-suave);
+  border-radius: var(--radio-pildora);
+  background-color: var(--color-base);
+  color: var(--color-texto-dim);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.opcion-compra:hover span {
+  border-color: var(--color-primario);
+  color: var(--color-texto);
+}
+
+.opcion-compra input:checked + span {
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+  color: var(--color-texto);
+  box-shadow: var(--sombra-glow);
+}
+
+.opcion-compra input:focus-visible + span {
+  outline: 2px solid var(--color-acento);
+  outline-offset: 2px;
+}
+
+.fila-cantidad {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 8px;
 }
 
-.compra-merch select,
-.compra-merch input[type="number"] {
-  background-color: var(--color-base);
-  color: var(--color-texto);
-  border: var(--borde);
-  border-radius: var(--radio-base);
-  padding: 10px 12px;
-  font-family: var(--fuente-cuerpo);
-  font-size: 14px;
-  width: 100%;
+.fila-cantidad .titulo-opcion {
+  margin-bottom: 0;
 }
 
-.compra-merch select:focus,
-.compra-merch input[type="number"]:focus {
-  outline: 2px solid var(--color-primario);
-}
-
-.compra-merch button,
+.boton-agregar,
 .boton-compra {
   background-color: var(--color-primario);
   color: var(--color-texto);
@@ -126,8 +195,33 @@
   margin: auto var(--espaciado) var(--espaciado);
 }
 
-.compra-merch button:hover {
+.boton-agregar {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.1s ease;
+}
+
+.boton-agregar:hover {
   background-color: var(--color-primario-hover);
+}
+
+.boton-agregar:active {
+  transform: scale(0.97);
+}
+
+/* Confirmación breve después de agregar al carrito. */
+.boton-agregar.agregado,
+.boton-agregar.agregado:hover {
+  background-color: var(--color-acento);
+  color: var(--color-base);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .opcion-compra span,
+  .boton-agregar {
+    transition: none;
+  }
 }
 
 .merch-artista {

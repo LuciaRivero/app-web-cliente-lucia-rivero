@@ -1,0 +1,119 @@
+/* =========================================================
+   Whiplash — Carga y entrada de contenido
+   - .cargando: disco de vinilo girando mientras llegan los
+     datos (lo arma crearCargando() de js/utilidades/dom.js).
+   - Las tarjetas generadas desde los datos entran con un
+     fundido escalonado según --orden (lo pone DataGrid).
+   ========================================================= */
+
+.cargando {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 220px;
+  color: var(--color-texto-dim);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  /* Aparece con un pequeño retraso: si los datos llegan rápido,
+     el disco ni se llega a ver y no hay parpadeo. */
+  animation: aparecer-suave 0.3s ease 0.15s backwards;
+}
+
+.cargando-chico {
+  flex-direction: row;
+  justify-content: flex-start;
+  min-height: 44px;
+  font-size: 13px;
+}
+
+/* Surcos del vinilo + etiqueta violeta con centro lima. El brillo
+   (::after) gira con el disco y hace visible el movimiento. */
+.spinner-disco {
+  position: relative;
+  width: 64px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle,
+      var(--color-acento) 0 7%,
+      var(--color-primario) 8% 30%,
+      var(--color-primario-oscuro) 31% 33%,
+      transparent 34%
+    ),
+    repeating-radial-gradient(circle, var(--color-base) 0 2px, var(--color-gris-oscuro) 2px 4px);
+  box-shadow:
+    0 0 0 1px var(--color-gris-suave),
+    var(--sombra-glow);
+  animation: girar-disco-carga 1.1s linear infinite;
+}
+
+.spinner-disco::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    transparent 0 15%,
+    rgba(244, 241, 234, 0.22) 22%,
+    transparent 30% 65%,
+    rgba(244, 241, 234, 0.12) 72%,
+    transparent 80%
+  );
+}
+
+.cargando-chico .spinner-disco {
+  width: 28px;
+}
+
+/* ---------- Entrada escalonada de las tarjetas ----------
+   "backwards" solo aplica la animación mientras corre, así no
+   pisa el transform del :hover de las tarjetas. */
+.grilla-artistas > :not(.cargando),
+.grilla-merch > :not(.cargando),
+genre-chips > :not(.cargando) {
+  animation: aparecer 0.45s ease backwards;
+  animation-delay: calc(var(--orden, 0) * 60ms);
+}
+
+@keyframes girar-disco-carga {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes aparecer-suave {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes latir {
+  to {
+    opacity: 0.4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grilla-artistas > *,
+  .grilla-merch > *,
+  genre-chips > * {
+    animation: none;
+  }
+
+  /* Sin giro: el disco late suave para indicar que sigue cargando. */
+  .spinner-disco {
+    animation: latir 0.9s ease-in-out infinite alternate;
+  }
+}

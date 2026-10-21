@@ -1,0 +1,72 @@
+/* =========================================================
+   Whiplash — Selector de cantidad ( − 1 + )
+   Lo usan el carrito (número en un <span>) y la compra de
+   entradas en el perfil del artista (número en un <input>).
+   ========================================================= */
+
+.selector-cantidad {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--color-base);
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  overflow: hidden;
+}
+
+.selector-cantidad button {
+  background: none;
+  border: none;
+  color: var(--color-texto);
+  font-family: var(--fuente-cuerpo);
+  font-size: 18px;
+  font-weight: 600;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.selector-cantidad button:hover:not(:disabled) {
+  color: var(--color-acento);
+  background-color: var(--color-gris-suave);
+}
+
+.selector-cantidad button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.selector-cantidad span,
+.selector-cantidad input {
+  min-width: 32px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* El input se ve igual que el número del carrito: sin borde
+   ni las flechitas nativas, que reemplazan los botones − y +. */
+.selector-cantidad input {
+  width: 40px;
+  background: none;
+  border: none;
+  color: var(--color-texto);
+  font-family: var(--fuente-cuerpo);
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.selector-cantidad input::-webkit-inner-spin-button,
+.selector-cantidad input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.selector-cantidad input:focus-visible {
+  outline: 2px solid var(--color-primario);
+  outline-offset: -2px;
+  border-radius: 6px;
+}
