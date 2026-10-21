@@ -11,3 +11,5 @@
 6. Voy a adaptar a mobile el header y el menu hambuguesa.
 
 7. Voy a reorganizar la estructura del proyecto (carpetas, CSS por capas, nombres en español y tokens) para que sea más mantenible y escalable.
+
+8. Voy a darle funcionalidad al buscador
