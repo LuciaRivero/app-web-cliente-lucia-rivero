@@ -10,14 +10,16 @@ import { crearElemento } from "../utilidades/dom.js";
 
 export class DataGrid extends HTMLElement {
   // A completar por cada grilla.
-  static claseCss = "";
+  get claseCss() {
+    return "";
+  }
   async cargar() {
     return [];
   }
   crearTarjeta() {}
 
   connectedCallback() {
-    this.classList.add(this.constructor.claseCss);
+    this.classList.add(this.claseCss);
     if (!this.childElementCount) this.cargarInicial();
   }
 

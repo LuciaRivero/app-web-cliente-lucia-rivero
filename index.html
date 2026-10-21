@@ -8,6 +8,15 @@
       content="Whiplash - Descubrí música independiente organizada por género y comprá merch de tus artistas."
     />
     <title>Whiplash | Música independiente y merch</title>
+    <!-- Precarga: fuentes y módulos compartidos se piden en paralelo
+         en vez de esperar a que los descubra main.css / main.js. -->
+    <link rel="preload" href="assets/fuentes/anton-regular.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="preload" href="assets/fuentes/inter-variable.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="modulepreload" href="js/servicios/datos.js" />
+    <link rel="modulepreload" href="js/utilidades/dom.js" />
+    <link rel="modulepreload" href="js/componentes/navigation.js" />
+    <link rel="modulepreload" href="js/componentes/tarjetas.js" />
+    <link rel="modulepreload" href="js/componentes/data-grid.js" />
     <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/paginas/inicio.css" />
     <script type="module" src="js/main.js"></script>
@@ -30,14 +39,7 @@
       <section class="generos-destacados" aria-labelledby="titulo-generos">
         <h2 id="titulo-generos">Explorá por género</h2>
 
-        <div class="generos-lista">
-          <a class="chip-genero" href="pages/generos.html">Rock independiente</a>
-          <a class="chip-genero" href="pages/generos.html">Folk indie</a>
-          <a class="chip-genero" href="pages/generos.html">Electrónica cruda</a>
-          <a class="chip-genero" href="pages/generos.html">Pop alternativo</a>
-          <a class="chip-genero" href="pages/generos.html">Punk DIY</a>
-          <a class="chip-genero" href="pages/generos.html">Hip-hop under</a>
-        </div>
+        <genre-chips></genre-chips>
       </section>
 
       <section class="artistas" aria-labelledby="titulo-artistas">

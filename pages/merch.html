@@ -8,6 +8,15 @@
       content="Merch de tus artistas favoritos en Whiplash - Discos, entradas y más directo del creador."
     />
     <title>Merch | Whiplash</title>
+    <!-- Precarga: fuentes y módulos compartidos se piden en paralelo
+         en vez de esperar a que los descubra main.css / main.js. -->
+    <link rel="preload" href="../assets/fuentes/anton-regular.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="preload" href="../assets/fuentes/inter-variable.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="modulepreload" href="../js/servicios/datos.js" />
+    <link rel="modulepreload" href="../js/utilidades/dom.js" />
+    <link rel="modulepreload" href="../js/componentes/navigation.js" />
+    <link rel="modulepreload" href="../js/componentes/tarjetas.js" />
+    <link rel="modulepreload" href="../js/componentes/data-grid.js" />
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/paginas/merch.css" />
     <script type="module" src="../js/main.js"></script>

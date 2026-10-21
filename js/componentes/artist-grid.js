@@ -8,7 +8,9 @@ import { DataGrid } from "./data-grid.js";
 import { crearTarjetaArtista } from "./tarjetas.js";
 
 class ArtistGrid extends DataGrid {
-  static claseCss = "grilla-artistas";
+  get claseCss() {
+    return "grilla-artistas";
+  }
 
   cargar() {
     return obtenerArtistas();

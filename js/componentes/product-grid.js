@@ -11,7 +11,9 @@ import { DataGrid } from "./data-grid.js";
 import { crearProductoMerch } from "./tarjetas.js";
 
 class ProductGrid extends DataGrid {
-  static claseCss = "grilla-merch";
+  get claseCss() {
+    return "grilla-merch";
+  }
 
   async cargar() {
     const productos = await obtenerProductosConArtista();

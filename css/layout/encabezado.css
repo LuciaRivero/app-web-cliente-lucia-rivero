@@ -320,6 +320,17 @@ site-header:not(:defined) {
     display: none;
   }
 
+  /* El botón de menú (.boton-menu) agrega esta clase desde
+     js/componentes/menu.js y la navegación aparece en columna. */
+  .encabezado-sitio.menu-abierto .nav-principal {
+    display: block;
+  }
+
+  .nav-principal ul {
+    flex-direction: column;
+    gap: var(--espaciado);
+  }
+
   /* La lupa (.boton-buscar) agrega esta clase desde el JS
      y el buscador ocupa una fila completa debajo del logo. */
   .encabezado-sitio.buscador-abierto .buscador {

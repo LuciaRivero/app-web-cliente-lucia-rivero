@@ -15,6 +15,9 @@ import "./componentes/site-breadcrumbs.js";
 import "./componentes/promo-banner.js";
 import "./componentes/artist-grid.js";
 import "./componentes/product-grid.js";
+import "./componentes/genre-chips.js";
 import { iniciarBuscador } from "./componentes/buscador.js";
+import { iniciarMenu } from "./componentes/menu.js";
 
 iniciarBuscador();
+iniciarMenu();

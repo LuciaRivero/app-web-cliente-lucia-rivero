@@ -28,7 +28,7 @@ archivo con doble clic (`file://`). Usá la extensión **Live Server** de VS Cod
 │   ├── paginas/            Lógica propia de cada página (explorar, carrito)
 │   ├── servicios/          datos.js: único lugar que lee los datos (hoy JSON, después Supabase)
 │   ├── utilidades/         dom.js: ayudas para armar elementos
-│   └── datos/              artistas.json y productos.json
+│   └── datos/              artistas.json, productos.json y generos.json
 ├── assets/
 │   ├── fuentes/
 │   └── img/                iconos/, artistas/, productos/ y logo.svg
@@ -51,6 +51,7 @@ mismos estilos de `css/` que el HTML escrito a mano.
 | `<promo-banner>` | Banner `.promo` | `heading`, `text`, `href`, `link-text` |
 | `<artist-grid>` | Grilla de artistas desde `artistas.json` | `limit` |
 | `<product-grid>` | Grilla de merch desde `productos.json` | `limit`, `artist` (id), `with-purchase` |
+| `<genre-chips>` | Chips de género desde `generos.json` (enlazan a Explorar con `?q=`) | `limit`, `filter` (botones que disparan el evento `genre-change`) |
 
 ```html
 <site-header current="merch"></site-header>
@@ -62,6 +63,9 @@ mismos estilos de `css/` que el HTML escrito a mano.
 ```
 
 Los links del encabezado y el pie se editan en un solo lugar: `js/componentes/navigation.js`.
+
+Los íconos SVG que se repiten viven en `assets/img/iconos/iconos.svg` y se usan con
+`<use href=".../iconos.svg#id" />`.
 
 ## Convenciones
 

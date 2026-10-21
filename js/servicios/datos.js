@@ -31,6 +31,7 @@ function cargarDatos() {
     cache = Promise.all([
       leerJson("../datos/artistas.json"),
       leerJson("../datos/productos.json"),
+      leerJson("../datos/generos.json"),
     ]).catch((error) => {
       cache = null;
       throw error;
@@ -47,6 +48,11 @@ export async function obtenerArtistas() {
 export async function obtenerProductos() {
   const [, productos] = await cargarDatos();
   return productos;
+}
+
+export async function obtenerGeneros() {
+  const [, , generos] = await cargarDatos();
+  return generos;
 }
 
 // Cada producto se completa con su artista para poder buscar
