@@ -17,9 +17,11 @@
     <link rel="modulepreload" href="../js/componentes/navigation.js" />
     <link rel="modulepreload" href="../js/componentes/tarjetas.js" />
     <link rel="modulepreload" href="../js/componentes/data-grid.js" />
+    <link rel="modulepreload" href="../js/servicios/carrito.js" />
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/paginas/carrito.css" />
     <script type="module" src="../js/main.js"></script>
+    <script type="module" src="../js/paginas/carrito.js"></script>
   </head>
   <body>
     <a class="enlace-saltar" href="#contenido-principal">Saltar al contenido</a>
@@ -35,85 +37,10 @@
       <div class="carrito-contenedor">
         <!-- Lista de productos -->
         <section class="carrito-lista" aria-labelledby="titulo-items">
-          <h2 id="titulo-items" class="sr-only">Productos en el carrito</h2>
-
-          <!-- Producto 1 -->
-          <article class="carrito-item">
-            <div class="item-imagen" aria-hidden="true"></div>
-            <div class="item-detalle">
-              <h2 class="item-titulo">Vinilo — Los Cráteres</h2>
-              <p class="item-subtitulo">180gr, edición limitada</p>
-            </div>
-            <div class="item-controles">
-              <div class="selector-cantidad">
-                <button type="button" aria-label="Restar una unidad">-</button>
-                <span>1</span>
-                <button type="button" aria-label="Sumar una unidad">+</button>
-              </div>
-              <span class="item-precio">$18.500</span>
-              <div class="item-eliminar">
-                <button type="button" class="boton-eliminar" aria-label="Eliminar Vinilo — Los Cráteres del carrito">
-                  <svg class="icono-eliminar" viewBox="0 0 32 32" aria-hidden="true">
-                    <use class="tapa-eliminar" href="../assets/img/iconos/iconos.svg#eliminar-tapa" />
-                    <use href="../assets/img/iconos/iconos.svg#eliminar-cuerpo" />
-                  </svg>
-                  <span class="texto-eliminar" aria-hidden="true">Eliminar</span>
-                </button>
-              </div>
-            </div>
-          </article>
-
-          <!-- Producto 2 -->
-          <article class="carrito-item">
-            <div class="item-imagen" aria-hidden="true"></div>
-            <div class="item-detalle">
-              <h2 class="item-titulo">Remera — Marea Onda</h2>
-              <p class="item-subtitulo">Talle M</p>
-            </div>
-            <div class="item-controles">
-              <div class="selector-cantidad">
-                <button type="button" aria-label="Restar una unidad">-</button>
-                <span>1</span>
-                <button type="button" aria-label="Sumar una unidad">+</button>
-              </div>
-              <span class="item-precio">$12.000</span>
-              <div class="item-eliminar">
-                <button type="button" class="boton-eliminar" aria-label="Eliminar Remera — Marea Onda del carrito">
-                  <svg class="icono-eliminar" viewBox="0 0 32 32" aria-hidden="true">
-                    <use class="tapa-eliminar" href="../assets/img/iconos/iconos.svg#eliminar-tapa" />
-                    <use href="../assets/img/iconos/iconos.svg#eliminar-cuerpo" />
-                  </svg>
-                  <span class="texto-eliminar" aria-hidden="true">Eliminar</span>
-                </button>
-              </div>
-            </div>
-          </article>
-
-          <!-- Producto 3 -->
-          <article class="carrito-item">
-            <div class="item-imagen" aria-hidden="true"></div>
-            <div class="item-detalle">
-              <h2 class="item-titulo">Entrada — Show 14/11</h2>
-              <p class="item-subtitulo">1 entrada general</p>
-            </div>
-            <div class="item-controles">
-              <div class="selector-cantidad">
-                <button type="button" aria-label="Restar una unidad">-</button>
-                <span>1</span>
-                <button type="button" aria-label="Sumar una unidad">+</button>
-              </div>
-              <span class="item-precio">$9.500</span>
-              <div class="item-eliminar">
-                <button type="button" class="boton-eliminar" aria-label="Eliminar Entrada — Show 14/11 del carrito">
-                  <svg class="icono-eliminar" viewBox="0 0 32 32" aria-hidden="true">
-                    <use class="tapa-eliminar" href="../assets/img/iconos/iconos.svg#eliminar-tapa" />
-                    <use href="../assets/img/iconos/iconos.svg#eliminar-cuerpo" />
-                  </svg>
-                  <span class="texto-eliminar" aria-hidden="true">Eliminar</span>
-                </button>
-              </div>
-            </div>
-          </article>
+          <h2 id="titulo-items" class="sr-only" tabindex="-1">Productos en el carrito</h2>
+          <!-- Los ítems los arma js/paginas/carrito.js desde el carrito guardado. -->
+          <div class="carrito-items"></div>
+          <p class="sr-only carrito-aviso" aria-live="polite"></p>
         </section>
 
         <!-- Resumen de compra -->
@@ -123,20 +50,20 @@
 
             <div class="resumen-fila">
               <span>Subtotal</span>
-              <span>$40.000</span>
+              <span data-resumen="subtotal">$0</span>
             </div>
 
             <div class="resumen-fila">
               <span>Envío</span>
-              <span>$2.500</span>
+              <span data-resumen="envio">$0</span>
             </div>
 
             <div class="resumen-fila total">
               <span>Total</span>
-              <span>$42.500</span>
+              <span data-resumen="total">$0</span>
             </div>
           </div>
-          <button type="button" class="boton-pagar">Ir a pagar</button>
+          <button type="button" class="boton-pagar" disabled>Ir a pagar</button>
         </aside>
       </div>
     </main>

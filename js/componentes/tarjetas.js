@@ -7,6 +7,7 @@
    como HTML (importante cuando vengan de Supabase).
    ========================================================= */
 
+import { agregarAlCarrito } from "../servicios/carrito.js";
 import { rutaDesdeRaiz } from "../servicios/datos.js";
 import { crearElemento } from "../utilidades/dom.js";
 
@@ -120,12 +121,19 @@ function crearCantidad(producto) {
   );
 }
 
-// Todavía no hay carrito real: el botón confirma visualmente y
-// avisa al lector de pantalla, sin recargar la página.
-function confirmarAgregado(formulario, boton, aviso) {
+// Guarda el producto con la opción elegida (formato, talle) o la
+// cantidad de entradas; el botón confirma visualmente y avisa al
+// lector de pantalla, sin recargar la página.
+function confirmarAgregado(formulario, producto, boton, aviso) {
   formulario.addEventListener("submit", (evento) => {
     evento.preventDefault();
     if (boton.classList.contains("agregado")) return;
+
+    const campos = new FormData(formulario);
+    const opciones = OPCIONES_COMPRA[producto.tipo];
+    const opcion = opciones ? campos.get(opciones.nombre) : null;
+    const cantidad = Number(campos.get("cantidad")) || 1;
+    agregarAlCarrito(producto.id, opcion, cantidad);
 
     boton.classList.add("agregado");
     boton.textContent = "Agregado ✓";
@@ -156,7 +164,7 @@ function crearFormularioCompra(producto) {
     boton,
     aviso,
   );
-  confirmarAgregado(formulario, boton, aviso);
+  confirmarAgregado(formulario, producto, boton, aviso);
   return formulario;
 }
 
