@@ -5,8 +5,10 @@ Proyecto de la materia **Aplicaciones Web Cliente** (ISTEA).
 
 ## Cómo verlo
 
-No necesita instalación ni dependencias. Abrí `index.html` en el navegador,
-o usá la extensión **Live Server** de VS Code para que se recargue solo al guardar.
+No necesita instalación ni dependencias, pero sí un servidor local: el JS se carga como
+módulo y lee los datos con `fetch`, y el navegador bloquea las dos cosas si abrís el
+archivo con doble clic (`file://`). Usá la extensión **Live Server** de VS Code
+(clic derecho en `index.html` → *Open with Live Server*).
 
 ## Estructura
 
@@ -20,11 +22,12 @@ o usá la extensión **Live Server** de VS Code para que se recargue solo al gua
 │   ├── layout/             Encabezado, contenido, migas de pan y pie
 │   ├── componentes/        Piezas reutilizables (botón, filtros, tarjetas, formularios)
 │   └── paginas/            Estilos propios de cada página
-├── js/                     Estructura preparada para la lógica (todavía sin código)
-│   ├── main.js
-│   ├── componentes/
-│   ├── paginas/
-│   └── datos/
+├── js/
+│   ├── main.js             Punto de entrada: inicia los componentes comunes
+│   ├── componentes/        Buscador del encabezado, tarjetas generadas, menú
+│   ├── paginas/            Lógica propia de cada página (explorar, carrito)
+│   ├── servicios/          datos.js: único lugar que lee los datos (hoy JSON, después Supabase)
+│   └── datos/              artistas.json y productos.json
 ├── assets/
 │   ├── fuentes/
 │   └── img/                iconos/, artistas/, productos/ y logo.svg

@@ -46,6 +46,9 @@
 
   /* Layout */
   --ancho-maximo: 1200px;
+  /* Ancho mínimo de una tarjeta en las grillas (artistas y merch
+     usan el mismo para que todas las tarjetas midan igual) */
+  --ancho-tarjeta: 220px;
 }
 
 /* Breakpoints (las media queries no aceptan custom properties,

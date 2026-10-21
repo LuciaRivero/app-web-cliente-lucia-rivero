@@ -1,1 +1,42 @@
-[]
+[
+  {
+    "id": 1,
+    "titulo": "Ruido blanco (EP)",
+    "tipo": "Disco",
+    "precio": 12000,
+    "artista_id": 1,
+    "imagen": "assets/img/productos/disco1.jpg"
+  },
+  {
+    "id": 2,
+    "titulo": "Andén (LP)",
+    "tipo": "Disco",
+    "precio": 15000,
+    "artista_id": 1,
+    "imagen": "assets/img/productos/disco2.jpg"
+  },
+  {
+    "id": 3,
+    "titulo": "Show en Vorterix",
+    "tipo": "Entrada",
+    "precio": 25000,
+    "artista_id": 1,
+    "imagen": "assets/img/productos/entrada1.jpg"
+  },
+  {
+    "id": 4,
+    "titulo": "Marea Onda (EP)",
+    "tipo": "Disco",
+    "precio": 10000,
+    "artista_id": 2,
+    "imagen": "assets/img/productos/disco3.jpg"
+  },
+  {
+    "id": 5,
+    "titulo": "Caminos (LP)",
+    "tipo": "Disco",
+    "precio": 10000,
+    "artista_id": 3,
+    "imagen": "assets/img/productos/disco4.jpg"
+  }
+]
