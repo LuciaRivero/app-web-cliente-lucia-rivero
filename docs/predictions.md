@@ -19,3 +19,5 @@
 10. **Optimización de géneros, íconos, precarga y menú mobile** — Generar los chips de género desde generos.json, unificar el ícono del carrito en un sprite SVG, precargar fuentes y módulos y hacer funcional el menú hamburguesa. Alcance: `<genre-chips>`, iconos.svg, `<head>` de las páginas, menu.js. Restricciones: JS vanilla, accesibilidad ARIA.
 
 11. **Indicador de carga y selector de compra** — Mostrar un disco de carga mientras llegan los datos y reemplazar los `<select>` de compra por pastillas y un selector de cantidad. Alcance: DataGrid, Explorar, tarjetas de merch con compra. Restricciones: JS vanilla, prefers-reduced-motion.
+
+12. **Flujo de predicción por rama** — Agregar un skill que, al iniciar cada cambio, cree la rama y commitee primero la predicción en docs/predictions.md, y adaptar crear-pr para verificarlo. Alcance: .claude/skills/iniciar-cambio, .claude/skills/crear-pr. Restricciones: un cambio por rama, predicción antes del código, formato técnico.
