@@ -5,3 +5,8 @@
 .explorar-resultados {
   margin-bottom: var(--espaciado-grande);
 }
+
+.titulo-resultados-merch {
+  font-size: 32px;
+  margin: var(--espaciado-grande) 0 var(--espaciado);
+}

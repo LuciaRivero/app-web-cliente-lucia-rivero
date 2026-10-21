@@ -28,3 +28,9 @@
 .enlace-saltar:focus {
   left: 0;
 }
+
+/* Asegura que el atributo hidden gane aunque el elemento
+   tenga un display propio (flex, grid...). Lo usa el JS. */
+[hidden] {
+  display: none !important;
+}

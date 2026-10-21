@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "nombre": "Los Cráteres",
+    "genero": "Rock independiente",
+    "imagen": "assets/img/artistas/artista1.jpg"
+  },
+  {
+    "id": 2,
+    "nombre": "Marea Onda",
+    "genero": "Folk indie",
+    "imagen": "assets/img/artistas/artista2.jpg"
+  },
+  {
+    "id": 3,
+    "nombre": "Valle Silente",
+    "genero": "Electrónica cruda",
+    "imagen": "assets/img/artistas/artista3.jpg"
+  },
+  {
+    "id": 4,
+    "nombre": "Tejido Rojo",
+    "genero": "Pop alternativo",
+    "imagen": "assets/img/artistas/artista4.jpg"
+  },
+  {
+    "id": 5,
+    "nombre": "Risa Cósmica",
+    "genero": "Punk DIY",
+    "imagen": "assets/img/artistas/artista2.jpg"
+  },
+  {
+    "id": 6,
+    "nombre": "Norte Adentro",
+    "genero": "Hip-hop under",
+    "imagen": "assets/img/artistas/artista3.jpg"
+  }
+]

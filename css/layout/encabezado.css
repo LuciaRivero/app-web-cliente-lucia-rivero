@@ -77,6 +77,105 @@
   cursor: pointer;
 }
 
+/* ---------- Resultados del buscador (los arma js/componentes/buscador.js) ---------- */
+.buscador {
+  position: relative;
+}
+
+.buscador-resultados {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  max-height: 70vh;
+  overflow-y: auto;
+  background-color: var(--color-gris-oscuro);
+  border: 1px solid var(--color-gris-suave);
+  border-radius: var(--radio-base);
+  box-shadow: var(--sombra);
+  padding: 8px;
+  z-index: 20;
+}
+
+.grupo-resultados + .grupo-resultados {
+  border-top: var(--borde);
+  margin-top: 8px;
+  padding-top: 8px;
+}
+
+.titulo-grupo {
+  color: var(--color-texto-dim);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 8px;
+}
+
+.resultado-buscador {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-radius: var(--radio-base);
+  color: var(--color-texto);
+  transition: background-color 0.2s ease;
+}
+
+.resultado-buscador:hover,
+.resultado-buscador:focus {
+  background-color: var(--color-gris-suave);
+  outline: none;
+}
+
+.resultado-buscador img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.resultado-buscador span {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.resultado-buscador strong,
+.resultado-buscador small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resultado-buscador small {
+  color: var(--color-texto-dim);
+  font-size: 13px;
+}
+
+.ver-todos {
+  display: block;
+  margin-top: 8px;
+  padding: 10px 8px;
+  border-top: var(--borde);
+  color: var(--color-acento);
+  font-weight: 600;
+  font-size: 14px;
+  text-align: center;
+}
+
+.ver-todos:hover,
+.ver-todos:focus {
+  color: var(--color-acento-hover);
+}
+
+.sin-resultados {
+  color: var(--color-texto-dim);
+  padding: 12px 8px;
+  font-size: 14px;
+}
+
 .nav-cuenta ul {
   display: flex;
   gap: var(--espaciado);
@@ -208,5 +307,13 @@
   .nav-cuenta,
   .nav-principal {
     display: none;
+  }
+
+  /* La lupa (.boton-buscar) agrega esta clase desde el JS
+     y el buscador ocupa una fila completa debajo del logo. */
+  .encabezado-sitio.buscador-abierto .buscador {
+    display: flex;
+    grid-column: 1 / -1;
+    grid-row: 2;
   }
 }

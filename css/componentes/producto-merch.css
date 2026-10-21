@@ -20,7 +20,7 @@
 
 .grilla-merch {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(var(--ancho-tarjeta), 1fr));
   gap: var(--espaciado);
 }
 
@@ -117,6 +117,13 @@
   width: 100%;
   text-align: center;
   font-size: 14px;
+}
+
+/* Dentro de la tarjeta: mismo margen que el botón "Seguir" de
+   .tarjeta-artista y pegado al fondo para que todos queden alineados */
+.producto-merch .boton-compra {
+  width: auto;
+  margin: auto var(--espaciado) var(--espaciado);
 }
 
 .compra-merch button:hover {

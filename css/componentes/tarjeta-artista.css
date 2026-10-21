@@ -4,7 +4,7 @@
 
 .grilla-artistas {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(var(--ancho-tarjeta), 1fr));
   gap: var(--espaciado);
 }
 
@@ -92,8 +92,8 @@
 }
 
 .tarjeta-artista button {
-  margin-top: auto;
-  margin: var(--espaciado);
+  /* margin-top: auto empuja el botón al fondo de la tarjeta */
+  margin: auto var(--espaciado) var(--espaciado);
   background-color: var(--color-primario);
   color: var(--color-texto);
   border: none;
