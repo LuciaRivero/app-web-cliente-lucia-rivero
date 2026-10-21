@@ -2,6 +2,13 @@
    Whiplash — Encabezado del sitio (logo, buscador, navegación)
    ========================================================= */
 
+/* Mientras carga el JS, <site-header> reserva el alto del
+   encabezado para que el contenido no salte al aparecer. */
+site-header:not(:defined) {
+  display: block;
+  min-height: 120px;
+}
+
 .encabezado-sitio {
   background-color: var(--color-base);
   border-bottom: var(--borde);
@@ -266,6 +273,10 @@
 
 /* ---------- Responsive ---------- */
 @media (max-width: 768px) {
+  site-header:not(:defined) {
+    min-height: 65px;
+  }
+
   .encabezado-superior {
     display: grid;
     grid-template-columns: 40px 1fr 40px;

@@ -1,97 +1,121 @@
 /* =========================================================
    Whiplash — Tarjetas generadas desde los datos
-   Arman el mismo HTML que está escrito a mano en las páginas
-   (.tarjeta-artista y .producto-merch) para reutilizar sus estilos.
+   Arman el HTML de .tarjeta-artista y .producto-merch
+   para reutilizar sus estilos. Las usan <artist-grid>,
+   <product-grid>, el buscador y la página Explorar.
    Se usa textContent para que los datos nunca se interpreten
    como HTML (importante cuando vengan de Supabase).
    ========================================================= */
 
 import { rutaDesdeRaiz } from "../servicios/datos.js";
+import { crearElemento } from "../utilidades/dom.js";
 
 const URL_PRODUCTO = rutaDesdeRaiz("pages/producto.html");
+// Opciones del formulario de compra según el tipo de producto.
+// Las entradas no tienen opciones: se elige la cantidad.
+const OPCIONES_COMPRA = {
+  Disco: { etiqueta: "Formato", nombre: "formato", valores: ["Vinilo", "CD", "Digital"] },
+  Remera: { etiqueta: "Talle", nombre: "talle", valores: ["S", "M", "L", "XL"] },
+};
 
 export function formatearPrecio(precio) {
   return `$${precio.toLocaleString("es-AR")}`;
 }
 
 function crearFigura(imagen, alt, titulo) {
-  const enlace = document.createElement("a");
-  enlace.href = URL_PRODUCTO;
-
-  const figura = document.createElement("figure");
-  const img = document.createElement("img");
-  img.src = rutaDesdeRaiz(imagen);
-  img.alt = alt;
-  const leyenda = document.createElement("figcaption");
-  leyenda.textContent = titulo;
-
-  figura.append(img, leyenda);
-  enlace.append(figura);
-  return enlace;
+  return crearElemento(
+    "figure",
+    {},
+    crearElemento("img", { atributos: { src: rutaDesdeRaiz(imagen), alt } }),
+    crearElemento("figcaption", { texto: titulo }),
+  );
 }
 
-function crearParrafo(clase, texto) {
-  const parrafo = document.createElement("p");
-  parrafo.className = clase;
-  parrafo.textContent = texto;
-  return parrafo;
+function crearFiguraConEnlace(imagen, alt, titulo) {
+  return crearElemento("a", { atributos: { href: URL_PRODUCTO } }, crearFigura(imagen, alt, titulo));
 }
 
 export function crearTarjetaArtista(artista) {
-  const tarjeta = document.createElement("article");
-  tarjeta.className = "tarjeta-artista";
-
-  const boton = document.createElement("button");
-  boton.type = "button";
-  boton.textContent = "Seguir";
-
-  tarjeta.append(
-    crearFigura(artista.imagen, `Imagen de ${artista.nombre}`, artista.nombre),
-    crearParrafo("genero-artista", artista.genero),
-    boton,
+  return crearElemento(
+    "article",
+    { clase: "tarjeta-artista" },
+    crearFiguraConEnlace(artista.imagen, `Imagen de ${artista.nombre}`, artista.nombre),
+    crearElemento("p", { clase: "genero-artista", texto: artista.genero }),
+    crearElemento("button", { texto: "Seguir", atributos: { type: "button" } }),
   );
-  return tarjeta;
 }
 
-export function crearProductoMerch(producto) {
-  const tarjeta = document.createElement("article");
-  tarjeta.className = "producto-merch";
+// Formulario de la página del artista: un desplegable con las
+// opciones del tipo (formato, talle) o la cantidad de entradas.
+function crearFormularioCompra(producto) {
+  const idCampo = `compra-${producto.id}`;
+  const opciones = OPCIONES_COMPRA[producto.tipo];
+  let etiqueta;
+  let campo;
 
+  if (opciones) {
+    etiqueta = `${opciones.etiqueta} de ${producto.titulo}`;
+    campo = crearElemento(
+      "select",
+      { atributos: { id: idCampo, name: opciones.nombre } },
+      ...opciones.valores.map((valor) => crearElemento("option", { texto: valor })),
+    );
+  } else {
+    etiqueta = `Cantidad de ${producto.titulo}`;
+    campo = crearElemento("input", {
+      atributos: { type: "number", id: idCampo, name: "cantidad", value: "1", min: "1", max: "10" },
+    });
+  }
+
+  return crearElemento(
+    "form",
+    { clase: "compra-merch", atributos: { action: "#", method: "post" } },
+    crearElemento("label", { clase: "sr-only", texto: etiqueta, atributos: { for: idCampo } }),
+    campo,
+    crearElemento("button", { texto: "Agregar al carrito", atributos: { type: "submit" } }),
+  );
+}
+
+// conCompra: en lugar del enlace "Ver producto" muestra el formulario
+// para agregar al carrito (se usa en la página del artista).
+export function crearProductoMerch(producto, { conCompra = false } = {}) {
   const alt = producto.artista
     ? `${producto.tipo} ${producto.titulo} de ${producto.artista.nombre}`
     : `${producto.tipo} ${producto.titulo}`;
 
-  const enlace = document.createElement("a");
-  enlace.className = "boton boton-compra";
-  enlace.href = URL_PRODUCTO;
-  enlace.textContent = "Ver producto";
+  const portada = conCompra
+    ? crearFigura(producto.imagen, alt, producto.titulo)
+    : crearFiguraConEnlace(producto.imagen, alt, producto.titulo);
 
-  tarjeta.append(
-    crearFigura(producto.imagen, alt, producto.titulo),
-    crearParrafo("tipo-merch", producto.tipo),
-    crearParrafo("precio", formatearPrecio(producto.precio)),
-    enlace,
+  const accion = conCompra
+    ? crearFormularioCompra(producto)
+    : crearElemento("a", {
+        clase: "boton boton-compra",
+        texto: "Ver producto",
+        atributos: { href: URL_PRODUCTO },
+      });
+
+  return crearElemento(
+    "article",
+    { clase: "producto-merch" },
+    portada,
+    crearElemento("p", { clase: "tipo-merch", texto: producto.tipo }),
+    crearElemento("p", { clase: "precio", texto: formatearPrecio(producto.precio) }),
+    accion,
   );
-  return tarjeta;
 }
 
 // Fila compacta para el desplegable del buscador.
 export function crearResultadoBuscador({ imagen, titulo, detalle }) {
-  const enlace = document.createElement("a");
-  enlace.className = "resultado-buscador";
-  enlace.href = URL_PRODUCTO;
-
-  const img = document.createElement("img");
-  img.src = rutaDesdeRaiz(imagen);
-  img.alt = "";
-
-  const textos = document.createElement("span");
-  const nombre = document.createElement("strong");
-  nombre.textContent = titulo;
-  const extra = document.createElement("small");
-  extra.textContent = detalle;
-  textos.append(nombre, extra);
-
-  enlace.append(img, textos);
-  return enlace;
+  return crearElemento(
+    "a",
+    { clase: "resultado-buscador", atributos: { href: URL_PRODUCTO } },
+    crearElemento("img", { atributos: { src: rutaDesdeRaiz(imagen), alt: "" } }),
+    crearElemento(
+      "span",
+      {},
+      crearElemento("strong", { texto: titulo }),
+      crearElemento("small", { texto: detalle }),
+    ),
+  );
 }

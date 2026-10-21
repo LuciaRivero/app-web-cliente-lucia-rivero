@@ -1,25 +1,25 @@
 /* =========================================================
    Whiplash — Página Explorar
-   Si la URL trae ?q=..., reemplaza la grilla de ejemplo por
+   Si la URL trae ?q=..., reemplaza la grilla general por
    los artistas y el merch que coinciden con la búsqueda.
    ========================================================= */
 
 import { buscar } from "../servicios/datos.js";
-import { crearProductoMerch, crearTarjetaArtista } from "../componentes/tarjetas.js";
+import { crearProductoMerch } from "../componentes/tarjetas.js";
+import { crearElemento, leerConsulta, textoResultados } from "../utilidades/dom.js";
 
 async function mostrarBusqueda() {
-  const termino = new URLSearchParams(location.search).get("q")?.trim();
+  const termino = leerConsulta();
   if (!termino) return;
 
   const info = document.querySelector(".info-resultados");
   const seccion = document.querySelector(".explorar-resultados");
-  const grillaArtistas = seccion.querySelector(".grilla-artistas");
-  const cargarMas = document.querySelector(".boton-inferior");
+  const grillaArtistas = seccion.querySelector("artist-grid");
 
   document.title = `“${termino}” | Explorar | Whiplash`;
   // Los chips y "Cargar más" son del listado general, no de una búsqueda.
   document.querySelector(".barra-filtros")?.setAttribute("hidden", "");
-  cargarMas?.setAttribute("hidden", "");
+  document.querySelector(".boton-inferior")?.setAttribute("hidden", "");
 
   let resultados;
   try {
@@ -35,21 +35,16 @@ async function mostrarBusqueda() {
   info.textContent =
     total === 0
       ? `No encontramos resultados para “${termino}”.`
-      : `${total} ${total === 1 ? "resultado" : "resultados"} para “${termino}”`;
+      : `${textoResultados(total)} para “${termino}”`;
 
-  grillaArtistas.replaceChildren(...artistas.map(crearTarjetaArtista));
+  grillaArtistas.mostrar(artistas);
   grillaArtistas.hidden = artistas.length === 0;
 
   if (productos.length) {
-    const titulo = document.createElement("h2");
-    titulo.className = "titulo-resultados-merch";
-    titulo.textContent = "Merch";
-
-    const grillaMerch = document.createElement("div");
-    grillaMerch.className = "grilla-merch";
-    grillaMerch.append(...productos.map(crearProductoMerch));
-
-    seccion.append(titulo, grillaMerch);
+    seccion.append(
+      crearElemento("h2", { clase: "titulo-resultados-merch", texto: "Merch" }),
+      crearElemento("div", { clase: "grilla-merch" }, ...productos.map((p) => crearProductoMerch(p))),
+    );
   }
 }
 

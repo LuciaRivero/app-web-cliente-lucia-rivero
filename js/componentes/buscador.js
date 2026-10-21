@@ -7,6 +7,7 @@
 
 import { buscar, rutaDesdeRaiz } from "../servicios/datos.js";
 import { crearResultadoBuscador, formatearPrecio } from "./tarjetas.js";
+import { crearElemento, leerConsulta, textoResultados } from "../utilidades/dom.js";
 
 const MAXIMO_POR_GRUPO = 4;
 const ESPERA_MS = 200;
@@ -19,9 +20,10 @@ export function iniciarBuscador() {
   const input = formulario.querySelector('input[type="search"]');
   const urlExplorar = rutaDesdeRaiz("pages/explorar.html");
 
-  const panel = document.createElement("div");
-  panel.className = "buscador-resultados";
-  panel.id = "buscador-resultados";
+  const panel = crearElemento("div", {
+    clase: "buscador-resultados",
+    atributos: { id: "buscador-resultados" },
+  });
   panel.hidden = true;
   formulario.append(panel);
   input.setAttribute("aria-controls", panel.id);
@@ -29,13 +31,11 @@ export function iniciarBuscador() {
   input.setAttribute("autocomplete", "off");
 
   // Lector de pantalla: anuncia cuántos resultados hay.
-  const anuncio = document.createElement("p");
-  anuncio.className = "sr-only";
-  anuncio.setAttribute("aria-live", "polite");
+  const anuncio = crearElemento("p", { clase: "sr-only", atributos: { "aria-live": "polite" } });
   formulario.append(anuncio);
 
   // Si se está en Explorar con ?q=, el campo arranca con esa búsqueda.
-  const consultaActual = new URLSearchParams(location.search).get("q");
+  const consultaActual = leerConsulta();
   if (consultaActual) input.value = consultaActual;
 
   function abrir() {
@@ -53,28 +53,29 @@ export function iniciarBuscador() {
   }
 
   function crearGrupo(titulo, elementos) {
-    const grupo = document.createElement("div");
-    grupo.className = "grupo-resultados";
-    const encabezadoGrupo = document.createElement("p");
-    encabezadoGrupo.className = "titulo-grupo";
-    encabezadoGrupo.textContent = titulo;
-    grupo.append(encabezadoGrupo, ...elementos);
-    return grupo;
+    return crearElemento(
+      "div",
+      { clase: "grupo-resultados" },
+      crearElemento("p", { clase: "titulo-grupo", texto: titulo }),
+      ...elementos,
+    );
+  }
+
+  function mostrarAviso(texto) {
+    panel.replaceChildren(crearElemento("p", { clase: "sin-resultados", texto }));
+    abrir();
   }
 
   function mostrar(termino, { artistas, productos }) {
-    panel.replaceChildren();
     const total = artistas.length + productos.length;
 
     if (total === 0) {
-      const vacio = document.createElement("p");
-      vacio.className = "sin-resultados";
-      vacio.textContent = `No encontramos nada para “${termino}”.`;
-      panel.append(vacio);
+      mostrarAviso(`No encontramos nada para “${termino}”.`);
       anuncio.textContent = "Sin resultados";
-      abrir();
       return;
     }
+
+    panel.replaceChildren();
 
     if (artistas.length) {
       const filas = artistas.slice(0, MAXIMO_POR_GRUPO).map((artista) =>
@@ -100,13 +101,15 @@ export function iniciarBuscador() {
       panel.append(crearGrupo("Merch", filas));
     }
 
-    const verTodos = document.createElement("a");
-    verTodos.className = "ver-todos";
-    verTodos.href = urlBusqueda(termino);
-    verTodos.textContent = total === 1 ? "Ver 1 resultado" : `Ver los ${total} resultados`;
-    panel.append(verTodos);
+    panel.append(
+      crearElemento("a", {
+        clase: "ver-todos",
+        texto: total === 1 ? "Ver 1 resultado" : `Ver los ${total} resultados`,
+        atributos: { href: urlBusqueda(termino) },
+      }),
+    );
 
-    anuncio.textContent = `${total} ${total === 1 ? "resultado" : "resultados"}`;
+    anuncio.textContent = textoResultados(total);
     abrir();
   }
 
@@ -132,13 +135,7 @@ export function iniciarBuscador() {
         if (numero === ultimaBusqueda) mostrar(termino, resultados);
       } catch (error) {
         console.error(error);
-        if (numero !== ultimaBusqueda) return;
-        panel.replaceChildren();
-        const aviso = document.createElement("p");
-        aviso.className = "sin-resultados";
-        aviso.textContent = "No pudimos buscar en este momento.";
-        panel.append(aviso);
-        abrir();
+        if (numero === ultimaBusqueda) mostrarAviso("No pudimos buscar en este momento.");
       }
     }, ESPERA_MS);
   });

@@ -34,3 +34,13 @@
 [hidden] {
   display: none !important;
 }
+
+/* Componentes de layout (js/componentes/site-*.js, promo-banner.js):
+   son solo envoltorios, su caja no participa del layout. Así el
+   position: sticky del encabezado sigue tomando al body como referencia. */
+site-header,
+site-footer,
+site-breadcrumbs,
+promo-banner {
+  display: contents;
+}
