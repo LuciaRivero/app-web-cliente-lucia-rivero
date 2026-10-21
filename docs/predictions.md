@@ -13,3 +13,5 @@
 7. Voy a reorganizar la estructura del proyecto (carpetas, CSS por capas, nombres en español y tokens) para que sea más mantenible y escalable.
 
 8. Voy a darle funcionalidad al buscador
+
+9. **Componentización con Web Components** — Convertir encabezado, pie, migas de pan, promo y grillas repetidas en Custom Elements renderizados desde JSON. Alcance: 14 páginas, js/componentes/, js/utilidades/dom.js. Restricciones: JS vanilla sin librerías, componentes en inglés.
