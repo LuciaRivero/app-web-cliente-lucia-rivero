@@ -23,7 +23,7 @@ export const ACCOUNT_NAV = [
   {
     id: "cuenta",
     texto: "Mi cuenta",
-    ruta: "pages/registro.html",
+    ruta: "pages/cuenta.html",
     clase: "ir-cuenta",
     icono: "usuario",
   },

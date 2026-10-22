@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Mi cuenta en Whiplash - Ingresá o creá tu cuenta para guardar artistas y comprar merch."
+      content="Registro en Whiplash - Creá tu cuenta para guardar artistas y comprar merch."
     />
-    <title>Mi cuenta | Whiplash</title>
+    <title>Registro | Whiplash</title>
     <!-- Precarga: fuentes y módulos compartidos se piden en paralelo
          en vez de esperar a que los descubra main.css / main.js. -->
     <link rel="preload" href="../assets/fuentes/anton-regular.ttf" as="font" type="font/ttf" crossorigin />
@@ -17,9 +17,11 @@
     <link rel="modulepreload" href="../js/componentes/navigation.js" />
     <link rel="modulepreload" href="../js/componentes/tarjetas.js" />
     <link rel="modulepreload" href="../js/componentes/data-grid.js" />
+    <link rel="modulepreload" href="../js/servicios/sesion.js" />
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/paginas/cuenta.css" />
     <script type="module" src="../js/main.js"></script>
+    <script type="module" src="../js/paginas/registro.js"></script>
   </head>
   <body>
     <a class="enlace-saltar" href="#contenido-principal">Saltar al contenido</a>
@@ -27,55 +29,18 @@
     <site-header current="cuenta"></site-header>
 
     <main id="contenido-principal">
-      <site-breadcrumbs><span>Mi cuenta</span></site-breadcrumbs>
+      <site-breadcrumbs><a href="cuenta.html">Mi cuenta</a><span>Registro</span></site-breadcrumbs>
 
-      <h1>Mi cuenta</h1>
+      <h1>Creá tu cuenta</h1>
       <p class="subtitulo">
-        Ingresá o creá tu cuenta para guardar artistas, seguir tus favoritos y
-        comprar merch.
+        Registrate para guardar artistas, seguir tus favoritos y comprar merch.
       </p>
 
-      <section class="cuenta-grid" aria-labelledby="titulo-cuenta">
-        <h2 id="titulo-cuenta" class="sr-only">Acceso a tu cuenta</h2>
+      <section class="cuenta-panel" aria-labelledby="titulo-registro">
+        <article class="formulario-cuenta">
+          <h2 id="titulo-registro">Tus datos</h2>
 
-        <article class="formulario-cuenta" aria-labelledby="titulo-ingreso">
-          <h2 id="titulo-ingreso">Ingresá a tu cuenta</h2>
-
-          <form action="#" method="post">
-            <div class="campo">
-              <label for="login-email">Correo electrónico</label>
-              <input
-                type="email"
-                id="login-email"
-                name="email"
-                placeholder="tucorreo@ejemplo.com"
-                required
-              />
-            </div>
-
-            <div class="campo">
-              <label for="login-password">Contraseña</label>
-              <input
-                type="password"
-                id="login-password"
-                name="password"
-                placeholder="Tu contraseña"
-                required
-              />
-            </div>
-
-            <a class="enlace-olvido" href="registro.html"
-              >¿Olvidaste tu contraseña?</a
-            >
-
-            <button type="submit">Ingresar</button>
-          </form>
-        </article>
-
-        <article class="formulario-cuenta" aria-labelledby="titulo-registro">
-          <h2 id="titulo-registro">Creá tu cuenta</h2>
-
-          <form action="#" method="post">
+          <form class="formulario-registro">
             <div class="campo">
               <label for="reg-nombre">Nombre</label>
               <input
@@ -83,6 +48,7 @@
                 id="reg-nombre"
                 name="nombre"
                 placeholder="Tu nombre"
+                autocomplete="name"
                 required
               />
             </div>
@@ -94,6 +60,7 @@
                 id="reg-email"
                 name="email"
                 placeholder="tucorreo@ejemplo.com"
+                autocomplete="email"
                 required
               />
             </div>
@@ -105,6 +72,8 @@
                 id="reg-password"
                 name="password"
                 placeholder="Mínimo 8 caracteres"
+                autocomplete="new-password"
+                minlength="8"
                 required
               />
             </div>
@@ -116,6 +85,7 @@
                 id="reg-password2"
                 name="password2"
                 placeholder="Repetí tu contraseña"
+                autocomplete="new-password"
                 required
               />
             </div>
@@ -135,6 +105,12 @@
 
             <button type="submit">Crear cuenta</button>
           </form>
+
+          <p class="mensaje-formulario" aria-live="polite"></p>
+
+          <p class="cuenta-alternativa">
+            ¿Ya tenés cuenta? <a href="cuenta.html">Ingresá</a>
+          </p>
         </article>
       </section>
 
