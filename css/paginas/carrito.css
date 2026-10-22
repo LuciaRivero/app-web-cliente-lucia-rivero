@@ -137,6 +137,17 @@
   flex-shrink: 0;
 }
 
+/* La cruz es solo para mobile (ver Responsive). */
+.icono-cruz {
+  display: none;
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
 .tapa-eliminar {
   transform-box: fill-box;
   transform-origin: right bottom;
@@ -260,16 +271,116 @@
     position: static;
   }
 
+  /* Ítem en grilla: imagen a la izquierda; arriba título y la
+     cruz para eliminar; abajo cantidad y precio. .item-controles
+     usa display: contents para que sus hijos entren en la grilla.
+     El precio ocupa también la columna de la cruz, así esa columna
+     mide lo que la cruz y el título tiene más lugar. */
   .carrito-item {
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "imagen detalle eliminar"
+      "imagen pie pie";
+    align-items: start;
+    column-gap: var(--espaciado);
+    row-gap: 12px;
+    padding: 12px;
+  }
+
+  .item-imagen {
+    grid-area: imagen;
+    width: 96px;
+    height: 96px;
+  }
+
+  .item-detalle {
+    grid-area: detalle;
+    align-self: start;
+  }
+
+  .item-titulo {
+    font-size: 17px;
+  }
+
+  .item-subtitulo {
+    font-size: 14px;
   }
 
   .item-controles {
-    width: 100%;
-    justify-content: space-between;
+    display: contents;
+  }
+
+  .carrito-item .selector-cantidad {
+    grid-area: pie;
+    justify-self: start;
+    align-self: end;
   }
 
   .item-precio {
-    text-align: left;
+    grid-area: pie;
+    align-self: end;
+    justify-self: end;
+    min-width: 0;
+    line-height: 36px;
+    font-size: 20px;
+    color: var(--color-acento);
+  }
+
+  .item-eliminar {
+    grid-area: eliminar;
+    min-width: 0;
+  }
+
+  /* En mobile el botón es una cruz simple, sin el efecto del tacho. */
+  .boton-eliminar,
+  .boton-eliminar:hover,
+  .boton-eliminar:focus-visible {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--color-texto-dim);
+  }
+
+  .boton-eliminar:hover,
+  .boton-eliminar:focus-visible {
+    color: var(--color-error);
+  }
+
+  .icono-eliminar,
+  .texto-eliminar {
+    display: none;
+  }
+
+  .icono-cruz {
+    display: block;
+  }
+}
+
+/* Pantallas muy angostas: la imagen, el precio y los botones de
+   cantidad se achican para que todo entre en la misma fila. */
+@media (max-width: 359px) {
+  .item-imagen {
+    width: 72px;
+    height: 72px;
+  }
+
+  .carrito-item {
+    column-gap: 12px;
+  }
+
+  .item-precio {
+    font-size: 17px;
+  }
+
+  .carrito-item .selector-cantidad button {
+    width: 30px;
+  }
+
+  .carrito-item .selector-cantidad span {
+    min-width: 24px;
   }
 }
