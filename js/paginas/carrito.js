@@ -52,6 +52,18 @@ function crearIconoEliminar() {
   return svg;
 }
 
+// Cruz que reemplaza al tacho en mobile (el CSS muestra uno u otro).
+function crearIconoCruz() {
+  const svg = document.createElementNS(SVG_NS, "svg");
+  svg.setAttribute("class", "icono-cruz");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("aria-hidden", "true");
+  const trazo = document.createElementNS(SVG_NS, "path");
+  trazo.setAttribute("d", "M6 6l12 12M18 6L6 18");
+  svg.append(trazo);
+  return svg;
+}
+
 // "Vinilo · Los Cráteres" / "Entrada · Los Cráteres"
 function crearSubtitulo(item, producto) {
   return [item.opcion ?? producto.tipo, producto.artista?.nombre].filter(Boolean).join(" · ");
@@ -82,6 +94,7 @@ function crearItem(item, producto) {
       atributos: { type: "button", "aria-label": `Eliminar ${nombre} del carrito` },
     },
     crearIconoEliminar(),
+    crearIconoCruz(),
     crearElemento("span", { clase: "texto-eliminar", texto: "Eliminar", atributos: { "aria-hidden": "true" } }),
   );
 
