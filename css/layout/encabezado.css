@@ -252,6 +252,11 @@ site-header:not(:defined) {
   .contador-salto {
     animation: none;
   }
+
+  .nav-principal,
+  .menu-fondo {
+    transition: none !important;
+  }
 }
 
 .icono-carrito,
@@ -317,6 +322,13 @@ site-header:not(:defined) {
 .nav-principal a:hover,
 .nav-principal a:focus {
   color: var(--color-primario);
+}
+
+/* Partes del menú lateral que solo existen en mobile. */
+.cerrar-menu,
+.menu-fondo,
+.nav-principal .solo-mobile {
+  display: none;
 }
 
 /* ---------- Menú de usuario (js/componentes/menu-usuario.js) ---------- */
@@ -457,7 +469,7 @@ site-header:not(:defined) {
 
   .encabezado-superior {
     display: grid;
-    /* Menú · logo · lupa · carrito y cuenta */
+    /* Menú · logo · lupa · cuenta */
     grid-template-columns: 40px 1fr 40px auto;
     align-items: center;
     gap: 12px;
@@ -493,35 +505,158 @@ site-header:not(:defined) {
     justify-self: end;
   }
 
-  .buscador,
-  .nav-principal {
+  .buscador {
     display: none;
   }
 
-  /* Carrito (con su contador) y acceso de usuario, junto a la lupa. */
+  /* Acceso de usuario junto a la lupa. El carrito, con su
+     contador, está en el menú lateral (link .solo-mobile). */
   .nav-cuenta {
     grid-column: 4;
     grid-row: 1;
     justify-self: end;
   }
 
-  .nav-cuenta ul {
-    gap: 12px;
+  .nav-cuenta li:has(.ir-carrito) {
+    display: none;
   }
 
   .menu-usuario-panel {
     width: min(280px, calc(100vw - 2 * var(--espaciado)));
   }
 
-  /* El botón de menú (.boton-menu) agrega esta clase desde
-     js/componentes/menu.js y la navegación aparece en columna. */
+  /* ---------- Menú lateral ----------
+     .boton-menu agrega .menu-abierto desde js/componentes/menu.js:
+     el panel entra desde la izquierda y el resto se oscurece.
+     Cerrado usa visibility: hidden para que sus links no reciban
+     foco; la transición de visibility espera a que salga el panel. */
+  .nav-principal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 30;
+    width: min(78vw, 300px);
+    padding: 20px var(--espaciado) var(--espaciado-grande);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background-color: var(--color-texto);
+    border-top: none;
+    border-radius: 0 var(--radio-amplio) var(--radio-amplio) 0;
+    box-shadow: var(--sombra);
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition:
+      transform 0.3s ease,
+      visibility 0s linear 0.3s;
+  }
+
   .encabezado-sitio.menu-abierto .nav-principal {
-    display: block;
+    transform: translateX(0);
+    visibility: visible;
+    transition: transform 0.3s ease;
+  }
+
+  .cerrar-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-left: auto;
+    color: var(--color-base);
+    background: none;
+    border: none;
+    border-radius: var(--radio-base);
+    cursor: pointer;
+  }
+
+  .cerrar-menu svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .cerrar-menu:hover,
+  .cerrar-menu:focus-visible {
+    background-color: rgba(10, 10, 10, 0.08);
   }
 
   .nav-principal ul {
     flex-direction: column;
-    gap: var(--espaciado);
+    align-items: center;
+    gap: 4px;
+    padding: var(--espaciado-grande) 0 0;
+  }
+
+  .nav-principal .solo-mobile {
+    display: list-item;
+  }
+
+  .nav-principal a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    color: var(--color-base);
+    font-size: 17px;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: normal;
+    border-radius: var(--radio-base);
+  }
+
+  .nav-principal a:focus {
+    color: var(--color-primario-oscuro);
+  }
+
+  .nav-principal a:hover,
+  .nav-principal a:focus-visible {
+    color: var(--color-primario-oscuro);
+    background-color: rgba(91, 33, 182, 0.08);
+  }
+
+  .nav-principal a[aria-current="page"] {
+    color: var(--color-primario-oscuro);
+    font-weight: 700;
+  }
+
+  /* Unidades del carrito al lado del link "Carrito". */
+  .contador-menu {
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radio-pildora);
+    background-color: var(--color-primario-oscuro);
+    color: var(--color-texto);
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .menu-fondo {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    background-color: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.3s ease,
+      visibility 0s linear 0.3s;
+  }
+
+  .encabezado-sitio.menu-abierto .menu-fondo {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease;
+  }
+
+  /* Con el menú abierto la página de atrás no se desplaza. */
+  body.menu-lateral-abierto {
+    overflow: hidden;
   }
 
   /* La lupa (.boton-buscar) agrega esta clase desde el JS
@@ -530,29 +665,5 @@ site-header:not(:defined) {
     display: flex;
     grid-column: 1 / -1;
     grid-row: 2;
-  }
-}
-
-/* Pantallas muy angostas (menos de 360px): con carrito y avatar
-   no entra el logo completo, se achican la separación y el logo. */
-@media (max-width: 359px) {
-  .encabezado-superior {
-    gap: 8px;
-  }
-
-  .nav-cuenta ul {
-    gap: 8px;
-  }
-
-  .logo {
-    gap: 6px;
-  }
-
-  .logo img {
-    height: 24px;
-  }
-
-  .logo span {
-    font-size: 19px;
   }
 }
