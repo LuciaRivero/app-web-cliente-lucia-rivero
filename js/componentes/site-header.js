@@ -3,12 +3,17 @@
    Encabezado común: menú mobile, logo, buscador, accesos
    de cuenta y navegación principal.
    - current: id del link activo (ver navigation.js).
+   Con sesión abierta, el link de la cuenta se reemplaza por el
+   menú de usuario (menu-usuario.js) y se vuelve a dibujar cada
+   vez que la sesión cambia.
    Se arma en light DOM para que apliquen los estilos de
    css/layout/encabezado.css sin cambios.
    ========================================================= */
 
 import { rutaDesdeRaiz } from "../servicios/datos.js";
+import { CAMBIO_SESION, usuarioActual } from "../servicios/sesion.js";
 import { crearElemento } from "../utilidades/dom.js";
+import { crearMenuUsuario } from "./menu-usuario.js";
 import { ACCOUNT_NAV, HOME, MAIN_NAV } from "./navigation.js";
 
 const icono = (nombre) => rutaDesdeRaiz(`assets/img/iconos/icono-${nombre}.svg`);
@@ -75,11 +80,23 @@ class SiteHeader extends HTMLElement {
         );
       }),
     );
+    this.enlaceCuenta = this.querySelector(".ir-cuenta");
+    this.itemCuenta = this.enlaceCuenta.parentElement;
+    this.mostrarCuenta(actual);
+    window.addEventListener(CAMBIO_SESION, () => this.mostrarCuenta(actual));
 
     this.querySelector(".nav-principal").append(
       crearLista(MAIN_NAV, actual, (enlace, link) => {
         enlace.textContent = link.texto;
       }),
+    );
+  }
+
+  // Alterna entre el link a Mi cuenta (sin sesión) y el menú de usuario.
+  mostrarCuenta(actual) {
+    const usuario = usuarioActual();
+    this.itemCuenta.replaceChildren(
+      usuario ? crearMenuUsuario(usuario, { actual: actual === "cuenta" }) : this.enlaceCuenta,
     );
   }
 }

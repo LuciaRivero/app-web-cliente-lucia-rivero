@@ -21,18 +21,18 @@ export const MAIN_NAV = [
 
 export const ACCOUNT_NAV = [
   {
-    id: "cuenta",
-    texto: "Mi cuenta",
-    ruta: "pages/cuenta.html",
-    clase: "ir-cuenta",
-    icono: "usuario",
-  },
-  {
     id: "carrito",
     texto: "Carrito",
     ruta: "pages/carrito.html",
     clase: "ir-carrito",
     icono: "carrito",
+  },
+  {
+    id: "cuenta",
+    texto: "Mi cuenta",
+    ruta: "pages/cuenta.html",
+    clase: "ir-cuenta",
+    icono: "usuario",
   },
 ];
 
