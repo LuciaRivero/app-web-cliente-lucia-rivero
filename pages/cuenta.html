@@ -10,8 +10,20 @@
     <title>Mi cuenta | Whiplash</title>
     <!-- Precarga: fuentes y módulos compartidos se piden en paralelo
          en vez de esperar a que los descubra main.css / main.js. -->
-    <link rel="preload" href="../assets/fuentes/anton-regular.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="preload" href="../assets/fuentes/inter-variable.ttf" as="font" type="font/ttf" crossorigin />
+    <link
+      rel="preload"
+      href="../assets/fuentes/anton-regular.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="../assets/fuentes/inter-variable.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
     <link rel="modulepreload" href="../js/servicios/datos.js" />
     <link rel="modulepreload" href="../js/utilidades/dom.js" />
     <link rel="modulepreload" href="../js/componentes/navigation.js" />
@@ -35,13 +47,18 @@
 
       <!-- js/paginas/cuenta.js muestra el ingreso o la edición
            según haya una sesión abierta. -->
-      <section class="cuenta-panel" data-vista="ingreso" aria-labelledby="titulo-ingreso" hidden>
+      <section
+        class="cuenta-panel"
+        data-vista="ingreso"
+        aria-labelledby="titulo-ingreso"
+        hidden
+      >
         <p class="subtitulo">
           Ingresá para guardar artistas, seguir tus favoritos y comprar merch.
         </p>
 
         <article class="formulario-cuenta">
-          <h2 id="titulo-ingreso" tabindex="-1">Ingresá a tu cuenta</h2>
+          <h2 id="titulo-ingreso">Ingresá a tu cuenta</h2>
 
           <form class="formulario-ingreso">
             <div class="campo">
@@ -79,13 +96,19 @@
         </article>
       </section>
 
-      <section class="cuenta-panel" data-vista="edicion" aria-labelledby="titulo-edicion" hidden>
+      <section
+        class="cuenta-panel"
+        data-vista="edicion"
+        aria-labelledby="titulo-edicion"
+        hidden
+      >
         <p class="subtitulo">
-          Hola, <span class="cuenta-nombre"></span>. Acá podés actualizar tus datos.
+          Hola, <span class="cuenta-nombre"></span>. Acá podés actualizar tus
+          datos.
         </p>
 
         <article class="formulario-cuenta">
-          <h2 id="titulo-edicion" tabindex="-1">Editá tus datos</h2>
+          <h2 id="titulo-edicion">Editá tus datos</h2>
 
           <form class="formulario-edicion">
             <div class="campo">
@@ -123,7 +146,9 @@
                 minlength="8"
                 aria-describedby="ayuda-password"
               />
-              <small id="ayuda-password" class="ayuda-campo">Mínimo 8 caracteres.</small>
+              <small id="ayuda-password" class="ayuda-campo"
+                >Mínimo 8 caracteres.</small
+              >
             </div>
 
             <div class="campo">
@@ -141,8 +166,6 @@
           </form>
 
           <p class="mensaje-formulario" aria-live="polite"></p>
-
-          <button type="button" class="boton-cerrar-sesion">Cerrar sesión</button>
         </article>
       </section>
 

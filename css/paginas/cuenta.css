@@ -11,11 +11,6 @@
   margin-bottom: 0;
 }
 
-/* Los títulos reciben el foco por JS al cambiar de vista. */
-.formulario-cuenta h2:focus {
-  outline: none;
-}
-
 .formulario-cuenta .ayuda-campo {
   font-size: 13px;
   color: var(--color-texto-dim);
@@ -56,17 +51,4 @@
 .cuenta-alternativa a:hover,
 .cuenta-alternativa a:focus {
   color: var(--color-acento);
-}
-
-/* Secundario: le saca el relleno al estilo de botón de formulario.css. */
-.formulario-cuenta .boton-cerrar-sesion {
-  margin-top: 20px;
-  background-color: transparent;
-  border: 2px solid var(--color-primario);
-  padding: 12px 26px;
-}
-
-.formulario-cuenta .boton-cerrar-sesion:hover,
-.formulario-cuenta .boton-cerrar-sesion:focus {
-  background-color: var(--color-primario);
 }
