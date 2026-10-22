@@ -37,3 +37,11 @@ export function crearCargando(texto = "Cargando…", { chico = false } = {}) {
     crearElemento("span", { texto }),
   );
 }
+
+// Muestra el resultado de un formulario en su <p class="mensaje-formulario">
+// (con aria-live, así el lector de pantalla lo anuncia).
+// `tipo` es "error" o "exito" y define el color.
+export function mostrarMensaje(elemento, texto, tipo = "error") {
+  elemento.dataset.tipo = tipo;
+  elemento.textContent = texto;
+}

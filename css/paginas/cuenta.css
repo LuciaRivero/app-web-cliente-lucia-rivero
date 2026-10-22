@@ -1,33 +1,72 @@
 /* =========================================================
-   Whiplash — Página Mi cuenta (registro / ingreso)
+   Whiplash — Páginas Mi cuenta y Registro
    ========================================================= */
 
-.cuenta-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--espaciado);
-  align-items: start;
+.cuenta-panel {
+  max-width: 640px;
   margin-bottom: var(--espaciado-grande);
 }
 
-.cuenta-grid .formulario-cuenta {
+.cuenta-panel .formulario-cuenta {
   margin-bottom: 0;
 }
 
-.formulario-cuenta .enlace-olvido {
-  align-self: flex-start;
-  font-size: 13px;
-  color: var(--color-texto-dim);
-  transition: color 0.2s ease;
+/* Los títulos reciben el foco por JS al cambiar de vista. */
+.formulario-cuenta h2:focus {
+  outline: none;
 }
 
-.formulario-cuenta .enlace-olvido:hover {
+.formulario-cuenta .ayuda-campo {
+  font-size: 13px;
+  color: var(--color-texto-dim);
+}
+
+/* Resultado del envío (js/utilidades/dom.js → mostrarMensaje) */
+.mensaje-formulario {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mensaje-formulario:not(:empty) {
+  margin-top: 16px;
+}
+
+.mensaje-formulario[data-tipo="error"] {
+  color: var(--color-error);
+}
+
+.mensaje-formulario[data-tipo="exito"] {
   color: var(--color-acento);
 }
 
-/* ---------- Responsive ---------- */
-@media (max-width: 768px) {
-  .cuenta-grid {
-    grid-template-columns: 1fr;
-  }
+.cuenta-alternativa {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-gris-suave);
+  font-size: 14px;
+  color: var(--color-texto-dim);
+}
+
+.cuenta-alternativa a {
+  color: var(--color-primario-claro);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.cuenta-alternativa a:hover,
+.cuenta-alternativa a:focus {
+  color: var(--color-acento);
+}
+
+/* Secundario: le saca el relleno al estilo de botón de formulario.css. */
+.formulario-cuenta .boton-cerrar-sesion {
+  margin-top: 20px;
+  background-color: transparent;
+  border: 2px solid var(--color-primario);
+  padding: 12px 26px;
+}
+
+.formulario-cuenta .boton-cerrar-sesion:hover,
+.formulario-cuenta .boton-cerrar-sesion:focus {
+  background-color: var(--color-primario);
 }
