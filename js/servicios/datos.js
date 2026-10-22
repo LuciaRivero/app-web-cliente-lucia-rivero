@@ -1,10 +1,12 @@
 /* =========================================================
    Whiplash — Capa de datos
    Único lugar que sabe de dónde salen los datos.
-   Por ahora lee los JSON locales de js/datos/; para pasar a
-   Supabase alcanza con reescribir cargarDatos() manteniendo
-   la misma forma de los objetos.
+   El catálogo (artistas, productos y géneros) se lee de las
+   tablas de Supabase (ver supabase/esquema.sql) con la misma
+   forma que tenían los JSON locales.
    ========================================================= */
+
+import { pedirTabla } from "./supabase.js";
 
 // Raíz del sitio calculada desde este archivo, así las rutas
 // funcionan igual desde index.html que desde pages/*.html.
@@ -14,24 +16,16 @@ export function rutaDesdeRaiz(ruta) {
   return new URL(ruta, RAIZ).href;
 }
 
-async function leerJson(ruta) {
-  const respuesta = await fetch(new URL(ruta, import.meta.url));
-  if (!respuesta.ok) {
-    throw new Error(`No se pudo leer ${ruta} (${respuesta.status})`);
-  }
-  return respuesta.json();
-}
-
-// Se guarda la promesa para no volver a pedir los archivos en cada
+// Se guarda la promesa para no volver a pedir las tablas en cada
 // tecla del buscador ni en cada grilla de la misma página.
 let cache = null;
 
 function cargarDatos() {
   if (!cache) {
     cache = Promise.all([
-      leerJson("../datos/artistas.json"),
-      leerJson("../datos/productos.json"),
-      leerJson("../datos/generos.json"),
+      pedirTabla("artistas?select=*&order=id"),
+      pedirTabla("productos?select=*&order=id"),
+      pedirTabla("generos?select=*&order=id"),
     ]).catch((error) => {
       cache = null;
       throw error;

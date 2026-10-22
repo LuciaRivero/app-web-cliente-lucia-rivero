@@ -14,8 +14,9 @@ import {
   validarPassword,
 } from "../servicios/sesion.js";
 import { completarSeguirPendiente } from "../servicios/artistas-seguidos.js";
+import { unirCarritoAlIngresar } from "../servicios/carrito.js";
 import { rutaDesdeRaiz } from "../servicios/datos.js";
-import { mostrarMensaje } from "../utilidades/dom.js";
+import { enviando, mostrarMensaje } from "../utilidades/dom.js";
 
 const vistas = {
   ingreso: document.querySelector('[data-vista="ingreso"]'),
@@ -41,22 +42,27 @@ function mostrarVista(usuario) {
   if (usuario) completarEdicion(usuario);
 }
 
-formularioIngreso.addEventListener("submit", (evento) => {
+formularioIngreso.addEventListener("submit", async (evento) => {
   evento.preventDefault();
   const datos = new FormData(formularioIngreso);
-  const { error } = iniciarSesion(datos.get("email"), datos.get("password"));
-  if (error) {
-    mostrarMensaje(mensajeIngreso, error);
-    formularioIngreso.elements.password.select();
-    return;
-  }
-  // Si se tocó "Seguir" sin sesión, ese artista se sigue ahora y
-  // el ingreso termina en Mis artistas; si no, en la home.
-  const destino = completarSeguirPendiente() ? "pages/artistas.html" : "index.html";
-  location.href = rutaDesdeRaiz(destino);
+  mostrarMensaje(mensajeIngreso, "");
+  const destino = await enviando(formularioIngreso, "Ingresando…", async () => {
+    const { error } = await iniciarSesion(datos.get("email"), datos.get("password"));
+    if (error) {
+      mostrarMensaje(mensajeIngreso, error);
+      formularioIngreso.elements.password.select();
+      return null;
+    }
+    // Lo agregado al carrito sin sesión se suma al de la cuenta.
+    // Si se tocó "Seguir" sin sesión, ese artista se sigue ahora y
+    // el ingreso termina en Mis artistas; si no, en la home.
+    const [siguioPendiente] = await Promise.all([completarSeguirPendiente(), unirCarritoAlIngresar()]);
+    return siguioPendiente ? "pages/artistas.html" : "index.html";
+  });
+  if (destino) location.href = rutaDesdeRaiz(destino);
 });
 
-formularioEdicion.addEventListener("submit", (evento) => {
+formularioEdicion.addEventListener("submit", async (evento) => {
   evento.preventDefault();
   const datos = new FormData(formularioEdicion);
   const password = datos.get("password");
@@ -71,17 +77,26 @@ formularioEdicion.addEventListener("submit", (evento) => {
     }
   }
 
-  const { usuario, error } = actualizarUsuario({
-    nombre: datos.get("nombre"),
-    email: datos.get("email"),
-    password,
-  });
+  mostrarMensaje(mensajeEdicion, "");
+  const { usuario, emailPendiente, error } = await enviando(formularioEdicion, "Guardando…", () =>
+    actualizarUsuario({
+      nombre: datos.get("nombre"),
+      email: datos.get("email"),
+      password,
+    }),
+  );
   if (error) {
     mostrarMensaje(mensajeEdicion, error);
     return;
   }
   completarEdicion(usuario);
-  mostrarMensaje(mensajeEdicion, "Guardamos tus cambios.", "exito");
+  mostrarMensaje(
+    mensajeEdicion,
+    emailPendiente
+      ? `Guardamos tus cambios. Para usar ${emailPendiente}, confirmalo desde el mail que te enviamos.`
+      : "Guardamos tus cambios.",
+    "exito",
+  );
 });
 
 mostrarVista(usuarioActual());

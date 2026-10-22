@@ -52,6 +52,7 @@ function crearFiguraConEnlace(href, imagen, alt, titulo) {
 // Botón de alternar: aria-pressed dice si ya se sigue al artista
 // y el texto visible cambia a "Siguiendo". Sin sesión deja al
 // artista pendiente y lleva a Mi cuenta: al ingresar se sigue.
+// El estado llega de Supabase: hasta entonces se muestra "Seguir".
 // Lo usan las tarjetas y el perfil.
 export function prepararBotonSeguir(boton, artista) {
   const mostrarEstado = (siguiendo) => {
@@ -59,14 +60,27 @@ export function prepararBotonSeguir(boton, artista) {
     boton.textContent = siguiendo ? "Siguiendo" : "Seguir";
   };
   boton.setAttribute("aria-label", `Seguir a ${artista.nombre}`);
-  mostrarEstado(estaSiguiendo(artista.id));
-  boton.addEventListener("click", () => {
+  mostrarEstado(false);
+  if (usuarioActual()) {
+    estaSiguiendo(artista.id)
+      .then(mostrarEstado)
+      .catch((error) => console.error(error));
+  }
+  boton.addEventListener("click", async () => {
     if (!usuarioActual()) {
       guardarSeguirPendiente(artista.id);
       location.href = URL_CUENTA;
       return;
     }
-    mostrarEstado(alternarSeguir(artista.id));
+    // Mientras se guarda, el botón no acepta otro clic.
+    boton.disabled = true;
+    try {
+      mostrarEstado(await alternarSeguir(artista.id));
+    } catch (error) {
+      console.error("No se pudo actualizar el artista seguido", error);
+    } finally {
+      boton.disabled = false;
+    }
   });
   return boton;
 }

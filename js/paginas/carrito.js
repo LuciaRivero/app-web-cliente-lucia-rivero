@@ -10,6 +10,7 @@ import {
   CANTIDAD_MAXIMA,
   CANTIDAD_MINIMA,
   cambiarCantidad,
+  carritoListo,
   claveItem,
   eliminarDelCarrito,
   leerCarrito,
@@ -32,7 +33,7 @@ const resumen = {
   total: document.querySelector('[data-resumen="total"]'),
 };
 
-// Productos de productos.json indexados por id, para buscar
+// Productos del catálogo indexados por id, para buscar
 // título, precio e imagen de cada ítem guardado.
 let productosPorId = new Map();
 
@@ -177,7 +178,7 @@ function mostrarVacio() {
 }
 
 // Ítems guardados cuyo producto existe (si uno se borra de
-// productos.json, deja de mostrarse en vez de romper la página).
+// el catálogo, deja de mostrarse en vez de romper la página).
 function itemsValidos() {
   return leerCarrito().filter((item) => productosPorId.has(item.id));
 }
@@ -198,7 +199,8 @@ async function iniciarCarrito() {
   lista.setAttribute("aria-busy", "true");
   lista.replaceChildren(crearCargando("Cargando tu carrito…"));
   try {
-    const productos = await obtenerProductosConArtista();
+    // Con sesión, primero llega el carrito guardado en la cuenta.
+    const [productos] = await Promise.all([obtenerProductosConArtista(), carritoListo]);
     productosPorId = new Map(productos.map((producto) => [producto.id, producto]));
   } catch (error) {
     console.error(error);

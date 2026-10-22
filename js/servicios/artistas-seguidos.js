@@ -1,40 +1,76 @@
 /* =========================================================
    Whiplash — Artistas seguidos
-   Ids de artistas.json que sigue el usuario con sesión, en el
-   orden en que los siguió. Se guardan en su registro de
-   usuario (ver leerDatoUsuario en sesion.js); sin sesión la
-   lista está vacía y no se puede seguir a nadie.
+   Ids de artistas que sigue el usuario con sesión, en el
+   orden en que los siguió. Se guardan en la tabla seguidos
+   de Supabase (RLS: cada usuario ve solo los suyos); sin
+   sesión la lista está vacía y no se puede seguir a nadie.
+   La lista se pide una vez por página y queda en memoria,
+   así los botones "Seguir" se pintan sin un pedido cada uno.
 
    Si alguien toca "Seguir" sin sesión, el artista queda
    pendiente en sessionStorage y se sigue al ingresar o
    registrarse (completarSeguirPendiente).
    ========================================================= */
 
-import { guardarDatoUsuario, leerDatoUsuario } from "./sesion.js";
+import { CAMBIO_SESION, obtenerToken } from "./sesion.js";
+import { pedirTabla } from "./supabase.js";
 
-const CLAVE = "seguidos";
 const CLAVE_PENDIENTE = "whiplash-seguir-pendiente";
 
+let cache = null;
+
+// Al ingresar o cerrar sesión cambia de quién es la lista.
+window.addEventListener(CAMBIO_SESION, () => {
+  cache = null;
+});
+
 export function leerSeguidos() {
-  const ids = leerDatoUsuario(CLAVE, []);
-  return Array.isArray(ids) ? ids : [];
+  cache ??= (async () => {
+    const token = await obtenerToken();
+    if (!token) return [];
+    const filas = await pedirTabla("seguidos?select=artista_id&order=creado_en", { token });
+    return filas.map((fila) => fila.artista_id);
+  })().catch((error) => {
+    cache = null;
+    throw error;
+  });
+  return cache;
 }
 
-export function estaSiguiendo(id) {
-  return leerSeguidos().includes(id);
+export async function estaSiguiendo(id) {
+  return (await leerSeguidos()).includes(id);
+}
+
+async function seguir(id) {
+  const token = await obtenerToken();
+  if (!token) throw new Error("Sin sesión");
+  await pedirTabla("seguidos", {
+    metodo: "POST",
+    cuerpo: { artista_id: id },
+    token,
+    // Si ya lo seguía, no es un error.
+    prefer: "resolution=ignore-duplicates,return=minimal",
+  });
+  const ids = await leerSeguidos();
+  if (!ids.includes(id)) cache = Promise.resolve([...ids, id]);
+}
+
+export async function dejarDeSeguir(id) {
+  const token = await obtenerToken();
+  if (!token) throw new Error("Sin sesión");
+  await pedirTabla(`seguidos?artista_id=eq.${id}`, { metodo: "DELETE", token });
+  const ids = await leerSeguidos();
+  cache = Promise.resolve(ids.filter((actual) => actual !== id));
 }
 
 // Devuelve si quedó siguiendo al artista.
-export function alternarSeguir(id) {
-  const ids = leerSeguidos();
-  const siguiendo = !ids.includes(id);
-  guardarDatoUsuario(CLAVE, siguiendo ? [...ids, id] : ids.filter((actual) => actual !== id));
-  return siguiendo;
-}
-
-function seguir(id) {
-  const ids = leerSeguidos();
-  if (!ids.includes(id)) guardarDatoUsuario(CLAVE, [...ids, id]);
+export async function alternarSeguir(id) {
+  if (await estaSiguiendo(id)) {
+    await dejarDeSeguir(id);
+    return false;
+  }
+  await seguir(id);
+  return true;
 }
 
 // sessionStorage puede fallar igual que localStorage: en ese caso
@@ -49,7 +85,7 @@ export function guardarSeguirPendiente(id) {
 
 // Sigue al artista pendiente (si hay uno) con la sesión recién
 // abierta y devuelve si lo hizo, para llevar a Mis artistas.
-export function completarSeguirPendiente() {
+export async function completarSeguirPendiente() {
   let id;
   try {
     id = Number(sessionStorage.getItem(CLAVE_PENDIENTE));
@@ -58,10 +94,11 @@ export function completarSeguirPendiente() {
     return false;
   }
   if (!id) return false;
-  seguir(id);
-  return true;
-}
-
-export function dejarDeSeguir(id) {
-  guardarDatoUsuario(CLAVE, leerSeguidos().filter((actual) => actual !== id));
+  try {
+    await seguir(id);
+    return true;
+  } catch (error) {
+    console.error("No se pudo seguir al artista pendiente", error);
+    return false;
+  }
 }

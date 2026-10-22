@@ -44,8 +44,16 @@ function crearItem(artista) {
     quitar,
   );
 
-  quitar.addEventListener("click", () => {
-    dejarDeSeguir(artista.id);
+  quitar.addEventListener("click", async () => {
+    quitar.disabled = true;
+    try {
+      await dejarDeSeguir(artista.id);
+    } catch (error) {
+      console.error(error);
+      quitar.disabled = false;
+      aviso.textContent = `No pudimos quitar a ${artista.nombre}. Probá de nuevo.`;
+      return;
+    }
     // El foco pasa al "Quitar" siguiente (o al anterior); si la
     // lista queda vacía, al título, para no perderse con el teclado.
     const vecino = item.nextElementSibling ?? item.previousElementSibling;
@@ -63,15 +71,9 @@ function crearItem(artista) {
 }
 
 async function iniciar() {
-  const ids = leerSeguidos();
-  if (!ids.length) {
-    mostrarVacio();
-    return;
-  }
-
   lista.replaceChildren(crearElemento("li", {}, crearCargando("Cargando tus artistas…")));
   try {
-    const artistas = await obtenerArtistas();
+    const [ids, artistas] = await Promise.all([leerSeguidos(), obtenerArtistas()]);
     const porId = new Map(artistas.map((artista) => [artista.id, artista]));
     const seguidos = ids.map((id) => porId.get(id)).filter(Boolean);
     if (!seguidos.length) {
