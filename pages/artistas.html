@@ -17,9 +17,12 @@
     <link rel="modulepreload" href="../js/componentes/navigation.js" />
     <link rel="modulepreload" href="../js/componentes/tarjetas.js" />
     <link rel="modulepreload" href="../js/componentes/data-grid.js" />
+    <link rel="modulepreload" href="../js/servicios/sesion.js" />
+    <link rel="modulepreload" href="../js/servicios/artistas-seguidos.js" />
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/paginas/artistas.css" />
     <script type="module" src="../js/main.js"></script>
+    <script type="module" src="../js/paginas/artistas.js"></script>
   </head>
   <body>
     <a class="enlace-saltar" href="#contenido-principal">Saltar al contenido</a>
@@ -33,68 +36,20 @@
       <p class="subtitulo">Las joyas que guardaste para volver a escuchar.</p>
 
       <section class="mis-artistas" aria-labelledby="titulo-mis-artistas">
-        <h2 id="titulo-mis-artistas" class="sr-only">
+        <h2 id="titulo-mis-artistas" class="sr-only" tabindex="-1">
           Lista de artistas guardados
         </h2>
 
-        <ul class="lista-artistas">
-          <li class="artista-guardado">
-            <a href="producto.html" class="artista-guardado-enlace">
-              <img
-                class="avatar"
-                src="../assets/img/artistas/artista1.jpg"
-                alt="Avatar de Los Cráteres"
-              />
-              <span class="artista-guardado-nombre">Los Cráteres</span>
-              <span class="artista-guardado-genero">Rock independiente</span>
-            </a>
-            <button
-              type="button"
-              class="quitar"
-              aria-label="Quitar a Los Cráteres de mis artistas"
-            >
-              Quitar
-            </button>
-          </li>
+        <!-- js/paginas/artistas.js arma la lista con los artistas
+             que sigue el usuario. -->
+        <ul class="lista-artistas"></ul>
 
-          <li class="artista-guardado">
-            <a href="producto.html" class="artista-guardado-enlace">
-              <img
-                class="avatar"
-                src="../assets/img/artistas/artista2.jpg"
-                alt="Avatar de Marea Onda"
-              />
-              <span class="artista-guardado-nombre">Marea Onda</span>
-              <span class="artista-guardado-genero">Folk indie</span>
-            </a>
-            <button
-              type="button"
-              class="quitar"
-              aria-label="Quitar a Marea Onda de mis artistas"
-            >
-              Quitar
-            </button>
-          </li>
+        <div class="artistas-vacio" hidden>
+          <p>Todavía no seguís a ningún artista.</p>
+          <p>Tocá "Seguir" en sus tarjetas o en su perfil para guardarlos acá.</p>
+        </div>
 
-          <li class="artista-guardado">
-            <a href="producto.html" class="artista-guardado-enlace">
-              <img
-                class="avatar"
-                src="../assets/img/artistas/artista3.jpg"
-                alt="Avatar de Valle Silente"
-              />
-              <span class="artista-guardado-nombre">Valle Silente</span>
-              <span class="artista-guardado-genero">Electrónica cruda</span>
-            </a>
-            <button
-              type="button"
-              class="quitar"
-              aria-label="Quitar a Valle Silente de mis artistas"
-            >
-              Quitar
-            </button>
-          </li>
-        </ul>
+        <p class="sr-only artistas-aviso" aria-live="polite"></p>
 
         <a class="boton boton-contorno boton-inferior" href="explorar.html"
           >Seguir explorando</a

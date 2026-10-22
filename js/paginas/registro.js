@@ -1,12 +1,14 @@
 /* =========================================================
    Whiplash — Página Registro
-   Crea la cuenta, deja la sesión abierta y lleva a Mi cuenta.
+   Crea la cuenta, deja la sesión abierta y lleva a Mi cuenta
+   (o a Mis artistas si se tocó "Seguir" antes de registrarse).
    El navegador valida los campos obligatorios, el formato del
    email y el largo de la contraseña; acá se suma que las dos
    contraseñas coincidan y que el email no esté registrado.
    ========================================================= */
 
 import { registrarUsuario, usuarioActual, validarPassword } from "../servicios/sesion.js";
+import { completarSeguirPendiente } from "../servicios/artistas-seguidos.js";
 import { mostrarMensaje } from "../utilidades/dom.js";
 
 const formulario = document.querySelector(".formulario-registro");
@@ -38,5 +40,5 @@ formulario.addEventListener("submit", (evento) => {
     return;
   }
 
-  location.href = "cuenta.html";
+  location.href = completarSeguirPendiente() ? "artistas.html" : "cuenta.html";
 });

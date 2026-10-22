@@ -17,9 +17,12 @@
     <link rel="modulepreload" href="../js/componentes/navigation.js" />
     <link rel="modulepreload" href="../js/componentes/tarjetas.js" />
     <link rel="modulepreload" href="../js/componentes/data-grid.js" />
+    <link rel="modulepreload" href="../js/servicios/sesion.js" />
+    <link rel="modulepreload" href="../js/servicios/artistas-seguidos.js" />
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/paginas/producto.css" />
     <script type="module" src="../js/main.js"></script>
+    <script type="module" src="../js/paginas/producto.js"></script>
   </head>
   <body>
     <a class="enlace-saltar" href="#contenido-principal">Saltar al contenido</a>
@@ -47,12 +50,14 @@
             camino sin intermediarios.
           </p>
 
-          <div class="acciones-artista">
+          <!-- data-artista: id en artistas.json (ver js/paginas/producto.js) -->
+          <div class="acciones-artista" data-artista="1">
             <button type="button" class="boton boton-seguir">Seguir</button>
             <button type="button" class="boton boton-compartir">
               Compartir
             </button>
           </div>
+          <p class="aviso-compartir" aria-live="polite"></p>
         </section>
 
         <section class="tracks" aria-labelledby="titulo-tracks">

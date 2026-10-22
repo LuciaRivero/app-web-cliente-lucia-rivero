@@ -7,11 +7,18 @@
    como HTML (importante cuando vengan de Supabase).
    ========================================================= */
 
+import {
+  alternarSeguir,
+  estaSiguiendo,
+  guardarSeguirPendiente,
+} from "../servicios/artistas-seguidos.js";
 import { agregarAlCarrito } from "../servicios/carrito.js";
 import { rutaDesdeRaiz } from "../servicios/datos.js";
+import { usuarioActual } from "../servicios/sesion.js";
 import { crearElemento } from "../utilidades/dom.js";
 
 const URL_PRODUCTO = rutaDesdeRaiz("pages/producto.html");
+const URL_CUENTA = rutaDesdeRaiz("pages/cuenta.html");
 // Opciones del formulario de compra según el tipo de producto.
 // Las entradas no tienen opciones: se elige la cantidad.
 const OPCIONES_COMPRA = {
@@ -36,13 +43,38 @@ function crearFiguraConEnlace(imagen, alt, titulo) {
   return crearElemento("a", { atributos: { href: URL_PRODUCTO } }, crearFigura(imagen, alt, titulo));
 }
 
+// Botón de alternar: aria-pressed dice si ya se sigue al artista
+// y el texto visible cambia a "Siguiendo". Sin sesión deja al
+// artista pendiente y lleva a Mi cuenta: al ingresar se sigue.
+// Lo usan las tarjetas y el perfil.
+export function prepararBotonSeguir(boton, artista) {
+  const mostrarEstado = (siguiendo) => {
+    boton.setAttribute("aria-pressed", String(siguiendo));
+    boton.textContent = siguiendo ? "Siguiendo" : "Seguir";
+  };
+  boton.setAttribute("aria-label", `Seguir a ${artista.nombre}`);
+  mostrarEstado(estaSiguiendo(artista.id));
+  boton.addEventListener("click", () => {
+    if (!usuarioActual()) {
+      guardarSeguirPendiente(artista.id);
+      location.href = URL_CUENTA;
+      return;
+    }
+    mostrarEstado(alternarSeguir(artista.id));
+  });
+  return boton;
+}
+
 export function crearTarjetaArtista(artista) {
   return crearElemento(
     "article",
     { clase: "tarjeta-artista" },
     crearFiguraConEnlace(artista.imagen, `Imagen de ${artista.nombre}`, artista.nombre),
     crearElemento("p", { clase: "genero-artista", texto: artista.genero }),
-    crearElemento("button", { texto: "Seguir", atributos: { type: "button" } }),
+    prepararBotonSeguir(
+      crearElemento("button", { clase: "boton-seguir-artista", atributos: { type: "button" } }),
+      artista,
+    ),
   );
 }
 
