@@ -70,6 +70,11 @@
   background-color: var(--color-gris-oscuro);
 }
 
+/* Aviso cuando el artista no tiene merch (js/paginas/producto.js). */
+.sin-merch {
+  color: var(--color-texto-dim);
+}
+
 /* Resultado de "Compartir" cuando se copia el link. */
 .aviso-compartir {
   margin-top: 12px;

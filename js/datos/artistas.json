@@ -3,36 +3,126 @@
     "id": 1,
     "nombre": "Los Cráteres",
     "genero": "Rock independiente",
-    "imagen": "assets/img/artistas/artista1.jpg"
+    "imagen": "assets/img/artistas/artista1.jpg",
+    "bio": "Banda de rock indie con guitarras crudas y letras que hablan de la ciudad. Desde su primer demo autoeditado, construyeron su propio camino sin intermediarios.",
+    "tracks": [
+      {
+        "titulo": "Ruido blanco",
+        "duracion": "3:24"
+      },
+      {
+        "titulo": "Andén",
+        "duracion": "4:01"
+      },
+      {
+        "titulo": "Enero",
+        "duracion": "3:47"
+      }
+    ]
   },
   {
     "id": 2,
     "nombre": "Marea Onda",
     "genero": "Folk indie",
-    "imagen": "assets/img/artistas/artista2.jpg"
+    "imagen": "assets/img/artistas/artista2.jpg",
+    "bio": "Dúo de folk indie que graba en casa, con guitarras acústicas, armonías de dos voces y canciones sobre el mar y los viajes cortos.",
+    "tracks": [
+      {
+        "titulo": "Bajamar",
+        "duracion": "3:58"
+      },
+      {
+        "titulo": "Faro apagado",
+        "duracion": "4:12"
+      },
+      {
+        "titulo": "Sal en la piel",
+        "duracion": "3:31"
+      }
+    ]
   },
   {
     "id": 3,
     "nombre": "Valle Silente",
     "genero": "Electrónica cruda",
-    "imagen": "assets/img/artistas/artista3.jpg"
+    "imagen": "assets/img/artistas/artista3.jpg",
+    "bio": "Proyecto de electrónica cruda nacido en un sótano: sintetizadores analógicos, cajas de ritmos gastadas y paisajes que suenan mejor de noche.",
+    "tracks": [
+      {
+        "titulo": "Estática",
+        "duracion": "5:06"
+      },
+      {
+        "titulo": "Llanura",
+        "duracion": "4:44"
+      },
+      {
+        "titulo": "Señal débil",
+        "duracion": "6:02"
+      }
+    ]
   },
   {
     "id": 4,
     "nombre": "Tejido Rojo",
     "genero": "Pop alternativo",
-    "imagen": "assets/img/artistas/artista4.jpg"
+    "imagen": "assets/img/artistas/artista4.jpg",
+    "bio": "Banda de pop alternativo con estribillos pegadizos y letras melancólicas. Tocan en centros culturales y editan todo de forma independiente.",
+    "tracks": [
+      {
+        "titulo": "Hilo suelto",
+        "duracion": "3:18"
+      },
+      {
+        "titulo": "Carmín",
+        "duracion": "3:42"
+      },
+      {
+        "titulo": "Telar",
+        "duracion": "4:05"
+      }
+    ]
   },
   {
     "id": 5,
     "nombre": "Risa Cósmica",
     "genero": "Punk DIY",
-    "imagen": "assets/img/artistas/artista2.jpg"
+    "imagen": "assets/img/artistas/artista2.jpg",
+    "bio": "Punk DIY rápido y directo, grabado en vivo en una sola toma. Canciones cortas, mucho volumen y fechas en cada rincón del conurbano.",
+    "tracks": [
+      {
+        "titulo": "Risa nerviosa",
+        "duracion": "1:58"
+      },
+      {
+        "titulo": "Fotocopia",
+        "duracion": "2:21"
+      },
+      {
+        "titulo": "Ruido de fondo",
+        "duracion": "2:07"
+      }
+    ]
   },
   {
     "id": 6,
     "nombre": "Norte Adentro",
     "genero": "Hip-hop under",
-    "imagen": "assets/img/artistas/artista3.jpg"
+    "imagen": "assets/img/artistas/artista3.jpg",
+    "bio": "Crew de hip-hop under del norte del país: rimas sobre el barrio, beats hechos con samples de discos viejos y producción propia.",
+    "tracks": [
+      {
+        "titulo": "Tierra adentro",
+        "duracion": "3:36"
+      },
+      {
+        "titulo": "Ruta 9",
+        "duracion": "3:52"
+      },
+      {
+        "titulo": "Siesta",
+        "duracion": "3:14"
+      }
+    ]
   }
 ]
