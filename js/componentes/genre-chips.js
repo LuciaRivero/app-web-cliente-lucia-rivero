@@ -1,6 +1,6 @@
 /* =========================================================
    Whiplash — <genre-chips limit="4" filter>
-   Chips de género armados desde generos.json.
+   Chips de género armados desde la tabla generos (Supabase).
    - Sin filter: cada chip es un enlace a Explorar con
      ?q=<género>, que muestra los resultados de ese género.
    - filter: botones "Todos" + un género por botón, con

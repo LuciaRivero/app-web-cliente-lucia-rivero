@@ -25,10 +25,12 @@ archivo con doble clic (`file://`). Usá la extensión **Live Server** de VS Cod
 ├── js/
 │   ├── main.js             Punto de entrada: registra los componentes e inicia el buscador
 │   ├── componentes/        Web Components (site-header, product-grid, ...), tarjetas, buscador, menú
-│   ├── paginas/            Lógica propia de cada página (explorar, carrito)
-│   ├── servicios/          datos.js: único lugar que lee los datos (hoy JSON, después Supabase)
-│   ├── utilidades/         dom.js: ayudas para armar elementos
-│   └── datos/              artistas.json, productos.json y generos.json
+│   ├── paginas/            Lógica propia de cada página (explorar, carrito, cuenta, ...)
+│   ├── servicios/          Acceso a Supabase: supabase.js (pedidos), datos.js (catálogo),
+│   │                       sesion.js (Auth), artistas-seguidos.js y carrito.js
+│   └── utilidades/         dom.js: ayudas para armar elementos
+├── supabase/
+│   └── esquema.sql         Tablas, políticas RLS y datos del catálogo (ejecutar en el SQL Editor)
 ├── assets/
 │   ├── fuentes/
 │   └── img/                iconos/, artistas/, productos/ y logo.svg
@@ -49,9 +51,9 @@ mismos estilos de `css/` que el HTML escrito a mano.
 | `<site-footer>` | Pie del sitio | — |
 | `<site-breadcrumbs>` | Migas de pan (agrega "Inicio" solo) | Hijos: `<a>` por cada paso y `<span>` para la página actual |
 | `<promo-banner>` | Banner `.promo` | `heading`, `text`, `href`, `link-text` |
-| `<artist-grid>` | Grilla de artistas desde `artistas.json` | `limit` |
-| `<product-grid>` | Grilla de merch desde `productos.json` | `limit`, `artist` (id), `with-purchase` |
-| `<genre-chips>` | Chips de género desde `generos.json` (enlazan a Explorar con `?q=`) | `limit`, `filter` (botones que disparan el evento `genre-change`) |
+| `<artist-grid>` | Grilla de artistas desde la tabla `artistas` | `limit` |
+| `<product-grid>` | Grilla de merch desde la tabla `productos` | `limit`, `artist` (id), `with-purchase` |
+| `<genre-chips>` | Chips de género desde la tabla `generos` (enlazan a Explorar con `?q=`) | `limit`, `filter` (botones que disparan el evento `genre-change`) |
 
 ```html
 <site-header current="merch"></site-header>

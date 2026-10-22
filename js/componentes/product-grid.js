@@ -1,6 +1,6 @@
 /* =========================================================
    Whiplash — <product-grid limit="5" artist="1" with-purchase>
-   Grilla de .producto-merch armada desde productos.json.
+   Grilla de .producto-merch armada desde la tabla productos (Supabase).
    - artist: muestra solo el merch de ese artista (id).
    - with-purchase: cada tarjeta trae el formulario para
      agregar al carrito en lugar del enlace "Ver producto".
