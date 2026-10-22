@@ -106,6 +106,25 @@ export function iniciarSesion(email, password) {
   return { usuario: datosPublicos(usuario) };
 }
 
+// Datos propios de cada usuario (por ejemplo, los artistas que
+// sigue). Van dentro de su registro, así no se pierden si cambia
+// el email. Sin sesión, leer devuelve `porDefecto` y guardar, false.
+export function leerDatoUsuario(clave, porDefecto) {
+  const email = leer(CLAVE_SESION);
+  if (typeof email !== "string") return porDefecto;
+  return buscarUsuario(leerUsuarios(), email)?.[clave] ?? porDefecto;
+}
+
+export function guardarDatoUsuario(clave, valor) {
+  const email = leer(CLAVE_SESION);
+  if (typeof email !== "string") return false;
+  const usuarios = leerUsuarios();
+  const usuario = buscarUsuario(usuarios, email);
+  if (!usuario) return false;
+  usuario[clave] = valor;
+  return guardar(CLAVE_USUARIOS, usuarios);
+}
+
 export function cerrarSesion() {
   guardar(CLAVE_SESION, null);
   avisarCambio();

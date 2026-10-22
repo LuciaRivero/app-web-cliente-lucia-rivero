@@ -107,3 +107,14 @@
 .tarjeta-artista button:hover {
   background-color: var(--color-primario-hover);
 }
+
+/* "Siguiendo" (aria-pressed lo pone tarjetas.js): solo el contorno.
+   El borde va con box-shadow para que el botón no cambie de tamaño. */
+.tarjeta-artista button[aria-pressed="true"] {
+  background-color: transparent;
+  box-shadow: inset 0 0 0 2px var(--color-primario);
+}
+
+.tarjeta-artista button[aria-pressed="true"]:hover {
+  background-color: var(--color-gris-suave);
+}

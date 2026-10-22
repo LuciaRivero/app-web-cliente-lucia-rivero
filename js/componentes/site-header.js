@@ -4,8 +4,8 @@
    de cuenta y navegación principal.
    - current: id del link activo (ver navigation.js).
    Con sesión abierta, el link de la cuenta se reemplaza por el
-   menú de usuario (menu-usuario.js) y se vuelve a dibujar cada
-   vez que la sesión cambia.
+   menú de usuario (menu-usuario.js) y aparecen los links marcados
+   con soloConSesion; se actualiza cada vez que la sesión cambia.
    Se arma en light DOM para que apliquen los estilos de
    css/layout/encabezado.css sin cambios.
    ========================================================= */
@@ -26,7 +26,9 @@ function crearLista(links, actual, crearContenido) {
       const enlace = crearElemento("a", { atributos: { href: rutaDesdeRaiz(link.ruta) } });
       crearContenido(enlace, link);
       if (link.id === actual) enlace.setAttribute("aria-current", "page");
-      return crearElemento("li", {}, enlace);
+      const item = crearElemento("li", {}, enlace);
+      if (link.soloConSesion) item.dataset.soloConSesion = "";
+      return item;
     }),
   );
 }
@@ -82,22 +84,27 @@ class SiteHeader extends HTMLElement {
     );
     this.enlaceCuenta = this.querySelector(".ir-cuenta");
     this.itemCuenta = this.enlaceCuenta.parentElement;
-    this.mostrarCuenta(actual);
-    window.addEventListener(CAMBIO_SESION, () => this.mostrarCuenta(actual));
 
     this.querySelector(".nav-principal").append(
       crearLista(MAIN_NAV, actual, (enlace, link) => {
         enlace.textContent = link.texto;
       }),
     );
+
+    this.actualizarSesion(actual);
+    window.addEventListener(CAMBIO_SESION, () => this.actualizarSesion(actual));
   }
 
-  // Alterna entre el link a Mi cuenta (sin sesión) y el menú de usuario.
-  mostrarCuenta(actual) {
+  // Alterna entre el link a Mi cuenta (sin sesión) y el menú de
+  // usuario, y muestra u oculta los links que piden sesión.
+  actualizarSesion(actual) {
     const usuario = usuarioActual();
     this.itemCuenta.replaceChildren(
       usuario ? crearMenuUsuario(usuario, { actual: actual === "cuenta" }) : this.enlaceCuenta,
     );
+    for (const item of this.querySelectorAll("[data-solo-con-sesion]")) {
+      item.hidden = !usuario;
+    }
   }
 }
 

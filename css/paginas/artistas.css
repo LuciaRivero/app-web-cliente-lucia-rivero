@@ -35,7 +35,8 @@
   gap: 16px;
 }
 
-.avatar {
+/* Acotado a la lista: .avatar también es el del menú de usuario. */
+.artista-guardado .avatar {
   width: 56px;
   height: 56px;
   border-radius: var(--radio-pildora);
@@ -65,9 +66,32 @@
   transition: border-color 0.2s ease, color 0.2s ease;
 }
 
-.quitar:hover {
+.quitar:hover,
+.quitar:focus-visible {
   border-color: var(--color-error);
   color: var(--color-error);
+}
+
+.artistas-vacio {
+  background-color: var(--color-gris-oscuro);
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  padding: var(--espaciado-grande) var(--espaciado);
+  margin-bottom: var(--espaciado-grande);
+  text-align: center;
+  color: var(--color-texto-dim);
+}
+
+.artistas-vacio p:first-child {
+  color: var(--color-texto);
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+/* El título recibe el foco por JS cuando se quita el último artista. */
+#titulo-mis-artistas:focus {
+  outline: none;
 }
 
 /* ---------- Responsive ---------- */

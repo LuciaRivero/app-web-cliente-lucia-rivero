@@ -1,7 +1,8 @@
 /* =========================================================
    Whiplash — Página Mi cuenta
    Sin sesión muestra el formulario de ingreso (con el enlace
-   a registro.html), que al ingresar lleva a la home; con
+   a registro.html), que al ingresar lleva a la home (o a Mis
+   artistas si se tocó "Seguir" antes de ingresar); con
    sesión, el formulario para editar los datos. Para cerrar
    sesión está el menú de usuario del encabezado.
    ========================================================= */
@@ -12,6 +13,7 @@ import {
   usuarioActual,
   validarPassword,
 } from "../servicios/sesion.js";
+import { completarSeguirPendiente } from "../servicios/artistas-seguidos.js";
 import { rutaDesdeRaiz } from "../servicios/datos.js";
 import { mostrarMensaje } from "../utilidades/dom.js";
 
@@ -48,8 +50,10 @@ formularioIngreso.addEventListener("submit", (evento) => {
     formularioIngreso.elements.password.select();
     return;
   }
-  // Con la sesión abierta, el ingreso termina en la home.
-  location.href = rutaDesdeRaiz("index.html");
+  // Si se tocó "Seguir" sin sesión, ese artista se sigue ahora y
+  // el ingreso termina en Mis artistas; si no, en la home.
+  const destino = completarSeguirPendiente() ? "pages/artistas.html" : "index.html";
+  location.href = rutaDesdeRaiz(destino);
 });
 
 formularioEdicion.addEventListener("submit", (evento) => {

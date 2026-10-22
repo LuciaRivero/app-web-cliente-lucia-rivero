@@ -7,12 +7,13 @@
 
    El `id` es el valor del atributo current de <site-header>
    que marca el link activo con aria-current="page".
+   `soloConSesion` oculta el link si no hay sesión iniciada.
    ========================================================= */
 
 export const HOME = { texto: "Inicio", ruta: "index.html" };
 
 export const MAIN_NAV = [
-  { id: "artistas", texto: "Mis artistas", ruta: "pages/artistas.html" },
+  { id: "artistas", texto: "Mis artistas", ruta: "pages/artistas.html", soloConSesion: true },
   { id: "explorar", texto: "Explorar", ruta: "pages/explorar.html" },
   { id: "generos", texto: "Géneros", ruta: "pages/generos.html" },
   { id: "merch", texto: "Merch", ruta: "pages/merch.html" },
