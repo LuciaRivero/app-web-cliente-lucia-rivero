@@ -6,7 +6,7 @@
    ========================================================= */
 
 import { buscar, rutaDesdeRaiz } from "../servicios/datos.js";
-import { crearResultadoBuscador, formatearPrecio } from "./tarjetas.js";
+import { crearResultadoBuscador, formatearPrecio, urlArtista } from "./tarjetas.js";
 import { crearElemento, leerConsulta, textoResultados } from "../utilidades/dom.js";
 
 const MAXIMO_POR_GRUPO = 4;
@@ -80,6 +80,7 @@ export function iniciarBuscador() {
     if (artistas.length) {
       const filas = artistas.slice(0, MAXIMO_POR_GRUPO).map((artista) =>
         crearResultadoBuscador({
+          href: urlArtista(artista.id),
           imagen: artista.imagen,
           titulo: artista.nombre,
           detalle: artista.genero,
@@ -91,6 +92,7 @@ export function iniciarBuscador() {
     if (productos.length) {
       const filas = productos.slice(0, MAXIMO_POR_GRUPO).map((producto) =>
         crearResultadoBuscador({
+          href: urlArtista(producto.artista_id),
           imagen: producto.imagen,
           titulo: producto.titulo,
           detalle: [producto.artista?.nombre, formatearPrecio(producto.precio)]

@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Perfil del artista Los Cráteres en Whiplash - Música independiente y merch"
+      content="Perfil de artista en Whiplash - Música independiente y merch"
     />
-    <title>Los Cráteres | Whiplash</title>
+    <title>Artista | Whiplash</title>
     <!-- Precarga: fuentes y módulos compartidos se piden en paralelo
          en vez de esperar a que los descubra main.css / main.js. -->
     <link rel="preload" href="../assets/fuentes/anton-regular.ttf" as="font" type="font/ttf" crossorigin />
@@ -30,28 +30,25 @@
     <site-header></site-header>
 
     <main id="contenido-principal">
+      <!-- js/paginas/producto.js completa el perfil con el artista
+           de ?id= (artistas.json) y actualiza las migas de pan. -->
       <site-breadcrumbs>
-        <a href="generos.html">Rock independiente</a>
-        <span>Los Cráteres</span>
+        <a href="generos.html" class="miga-genero">Géneros</a>
+        <span>Artista</span>
       </site-breadcrumbs>
 
-      <article class="perfil-artista">
+      <article class="perfil-artista" aria-busy="true">
         <section class="portada-artista" aria-label="Portada del artista">
-          <img src="../assets/img/artistas/artista1.jpg" alt="Portada del artista Los Cráteres" />
+          <img src="" alt="" hidden />
         </section>
 
         <section class="info-artista" aria-labelledby="titulo-artista">
-          <h1 id="titulo-artista">Los Cráteres</h1>
-          <p class="genero-artista">Rock independiente</p>
+          <h1 id="titulo-artista"></h1>
+          <p class="genero-artista"></p>
 
-          <p class="bio-artista">
-            Banda de rock indie con guitarras crudas y letras que hablan de la
-            ciudad. Desde su primer demo autoeditado, construyeron su propio
-            camino sin intermediarios.
-          </p>
+          <p class="bio-artista"></p>
 
-          <!-- data-artista: id en artistas.json (ver js/paginas/producto.js) -->
-          <div class="acciones-artista" data-artista="1">
+          <div class="acciones-artista">
             <button type="button" class="boton boton-seguir">Seguir</button>
             <button type="button" class="boton boton-compartir">
               Compartir
@@ -62,36 +59,7 @@
 
         <section class="tracks" aria-labelledby="titulo-tracks">
           <h2 id="titulo-tracks">Tracks</h2>
-
-          <ul class="lista-tracks">
-            <li>
-              <button type="button" class="track">
-                <span class="track-num">1</span>
-                <span class="track-info">
-                  <span class="track-titulo">Ruido blanco</span>
-                  <span class="track-duracion">3:24</span>
-                </span>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="track">
-                <span class="track-num">2</span>
-                <span class="track-info">
-                  <span class="track-titulo">Andén</span>
-                  <span class="track-duracion">4:01</span>
-                </span>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="track">
-                <span class="track-num">3</span>
-                <span class="track-info">
-                  <span class="track-titulo">Enero</span>
-                  <span class="track-duracion">3:47</span>
-                </span>
-              </button>
-            </li>
-          </ul>
+          <ul class="lista-tracks"></ul>
         </section>
 
         <section class="merch-artista" aria-labelledby="titulo-merch">
@@ -99,10 +67,17 @@
           <p class="subtitulo">
             Discos y entradas vendidos directo por el artista.
           </p>
-
-          <product-grid artist="1" with-purchase></product-grid>
+          <!-- Acá va <product-grid artist="id" with-purchase>. -->
         </section>
       </article>
+
+      <section class="artista-no-encontrado" hidden>
+        <h1>Artista no encontrado</h1>
+        <p class="subtitulo">
+          No encontramos ese perfil. Puede que el link esté incompleto.
+        </p>
+        <a class="boton" href="explorar.html">Explorar artistas</a>
+      </section>
     </main>
 
     <site-footer></site-footer>

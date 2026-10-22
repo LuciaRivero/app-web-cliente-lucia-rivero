@@ -26,6 +26,12 @@ const OPCIONES_COMPRA = {
   Remera: { etiqueta: "Talle", nombre: "talle", valores: ["S", "M", "L", "XL"] },
 };
 
+// Perfil de un artista: pages/producto.html?id=3. El merch no tiene
+// página propia, así que sus enlaces llevan al perfil de su artista.
+export function urlArtista(id) {
+  return `${URL_PRODUCTO}?id=${id}`;
+}
+
 export function formatearPrecio(precio) {
   return `$${precio.toLocaleString("es-AR")}`;
 }
@@ -39,8 +45,8 @@ function crearFigura(imagen, alt, titulo) {
   );
 }
 
-function crearFiguraConEnlace(imagen, alt, titulo) {
-  return crearElemento("a", { atributos: { href: URL_PRODUCTO } }, crearFigura(imagen, alt, titulo));
+function crearFiguraConEnlace(href, imagen, alt, titulo) {
+  return crearElemento("a", { atributos: { href } }, crearFigura(imagen, alt, titulo));
 }
 
 // Botón de alternar: aria-pressed dice si ya se sigue al artista
@@ -69,7 +75,7 @@ export function crearTarjetaArtista(artista) {
   return crearElemento(
     "article",
     { clase: "tarjeta-artista" },
-    crearFiguraConEnlace(artista.imagen, `Imagen de ${artista.nombre}`, artista.nombre),
+    crearFiguraConEnlace(urlArtista(artista.id), artista.imagen, `Imagen de ${artista.nombre}`, artista.nombre),
     crearElemento("p", { clase: "genero-artista", texto: artista.genero }),
     prepararBotonSeguir(
       crearElemento("button", { clase: "boton-seguir-artista", atributos: { type: "button" } }),
@@ -209,14 +215,14 @@ export function crearProductoMerch(producto, { conCompra = false } = {}) {
 
   const portada = conCompra
     ? crearFigura(producto.imagen, alt, producto.titulo)
-    : crearFiguraConEnlace(producto.imagen, alt, producto.titulo);
+    : crearFiguraConEnlace(urlArtista(producto.artista_id), producto.imagen, alt, producto.titulo);
 
   const accion = conCompra
     ? crearFormularioCompra(producto)
     : crearElemento("a", {
         clase: "boton boton-compra",
         texto: "Ver producto",
-        atributos: { href: URL_PRODUCTO },
+        atributos: { href: urlArtista(producto.artista_id) },
       });
 
   return crearElemento(
@@ -230,10 +236,10 @@ export function crearProductoMerch(producto, { conCompra = false } = {}) {
 }
 
 // Fila compacta para el desplegable del buscador.
-export function crearResultadoBuscador({ imagen, titulo, detalle }) {
+export function crearResultadoBuscador({ href, imagen, titulo, detalle }) {
   return crearElemento(
     "a",
-    { clase: "resultado-buscador", atributos: { href: URL_PRODUCTO } },
+    { clase: "resultado-buscador", atributos: { href } },
     crearElemento("img", { atributos: { src: rutaDesdeRaiz(imagen), alt: "" } }),
     crearElemento(
       "span",
