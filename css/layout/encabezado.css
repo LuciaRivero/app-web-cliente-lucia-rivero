@@ -185,6 +185,7 @@ site-header:not(:defined) {
 
 .nav-cuenta ul {
   display: flex;
+  align-items: center;
   gap: var(--espaciado);
 }
 
@@ -271,6 +272,136 @@ site-header:not(:defined) {
   color: var(--color-primario);
 }
 
+/* ---------- Menú de usuario (js/componentes/menu-usuario.js) ---------- */
+.menu-usuario {
+  position: relative;
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--degradado-primario);
+  color: var(--color-texto);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-grande {
+  width: 48px;
+  height: 48px;
+  font-size: 18px;
+}
+
+.boton-usuario {
+  display: inline-flex;
+  padding: 2px;
+  background: none;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.boton-usuario:hover,
+.boton-usuario:focus-visible,
+.boton-usuario[aria-expanded="true"] {
+  border-color: var(--color-acento);
+}
+
+.menu-usuario-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 50;
+  width: 280px;
+  padding: 8px 0;
+  background-color: var(--color-gris-oscuro);
+  border: 1px solid var(--color-gris-suave);
+  border-radius: var(--radio-base);
+  box-shadow: var(--sombra);
+}
+
+.menu-usuario-perfil {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px 16px;
+}
+
+.menu-usuario-datos {
+  min-width: 0;
+}
+
+.menu-usuario-nombre {
+  color: var(--color-texto);
+  font-weight: 700;
+  font-size: 16px;
+}
+
+/* Un email largo se corta con "…" en vez de ensanchar el panel. */
+.menu-usuario-email {
+  color: var(--color-texto-dim);
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-cuenta .menu-usuario-opciones {
+  display: block;
+  padding: 8px 0;
+  border-top: 1px solid var(--color-gris-suave);
+  border-bottom: 1px solid var(--color-gris-suave);
+}
+
+.nav-cuenta .menu-usuario-opcion {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 16px;
+  color: var(--color-texto);
+  font-family: var(--fuente-cuerpo);
+  font-size: 15px;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.nav-cuenta .menu-usuario-opcion:hover,
+.nav-cuenta .menu-usuario-opcion:focus-visible,
+.nav-cuenta .menu-usuario-opcion[aria-current="page"] {
+  background-color: var(--color-gris-suave);
+  color: var(--color-acento);
+}
+
+.menu-usuario-salir {
+  margin-top: 8px;
+}
+
+.icono-menu-usuario {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 768px) {
   site-header:not(:defined) {
@@ -279,7 +410,8 @@ site-header:not(:defined) {
 
   .encabezado-superior {
     display: grid;
-    grid-template-columns: 40px 1fr 40px;
+    /* Menú · logo · lupa · cuenta */
+    grid-template-columns: 40px 1fr 40px 40px;
     align-items: center;
     gap: 12px;
     padding: 12px var(--espaciado);
@@ -315,9 +447,24 @@ site-header:not(:defined) {
   }
 
   .buscador,
-  .nav-cuenta,
   .nav-principal {
     display: none;
+  }
+
+  /* De la cuenta solo queda el acceso de usuario (link o avatar
+     con su menú): el carrito no entra junto a la lupa. */
+  .nav-cuenta {
+    grid-column: 4;
+    grid-row: 1;
+    justify-self: end;
+  }
+
+  .nav-cuenta li:has(.ir-carrito) {
+    display: none;
+  }
+
+  .menu-usuario-panel {
+    width: min(280px, calc(100vw - 2 * var(--espaciado)));
   }
 
   /* El botón de menú (.boton-menu) agrega esta clase desde

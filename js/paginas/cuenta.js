@@ -2,13 +2,12 @@
    Whiplash — Página Mi cuenta
    Sin sesión muestra el formulario de ingreso (con el enlace
    a registro.html), que al ingresar lleva a la home; con
-   sesión, el formulario para editar los datos y el botón para
-   cerrar sesión.
+   sesión, el formulario para editar los datos. Para cerrar
+   sesión está el menú de usuario del encabezado.
    ========================================================= */
 
 import {
   actualizarUsuario,
-  cerrarSesion,
   iniciarSesion,
   usuarioActual,
   validarPassword,
@@ -34,15 +33,10 @@ function completarEdicion(usuario) {
   formularioEdicion.elements.password2.value = "";
 }
 
-// `enfocar` mueve el foco al título de la vista nueva cuando el
-// cambio lo provocó el usuario (al cerrar sesión), para
-// que el teclado y el lector de pantalla no queden en un botón oculto.
-function mostrarVista(usuario, { enfocar = false } = {}) {
-  const vista = usuario ? vistas.edicion : vistas.ingreso;
+function mostrarVista(usuario) {
   vistas.ingreso.hidden = Boolean(usuario);
   vistas.edicion.hidden = !usuario;
   if (usuario) completarEdicion(usuario);
-  if (enfocar) vista.querySelector("h2").focus();
 }
 
 formularioIngreso.addEventListener("submit", (evento) => {
@@ -84,13 +78,6 @@ formularioEdicion.addEventListener("submit", (evento) => {
   }
   completarEdicion(usuario);
   mostrarMensaje(mensajeEdicion, "Guardamos tus cambios.", "exito");
-});
-
-vistas.edicion.querySelector(".boton-cerrar-sesion").addEventListener("click", () => {
-  cerrarSesion();
-  mostrarMensaje(mensajeEdicion, "");
-  mostrarMensaje(mensajeIngreso, "Cerraste sesión.", "exito");
-  mostrarVista(null, { enfocar: true });
 });
 
 mostrarVista(usuarioActual());

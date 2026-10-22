@@ -8,10 +8,14 @@
 
    Las funciones que pueden fallar devuelven { error } con un
    mensaje listo para mostrar, o { usuario } si salió bien.
+   Cada vez que la sesión cambia (ingreso, edición o cierre)
+   se dispara CAMBIO_SESION en window, así <site-header>
+   actualiza el menú de usuario sin recargar la página.
    ========================================================= */
 
 const CLAVE_USUARIOS = "whiplash-usuarios";
 const CLAVE_SESION = "whiplash-sesion";
+export const CAMBIO_SESION = "sesion-cambiada";
 export const LARGO_MINIMO_PASSWORD = 8;
 
 // localStorage puede fallar (modo privado, almacenamiento
@@ -52,8 +56,13 @@ function buscarUsuario(usuarios, email) {
 }
 
 // Sin la contraseña: es lo único que necesitan las páginas.
-function datosPublicos({ nombre, email }) {
-  return { nombre, email };
+// `imagen` (URL del avatar) es opcional; sin ella se usan las iniciales.
+function datosPublicos({ nombre, email, imagen = null }) {
+  return { nombre, email, imagen };
+}
+
+function avisarCambio() {
+  window.dispatchEvent(new CustomEvent(CAMBIO_SESION, { detail: usuarioActual() }));
 }
 
 // Reglas compartidas por el registro y la edición.
@@ -82,6 +91,7 @@ export function registrarUsuario({ nombre, email, password }) {
   if (!guardar(CLAVE_USUARIOS, usuarios) || !guardar(CLAVE_SESION, usuario.email)) {
     return { error: ERROR_GUARDADO };
   }
+  avisarCambio();
   return { usuario: datosPublicos(usuario) };
 }
 
@@ -92,11 +102,13 @@ export function iniciarSesion(email, password) {
     return { error: "El correo electrónico o la contraseña no son correctos." };
   }
   if (!guardar(CLAVE_SESION, usuario.email)) return { error: ERROR_GUARDADO };
+  avisarCambio();
   return { usuario: datosPublicos(usuario) };
 }
 
 export function cerrarSesion() {
   guardar(CLAVE_SESION, null);
+  avisarCambio();
 }
 
 // `password` es opcional: si viene vacía se mantiene la actual.
@@ -118,5 +130,6 @@ export function actualizarUsuario({ nombre, email, password }) {
   if (!guardar(CLAVE_USUARIOS, usuarios) || !guardar(CLAVE_SESION, usuario.email)) {
     return { error: ERROR_GUARDADO };
   }
+  avisarCambio();
   return { usuario: datosPublicos(usuario) };
 }
