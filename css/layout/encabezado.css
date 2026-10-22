@@ -457,8 +457,8 @@ site-header:not(:defined) {
 
   .encabezado-superior {
     display: grid;
-    /* Menú · logo · lupa · cuenta */
-    grid-template-columns: 40px 1fr 40px 40px;
+    /* Menú · logo · lupa · carrito y cuenta */
+    grid-template-columns: 40px 1fr 40px auto;
     align-items: center;
     gap: 12px;
     padding: 12px var(--espaciado);
@@ -498,16 +498,15 @@ site-header:not(:defined) {
     display: none;
   }
 
-  /* De la cuenta solo queda el acceso de usuario (link o avatar
-     con su menú): el carrito no entra junto a la lupa. */
+  /* Carrito (con su contador) y acceso de usuario, junto a la lupa. */
   .nav-cuenta {
     grid-column: 4;
     grid-row: 1;
     justify-self: end;
   }
 
-  .nav-cuenta li:has(.ir-carrito) {
-    display: none;
+  .nav-cuenta ul {
+    gap: 12px;
   }
 
   .menu-usuario-panel {
@@ -531,5 +530,29 @@ site-header:not(:defined) {
     display: flex;
     grid-column: 1 / -1;
     grid-row: 2;
+  }
+}
+
+/* Pantallas muy angostas (menos de 360px): con carrito y avatar
+   no entra el logo completo, se achican la separación y el logo. */
+@media (max-width: 359px) {
+  .encabezado-superior {
+    gap: 8px;
+  }
+
+  .nav-cuenta ul {
+    gap: 8px;
+  }
+
+  .logo {
+    gap: 6px;
+  }
+
+  .logo img {
+    height: 24px;
+  }
+
+  .logo span {
+    font-size: 19px;
   }
 }
