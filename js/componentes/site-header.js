@@ -6,10 +6,13 @@
    Con sesión abierta, el link de la cuenta se reemplaza por el
    menú de usuario (menu-usuario.js) y aparecen los links marcados
    con soloConSesion; se actualiza cada vez que la sesión cambia.
+   El ícono del carrito lleva un contador con las unidades que
+   hay en el carrito, que se actualiza cuando el carrito cambia.
    Se arma en light DOM para que apliquen los estilos de
    css/layout/encabezado.css sin cambios.
    ========================================================= */
 
+import { contarUnidades, escucharCambiosCarrito } from "../servicios/carrito.js";
 import { rutaDesdeRaiz } from "../servicios/datos.js";
 import { CAMBIO_SESION, usuarioActual } from "../servicios/sesion.js";
 import { crearElemento } from "../utilidades/dom.js";
@@ -84,6 +87,13 @@ class SiteHeader extends HTMLElement {
     );
     this.enlaceCuenta = this.querySelector(".ir-cuenta");
     this.itemCuenta = this.enlaceCuenta.parentElement;
+    this.enlaceCarrito = this.querySelector(".ir-carrito");
+    // Decorativo: la cantidad la lee el lector de pantalla del aria-label.
+    this.contadorCarrito = crearElemento("span", {
+      clase: "contador-carrito",
+      atributos: { "aria-hidden": "true" },
+    });
+    this.enlaceCarrito.append(this.contadorCarrito);
 
     this.querySelector(".nav-principal").append(
       crearLista(MAIN_NAV, actual, (enlace, link) => {
@@ -93,6 +103,28 @@ class SiteHeader extends HTMLElement {
 
     this.actualizarSesion(actual);
     window.addEventListener(CAMBIO_SESION, () => this.actualizarSesion(actual));
+    this.actualizarCarrito();
+    escucharCambiosCarrito(() => this.actualizarCarrito());
+  }
+
+  // Muestra las unidades del carrito sobre el ícono (oculto si
+  // está vacío) y hace un "salto" cuando la cantidad sube.
+  actualizarCarrito() {
+    const unidades = contarUnidades();
+    const anterior = Number(this.contadorCarrito.dataset.unidades ?? unidades);
+    this.contadorCarrito.dataset.unidades = unidades;
+    this.contadorCarrito.textContent = unidades > 99 ? "99+" : String(unidades);
+    this.contadorCarrito.hidden = unidades === 0;
+    this.enlaceCarrito.setAttribute(
+      "aria-label",
+      unidades ? `Carrito, ${unidades} ${unidades === 1 ? "producto" : "productos"}` : "Carrito vacío",
+    );
+    if (unidades > anterior) {
+      this.contadorCarrito.classList.remove("contador-salto");
+      // Fuerza un reflow para que la animación arranque de nuevo.
+      void this.contadorCarrito.offsetWidth;
+      this.contadorCarrito.classList.add("contador-salto");
+    }
   }
 
   // Alterna entre el link a Mi cuenta (sin sesión) y el menú de

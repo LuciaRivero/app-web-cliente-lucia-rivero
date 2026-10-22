@@ -4,9 +4,12 @@
    Por ahora vive en localStorage; cada ítem es
    { id, opcion, cantidad } y los datos del producto (título,
    precio, imagen) se buscan en productos.json al mostrarlo.
+   Cada vez que se guarda dispara CAMBIO_CARRITO en window,
+   así <site-header> actualiza el contador del ícono.
    ========================================================= */
 
 const CLAVE = "whiplash-carrito";
+export const CAMBIO_CARRITO = "carrito-cambiado";
 export const CANTIDAD_MINIMA = 1;
 export const CANTIDAD_MAXIMA = 10;
 
@@ -27,7 +30,21 @@ function guardarCarrito(items) {
   } catch (error) {
     console.error("No se pudo guardar el carrito", error);
   }
+  window.dispatchEvent(new CustomEvent(CAMBIO_CARRITO));
   return items;
+}
+
+// Unidades en total: 2 vinilos + 1 entrada = 3.
+export function contarUnidades(items = leerCarrito()) {
+  return items.reduce((total, item) => total + item.cantidad, 0);
+}
+
+// El evento storage llega cuando otra pestaña cambia el carrito.
+export function escucharCambiosCarrito(callback) {
+  window.addEventListener(CAMBIO_CARRITO, callback);
+  window.addEventListener("storage", (evento) => {
+    if (evento.key === CLAVE || evento.key === null) callback();
+  });
 }
 
 function limitar(cantidad) {
