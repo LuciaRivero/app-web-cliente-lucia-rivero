@@ -207,6 +207,53 @@ site-header:not(:defined) {
   align-items: center;
 }
 
+/* Contador del carrito (js/componentes/site-header.js) */
+.nav-cuenta a.ir-carrito {
+  position: relative;
+}
+
+.contador-carrito {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radio-pildora);
+  border: 2px solid var(--color-base);
+  background-color: var(--color-acento);
+  color: var(--color-base);
+  font-family: var(--fuente-cuerpo);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.contador-salto {
+  animation: salto-contador 0.4s ease-out;
+}
+
+@keyframes salto-contador {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.35);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contador-salto {
+    animation: none;
+  }
+}
+
 .icono-carrito,
 .icono-usuario {
   width: 30px;
