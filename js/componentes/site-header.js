@@ -8,6 +8,8 @@
    con soloConSesion; se actualiza cada vez que la sesión cambia.
    El ícono del carrito lleva un contador con las unidades que
    hay en el carrito, que se actualiza cuando el carrito cambia.
+   En mobile, .nav-principal es un panel lateral (ver menu.js)
+   con botón de cierre y un link extra al Carrito.
    Se arma en light DOM para que apliquen los estilos de
    css/layout/encabezado.css sin cambios.
    ========================================================= */
@@ -69,7 +71,15 @@ class SiteHeader extends HTMLElement {
           <nav class="nav-cuenta" aria-label="Acciones de cuenta"></nav>
         </div>
 
-        <nav class="nav-principal" id="menu-principal" aria-label="Categorías"></nav>
+        <nav class="nav-principal" id="menu-principal" aria-label="Categorías">
+          <button class="cerrar-menu" type="button" aria-label="Cerrar menú">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </nav>
+        <div class="menu-fondo"></div>
       </header>
     `;
 
@@ -95,11 +105,24 @@ class SiteHeader extends HTMLElement {
     });
     this.enlaceCarrito.append(this.contadorCarrito);
 
-    this.querySelector(".nav-principal").append(
-      crearLista(MAIN_NAV, actual, (enlace, link) => {
-        enlace.textContent = link.texto;
-      }),
+    const listaPrincipal = crearLista(MAIN_NAV, actual, (enlace, link) => {
+      enlace.textContent = link.texto;
+    });
+    // Solo en el panel mobile: el Carrito con su contador.
+    const carrito = ACCOUNT_NAV.find((link) => link.id === "carrito");
+    this.contadorMenu = crearElemento("span", {
+      clase: "contador-menu",
+      atributos: { "aria-hidden": "true" },
+    });
+    this.enlaceCarritoMenu = crearElemento(
+      "a",
+      { atributos: { href: rutaDesdeRaiz(carrito.ruta) } },
+      carrito.texto,
+      this.contadorMenu,
     );
+    if (actual === carrito.id) this.enlaceCarritoMenu.setAttribute("aria-current", "page");
+    listaPrincipal.append(crearElemento("li", { clase: "solo-mobile" }, this.enlaceCarritoMenu));
+    this.querySelector(".nav-principal").append(listaPrincipal);
 
     this.actualizarSesion(actual);
     window.addEventListener(CAMBIO_SESION, () => this.actualizarSesion(actual));
@@ -107,18 +130,25 @@ class SiteHeader extends HTMLElement {
     escucharCambiosCarrito(() => this.actualizarCarrito());
   }
 
-  // Muestra las unidades del carrito sobre el ícono (oculto si
-  // está vacío) y hace un "salto" cuando la cantidad sube.
+  // Muestra las unidades del carrito sobre el ícono y en el link
+  // del panel mobile (ocultas si está vacío) y hace un "salto" en
+  // el ícono cuando la cantidad sube.
   actualizarCarrito() {
     const unidades = contarUnidades();
     const anterior = Number(this.contadorCarrito.dataset.unidades ?? unidades);
     this.contadorCarrito.dataset.unidades = unidades;
-    this.contadorCarrito.textContent = unidades > 99 ? "99+" : String(unidades);
-    this.contadorCarrito.hidden = unidades === 0;
-    this.enlaceCarrito.setAttribute(
-      "aria-label",
-      unidades ? `Carrito, ${unidades} ${unidades === 1 ? "producto" : "productos"}` : "Carrito vacío",
-    );
+    const texto = unidades > 99 ? "99+" : String(unidades);
+    const etiqueta = unidades
+      ? `Carrito, ${unidades} ${unidades === 1 ? "producto" : "productos"}`
+      : "Carrito vacío";
+    for (const [enlace, contador] of [
+      [this.enlaceCarrito, this.contadorCarrito],
+      [this.enlaceCarritoMenu, this.contadorMenu],
+    ]) {
+      contador.textContent = texto;
+      contador.hidden = unidades === 0;
+      enlace.setAttribute("aria-label", etiqueta);
+    }
     if (unidades > anterior) {
       this.contadorCarrito.classList.remove("contador-salto");
       // Fuerza un reflow para que la animación arranque de nuevo.
