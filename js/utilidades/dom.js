@@ -45,3 +45,20 @@ export function mostrarMensaje(elemento, texto, tipo = "error") {
   elemento.dataset.tipo = tipo;
   elemento.textContent = texto;
 }
+
+// Mientras un formulario espera al servidor, su botón de envío
+// queda deshabilitado (evita envíos dobles) y muestra `texto`.
+export async function enviando(formulario, texto, tarea) {
+  const boton = formulario.querySelector('[type="submit"]');
+  const original = boton.textContent;
+  boton.disabled = true;
+  boton.textContent = texto;
+  formulario.setAttribute("aria-busy", "true");
+  try {
+    return await tarea();
+  } finally {
+    boton.disabled = false;
+    boton.textContent = original;
+    formulario.removeAttribute("aria-busy");
+  }
+}

@@ -1,6 +1,6 @@
 /* =========================================================
    Whiplash — Perfil del artista
-   Arma la página con el artista de ?id= (artistas.json):
+   Arma la página con el artista de ?id= (tabla artistas):
    portada, nombre, género, bio, tracks, merch, <title> y
    migas de pan. Sin ?id= muestra el artista 1; con un id que
    no existe, el aviso "Artista no encontrado".

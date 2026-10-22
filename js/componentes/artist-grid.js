@@ -1,6 +1,6 @@
 /* =========================================================
    Whiplash — <artist-grid limit="4">
-   Grilla de .tarjeta-artista armada desde artistas.json.
+   Grilla de .tarjeta-artista armada desde la tabla artistas (Supabase).
    ========================================================= */
 
 import { obtenerArtistas } from "../servicios/datos.js";
