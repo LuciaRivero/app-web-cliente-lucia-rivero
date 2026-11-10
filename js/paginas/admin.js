@@ -32,6 +32,10 @@ const botonCancelar = formulario.querySelector(".boton-cancelar");
 const lista = document.querySelector(".lista-productos");
 const aviso = document.querySelector(".admin-aviso");
 const campos = formulario.elements;
+const modal = document.querySelector(".modal-eliminar");
+const modalProducto = modal.querySelector(".modal-producto");
+const modalMensaje = modal.querySelector(".mensaje-formulario");
+const botonConfirmar = modal.querySelector('[data-accion="eliminar"]');
 
 let artistasPorId = new Map();
 let productos = [];
@@ -39,6 +43,8 @@ let productos = [];
 let editando = null;
 // URL temporal de la imagen elegida, para la vista previa.
 let urlPrevia = null;
+// Producto que espera confirmación en el modal.
+let porEliminar = null;
 
 function esAdmin() {
   return Boolean(usuarioActual()?.esAdmin);
@@ -186,22 +192,55 @@ formulario.addEventListener("submit", async (evento) => {
 
 // ---------- Lista ----------
 
-async function eliminar(producto, boton) {
-  if (!confirm(`¿Eliminar “${producto.titulo}”? También se quita de los carritos donde esté.`)) return;
-  boton.disabled = true;
+// ---------- Modal de eliminación ----------
+
+function pedirConfirmacion(producto) {
+  porEliminar = producto;
+  modalProducto.textContent = `“${producto.titulo}”`;
+  mostrarMensaje(modalMensaje, "");
+  modal.showModal();
+}
+
+// Al cerrar, el navegador devuelve el foco al botón "Eliminar"
+// que abrió el modal (si el producto sigue en la lista).
+function cerrarModal() {
+  if (botonConfirmar.disabled) return;
+  modal.close();
+}
+
+async function eliminar() {
+  const producto = porEliminar;
+  botonConfirmar.disabled = true;
+  botonConfirmar.textContent = "Eliminando…";
+  modal.setAttribute("aria-busy", "true");
   const { error } = await eliminarProducto(producto);
+  botonConfirmar.disabled = false;
+  botonConfirmar.textContent = "Eliminar";
+  modal.removeAttribute("aria-busy");
   if (error) {
-    boton.disabled = false;
-    mostrarMensaje(mensaje, error);
+    mostrarMensaje(modalMensaje, error);
     return;
   }
+
+  modal.close();
   if (editando?.id === producto.id) limpiarFormulario();
   productos = productos.filter((actual) => actual.id !== producto.id);
   dibujarLista();
   aviso.textContent = `Eliminamos “${producto.titulo}”.`;
-  // El botón eliminado se llevó el foco: pasa al título de la lista.
+  // El botón que abrió el modal ya no existe: el foco pasa al título de la lista.
   document.querySelector("#titulo-lista").focus();
 }
+
+botonConfirmar.addEventListener("click", eliminar);
+modal.querySelector('[data-accion="cancelar"]').addEventListener("click", cerrarModal);
+// Clic en el fondo oscuro (fuera de .modal-contenido) también cierra.
+modal.addEventListener("click", (evento) => {
+  if (evento.target === modal) cerrarModal();
+});
+// Escape no cierra mientras se está eliminando.
+modal.addEventListener("cancel", (evento) => {
+  if (botonConfirmar.disabled) evento.preventDefault();
+});
 
 function crearItem(producto) {
   const artista = artistasPorId.get(producto.artista_id);
@@ -216,7 +255,7 @@ function crearItem(producto) {
     atributos: { type: "button", "aria-label": `Eliminar ${producto.titulo}` },
   });
   botonEditar.addEventListener("click", () => editar(producto));
-  botonEliminar.addEventListener("click", () => eliminar(producto, botonEliminar));
+  botonEliminar.addEventListener("click", () => pedirConfirmacion(producto));
 
   return crearElemento(
     "li",
