@@ -162,7 +162,7 @@ class SiteHeader extends HTMLElement {
   actualizarSesion(actual) {
     const usuario = usuarioActual();
     this.itemCuenta.replaceChildren(
-      usuario ? crearMenuUsuario(usuario, { actual: actual === "cuenta" }) : this.enlaceCuenta,
+      usuario ? crearMenuUsuario(usuario, { actual }) : this.enlaceCuenta,
     );
     for (const item of this.querySelectorAll("[data-solo-con-sesion]")) {
       item.hidden = !usuario;

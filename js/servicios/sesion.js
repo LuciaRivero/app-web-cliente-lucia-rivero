@@ -52,6 +52,9 @@ function guardarSesion(sesion) {
 
 // Lo que necesitan las páginas del usuario de Supabase.
 // `imagen` (URL del avatar) es opcional; sin ella se usan las iniciales.
+// `esAdmin` sale de app_metadata, que el usuario no puede editar
+// (ver supabase/esquema.sql). Solo decide qué se muestra: lo que
+// protege los productos son las políticas RLS.
 function datosPublicos(usuario) {
   const metadatos = usuario.user_metadata ?? {};
   return {
@@ -59,6 +62,7 @@ function datosPublicos(usuario) {
     nombre: metadatos.nombre ?? usuario.email.split("@")[0],
     email: usuario.email,
     imagen: metadatos.imagen ?? null,
+    esAdmin: usuario.app_metadata?.rol === "admin",
   };
 }
 

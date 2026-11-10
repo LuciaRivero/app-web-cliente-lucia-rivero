@@ -46,6 +46,32 @@ export function mostrarMensaje(elemento, texto, tipo = "error") {
   elemento.textContent = texto;
 }
 
+// Aviso breve que aparece abajo de la pantalla y se va solo
+// (estilos en css/componentes/toast.css). `tipo` es "exito" o
+// "error". La región tiene role="status", así el lector de
+// pantalla lo anuncia sin mover el foco.
+const DURACION_TOAST = 4000;
+let regionToasts = null;
+
+export function mostrarToast(texto, tipo = "exito") {
+  const toast = crearElemento("div", { clase: "toast", texto, atributos: { "data-tipo": tipo } });
+  setTimeout(() => {
+    toast.classList.add("toast-saliendo");
+    toast.addEventListener("animationend", () => toast.remove(), { once: true });
+  }, DURACION_TOAST);
+
+  if (regionToasts) {
+    regionToasts.append(toast);
+    return;
+  }
+  // La región se crea con el primer aviso. Algunos lectores de
+  // pantalla no anuncian lo que llega junto con la región: el
+  // texto se agrega un momento después.
+  regionToasts = crearElemento("div", { clase: "toasts", atributos: { role: "status" } });
+  document.body.append(regionToasts);
+  setTimeout(() => regionToasts.append(toast), 100);
+}
+
 // Mientras un formulario espera al servidor, su botón de envío
 // queda deshabilitado (evita envíos dobles) y muestra `texto`.
 export async function enviando(formulario, texto, tarea) {

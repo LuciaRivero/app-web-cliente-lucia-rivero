@@ -1,0 +1,358 @@
+/* =========================================================
+   Whiplash — Página Administrar productos
+   El formulario reutiliza .formulario-cuenta
+   (css/componentes/formulario.css).
+   ========================================================= */
+
+.admin-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+  gap: var(--espaciado-grande);
+  align-items: start;
+  margin-bottom: var(--espaciado-grande);
+}
+
+.admin-panel .formulario-cuenta {
+  margin-bottom: 0;
+}
+
+/* Reciben el foco por JS al editar o eliminar. */
+#titulo-formulario:focus,
+#titulo-lista:focus {
+  outline: none;
+}
+
+.admin-lista h2 {
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+
+/* ---------- Selects y precio ---------- */
+/* La flecha nativa del select queda pegada al borde: se reemplaza
+   por un chevron propio con aire a la derecha. */
+.formulario-producto select {
+  appearance: none;
+  padding-right: 44px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a8a29e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+  cursor: pointer;
+}
+
+.campo-precio {
+  position: relative;
+}
+
+.campo-precio span {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-texto-dim);
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.formulario-cuenta .campo-precio input {
+  width: 100%;
+  padding-left: 30px;
+  /* Sin las flechitas de subir y bajar del input numérico. */
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.campo-precio input::-webkit-inner-spin-button,
+.campo-precio input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* ---------- Errores por campo (js/paginas/admin.js) ---------- */
+.error-campo {
+  color: var(--color-error);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.error-campo:empty {
+  display: none;
+}
+
+.formulario-cuenta [aria-invalid="true"] {
+  border-color: var(--color-error);
+}
+
+.formulario-cuenta [aria-invalid="true"]:focus {
+  outline-color: var(--color-error);
+}
+
+/* ---------- Imagen ---------- */
+.imagen-producto {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.vista-previa {
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+  object-fit: cover;
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  background-color: var(--color-gris-suave);
+}
+
+.imagen-producto-controles {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.formulario-cuenta .imagen-producto-controles input[type="file"] {
+  padding: 8px;
+  max-width: 100%;
+}
+
+.formulario-cuenta .quitar-imagen {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 400;
+}
+
+.formulario-cuenta .quitar-imagen[hidden] {
+  display: none;
+}
+
+.quitar-imagen input {
+  accent-color: var(--color-primario);
+}
+
+/* ---------- Botones del formulario ---------- */
+.acciones-formulario {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.formulario-cuenta .boton-cancelar {
+  background-color: transparent;
+  border: 1px solid var(--color-gris-suave);
+  color: var(--color-texto-dim);
+}
+
+.formulario-cuenta .boton-cancelar:hover,
+.formulario-cuenta .boton-cancelar:focus-visible {
+  background-color: transparent;
+  border-color: var(--color-texto-dim);
+  color: var(--color-texto);
+}
+
+/* ---------- Lista de productos ---------- */
+.lista-productos {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.producto-admin {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: var(--color-gris-oscuro);
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  padding: 12px 16px;
+}
+
+.producto-admin-imagen {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  object-fit: cover;
+  border-radius: 8px;
+  background-color: var(--color-gris-suave);
+}
+
+.producto-admin-datos {
+  flex: 1;
+  min-width: 0;
+}
+
+.producto-admin-titulo {
+  font-weight: 700;
+}
+
+.producto-admin-detalle {
+  color: var(--color-texto-dim);
+  font-size: 13px;
+}
+
+.producto-admin-acciones {
+  display: flex;
+  gap: 8px;
+}
+
+.boton-admin {
+  background: none;
+  border: var(--borde);
+  border-color: var(--color-gris-suave);
+  color: var(--color-texto);
+  border-radius: var(--radio-base);
+  padding: 8px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.boton-admin:hover,
+.boton-admin:focus-visible {
+  border-color: var(--color-primario);
+  color: var(--color-primario-claro);
+}
+
+.boton-admin-eliminar:hover,
+.boton-admin-eliminar:focus-visible {
+  border-color: var(--color-error);
+  color: var(--color-error);
+}
+
+.boton-admin:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.admin-vacio {
+  color: var(--color-texto-dim);
+}
+
+/* ---------- Modal de eliminación ---------- */
+/* Sin padding en el <dialog>: un clic sobre él (y no sobre
+   .modal-contenido) es un clic en el fondo, y cierra. */
+.modal-eliminar {
+  margin: auto;
+  padding: 0;
+  width: min(440px, calc(100vw - 2 * var(--espaciado)));
+  background-color: var(--color-gris-oscuro);
+  color: var(--color-texto);
+  border: 1px solid var(--color-gris-suave);
+  border-radius: var(--radio-amplio);
+  box-shadow: var(--sombra);
+}
+
+.modal-eliminar::backdrop {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-eliminar[open] {
+  animation: modal-entrar 0.2s ease-out;
+}
+
+@keyframes modal-entrar {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+
+.modal-contenido {
+  padding: 24px;
+}
+
+.modal-contenido h2 {
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+
+.modal-contenido p {
+  color: var(--color-texto-dim);
+  line-height: 1.5;
+}
+
+.modal-producto {
+  color: var(--color-texto);
+}
+
+.modal-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.boton-modal {
+  border-radius: var(--radio-base);
+  padding: 12px 20px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  background-color: transparent;
+  border: 1px solid var(--color-gris-suave);
+  color: var(--color-texto);
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.boton-modal:hover,
+.boton-modal:focus-visible {
+  border-color: var(--color-texto-dim);
+}
+
+.boton-modal:focus-visible {
+  outline: 2px solid var(--color-primario);
+  outline-offset: 2px;
+}
+
+.boton-modal-eliminar {
+  background-color: var(--color-error);
+  border-color: var(--color-error);
+  color: #fff;
+}
+
+.boton-modal-eliminar:hover,
+.boton-modal-eliminar:focus-visible {
+  background-color: #dc2626;
+  border-color: #dc2626;
+}
+
+.boton-modal:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-eliminar[open] {
+    animation: none;
+  }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .admin-panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .producto-admin {
+    flex-wrap: wrap;
+  }
+
+  .producto-admin-acciones {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .modal-acciones {
+    flex-direction: column-reverse;
+  }
+
+  .boton-modal {
+    width: 100%;
+  }
+}
