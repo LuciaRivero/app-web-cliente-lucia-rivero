@@ -4,55 +4,43 @@
    Arma la lista de productos con "Editar" y "Eliminar" y
    maneja el formulario, que sirve para el alta y, al tocar
    "Editar", para la edición del producto elegido.
-   Ocultar la página no protege nada: Supabase rechaza los
-   cambios de quien no es administrador (RLS).
+   Las piezas comunes con Administrar artistas están en
+   js/componentes/panel-admin.js.
    ========================================================= */
 
+import {
+  completarOpciones,
+  prepararErrores,
+  prepararImagen,
+  prepararModalEliminar,
+  protegerPaginaAdmin,
+} from "../componentes/panel-admin.js";
 import { crearImagen, formatearPrecio } from "../componentes/tarjetas.js";
+import { validarImagen } from "../servicios/catalogo-admin.js";
 import { obtenerArtistas, rutaDesdeRaiz } from "../servicios/datos.js";
 import {
   TIPOS_PRODUCTO,
   eliminarProducto,
   guardarProducto,
   obtenerProductosAdmin,
-  validarImagen,
 } from "../servicios/productos-admin.js";
-import { CAMBIO_SESION, usuarioActual } from "../servicios/sesion.js";
 import { crearCargando, crearElemento, enviando, mostrarMensaje, mostrarToast } from "../utilidades/dom.js";
 
-const IMAGEN_REEMPLAZO = rutaDesdeRaiz("assets/img/productos/sin-imagen.svg");
-
-const formulario = document.querySelector(".formulario-producto form");
+const formulario = document.querySelector(".formulario-admin form");
 const tituloFormulario = document.querySelector("#titulo-formulario");
-const mensaje = document.querySelector(".formulario-producto .mensaje-formulario");
-const vistaPrevia = formulario.querySelector(".vista-previa");
-const quitarImagen = formulario.querySelector(".quitar-imagen");
+const mensaje = document.querySelector(".formulario-admin .mensaje-formulario");
 const botonGuardar = formulario.querySelector('[type="submit"]');
 const botonCancelar = formulario.querySelector(".boton-cancelar");
-const lista = document.querySelector(".lista-productos");
+const lista = document.querySelector(".lista-admin");
 const campos = formulario.elements;
-const modal = document.querySelector(".modal-eliminar");
-const modalProducto = modal.querySelector(".modal-producto");
-const modalMensaje = modal.querySelector(".mensaje-formulario");
-const botonConfirmar = modal.querySelector('[data-accion="eliminar"]');
 
 let artistasPorId = new Map();
 let productos = [];
 // Producto que se está editando; null = alta.
 let editando = null;
-// URL temporal de la imagen elegida, para la vista previa.
-let urlPrevia = null;
-// Producto que espera confirmación en el modal.
-let porEliminar = null;
-
-function esAdmin() {
-  return Boolean(usuarioActual()?.esAdmin);
-}
-
-// ---------- Errores por campo ----------
 
 // Cada regla devuelve el error del campo o un valor falso.
-const VALIDACIONES = {
+const errores = prepararErrores(formulario, {
   titulo: (campo) => !campo.value.trim() && "Escribí el título del producto.",
   tipo: (campo) => !campo.value && "Elegí el tipo de producto.",
   precio: (campo) => {
@@ -64,52 +52,17 @@ const VALIDACIONES = {
   },
   artista_id: (campo) => !campo.value && "Elegí el artista.",
   imagen: (campo) => campo.files[0] && validarImagen(campo.files[0]),
-};
-
-// El error va en el <small id="error-<name>"> debajo del campo,
-// que el campo ya tiene en aria-describedby.
-function mostrarErrorCampo(campo, texto) {
-  document.querySelector(`#error-${campo.name}`).textContent = texto || "";
-  if (texto) campo.setAttribute("aria-invalid", "true");
-  else campo.removeAttribute("aria-invalid");
-}
-
-function limpiarErrores() {
-  for (const nombre of Object.keys(VALIDACIONES)) mostrarErrorCampo(campos[nombre], null);
-}
-
-// Marca todos los campos con error y enfoca el primero.
-// Devuelve true si el formulario es válido.
-function validar() {
-  let primero = null;
-  for (const [nombre, regla] of Object.entries(VALIDACIONES)) {
-    const error = regla(campos[nombre]);
-    mostrarErrorCampo(campos[nombre], error);
-    if (error) primero ??= campos[nombre];
-  }
-  primero?.focus();
-  return !primero;
-}
-
-// Al corregir un campo, su error desaparece.
-formulario.addEventListener("input", (evento) => {
-  if (evento.target.name in VALIDACIONES) mostrarErrorCampo(evento.target, null);
 });
+const imagen = prepararImagen(formulario, errores, rutaDesdeRaiz("assets/img/productos/sin-imagen.svg"));
+const pedirConfirmacion = prepararModalEliminar(document.querySelector(".modal-eliminar"));
 
 // ---------- Formulario ----------
-
-function mostrarVistaPrevia(src) {
-  if (urlPrevia) URL.revokeObjectURL(urlPrevia);
-  urlPrevia = null;
-  vistaPrevia.src = src || IMAGEN_REEMPLAZO;
-}
 
 function limpiarFormulario() {
   editando = null;
   formulario.reset();
-  limpiarErrores();
-  mostrarVistaPrevia(null);
-  quitarImagen.hidden = true;
+  errores.limpiar();
+  imagen.mostrar(null);
   tituloFormulario.textContent = "Nuevo producto";
   botonGuardar.textContent = "Agregar producto";
   botonCancelar.hidden = true;
@@ -121,11 +74,8 @@ function editar(producto) {
   campos.tipo.value = producto.tipo;
   campos.precio.value = producto.precio;
   campos.artista_id.value = producto.artista_id;
-  campos.imagen.value = "";
-  campos.quitarImagen.checked = false;
-  limpiarErrores();
-  quitarImagen.hidden = !producto.imagen;
-  mostrarVistaPrevia(producto.imagen ? rutaDesdeRaiz(producto.imagen) : null);
+  errores.limpiar();
+  imagen.mostrar(producto.imagen);
   tituloFormulario.textContent = `Editar “${producto.titulo}”`;
   botonGuardar.textContent = "Guardar cambios";
   botonCancelar.hidden = false;
@@ -133,39 +83,6 @@ function editar(producto) {
   // El formulario queda arriba de la lista: se lleva el foco ahí.
   tituloFormulario.focus();
 }
-
-// Si la imagen guardada no carga, la vista previa muestra la de reemplazo.
-vistaPrevia.addEventListener("error", () => {
-  if (vistaPrevia.src !== IMAGEN_REEMPLAZO) vistaPrevia.src = IMAGEN_REEMPLAZO;
-});
-
-campos.imagen.addEventListener("change", () => {
-  const archivo = campos.imagen.files[0];
-  if (!archivo) {
-    mostrarVistaPrevia(editando?.imagen ? rutaDesdeRaiz(editando.imagen) : null);
-    return;
-  }
-  const error = validarImagen(archivo);
-  if (error) {
-    campos.imagen.value = "";
-    mostrarErrorCampo(campos.imagen, error);
-    return;
-  }
-  mostrarVistaPrevia(null);
-  urlPrevia = URL.createObjectURL(archivo);
-  vistaPrevia.src = urlPrevia;
-  campos.quitarImagen.checked = false;
-});
-
-// Quitar la imagen y subir otra se excluyen.
-campos.quitarImagen.addEventListener("change", () => {
-  if (!campos.quitarImagen.checked) {
-    mostrarVistaPrevia(rutaDesdeRaiz(editando.imagen));
-    return;
-  }
-  campos.imagen.value = "";
-  mostrarVistaPrevia(null);
-});
 
 botonCancelar.addEventListener("click", () => {
   limpiarFormulario();
@@ -176,10 +93,10 @@ botonCancelar.addEventListener("click", () => {
 formulario.addEventListener("submit", async (evento) => {
   evento.preventDefault();
   mostrarMensaje(mensaje, "");
-  if (!validar()) return;
+  if (!errores.validar()) return;
 
   const eraEdicion = Boolean(editando);
-  const { producto, error: errorGuardado } = await enviando(formulario, "Guardando…", () =>
+  const { producto, error } = await enviando(formulario, "Guardando…", () =>
     guardarProducto(
       {
         id: editando?.id,
@@ -188,15 +105,11 @@ formulario.addEventListener("submit", async (evento) => {
         precio: Number(campos.precio.value),
         artista_id: Number(campos.artista_id.value),
       },
-      {
-        archivo: campos.imagen.files[0],
-        quitarImagen: campos.quitarImagen.checked,
-        imagenActual: editando?.imagen,
-      },
+      imagen.datos(),
     ),
   );
-  if (errorGuardado) {
-    mostrarMensaje(mensaje, errorGuardado);
+  if (error) {
+    mostrarMensaje(mensaje, error);
     return;
   }
 
@@ -212,37 +125,18 @@ formulario.addEventListener("submit", async (evento) => {
 
 // ---------- Lista ----------
 
-// ---------- Modal de eliminación ----------
+async function eliminar(producto) {
+  const eliminado = await pedirConfirmacion({
+    titulo: "¿Eliminar producto?",
+    texto: [
+      "Vas a eliminar ",
+      crearElemento("strong", { texto: `“${producto.titulo}”` }),
+      ". También se quita de los carritos donde esté. Esta acción no se puede deshacer.",
+    ],
+    eliminar: () => eliminarProducto(producto),
+  });
+  if (!eliminado) return;
 
-function pedirConfirmacion(producto) {
-  porEliminar = producto;
-  modalProducto.textContent = `“${producto.titulo}”`;
-  mostrarMensaje(modalMensaje, "");
-  modal.showModal();
-}
-
-// Al cerrar, el navegador devuelve el foco al botón "Eliminar"
-// que abrió el modal (si el producto sigue en la lista).
-function cerrarModal() {
-  if (botonConfirmar.disabled) return;
-  modal.close();
-}
-
-async function eliminar() {
-  const producto = porEliminar;
-  botonConfirmar.disabled = true;
-  botonConfirmar.textContent = "Eliminando…";
-  modal.setAttribute("aria-busy", "true");
-  const { error } = await eliminarProducto(producto);
-  botonConfirmar.disabled = false;
-  botonConfirmar.textContent = "Eliminar";
-  modal.removeAttribute("aria-busy");
-  if (error) {
-    mostrarMensaje(modalMensaje, error);
-    return;
-  }
-
-  modal.close();
   if (editando?.id === producto.id) limpiarFormulario();
   productos = productos.filter((actual) => actual.id !== producto.id);
   dibujarLista();
@@ -250,17 +144,6 @@ async function eliminar() {
   // El botón que abrió el modal ya no existe: el foco pasa al título de la lista.
   document.querySelector("#titulo-lista").focus();
 }
-
-botonConfirmar.addEventListener("click", eliminar);
-modal.querySelector('[data-accion="cancelar"]').addEventListener("click", cerrarModal);
-// Clic en el fondo oscuro (fuera de .modal-contenido) también cierra.
-modal.addEventListener("click", (evento) => {
-  if (evento.target === modal) cerrarModal();
-});
-// Escape no cierra mientras se está eliminando.
-modal.addEventListener("cancel", (evento) => {
-  if (botonConfirmar.disabled) evento.preventDefault();
-});
 
 function crearItem(producto) {
   const artista = artistasPorId.get(producto.artista_id);
@@ -275,22 +158,22 @@ function crearItem(producto) {
     atributos: { type: "button", "aria-label": `Eliminar ${producto.titulo}` },
   });
   botonEditar.addEventListener("click", () => editar(producto));
-  botonEliminar.addEventListener("click", () => pedirConfirmacion(producto));
+  botonEliminar.addEventListener("click", () => eliminar(producto));
 
   return crearElemento(
     "li",
-    { clase: "producto-admin" },
-    crearImagen(producto.imagen, { clase: "producto-admin-imagen" }),
+    { clase: "item-admin" },
+    crearImagen(producto.imagen, { clase: "item-admin-imagen" }),
     crearElemento(
       "div",
-      { clase: "producto-admin-datos" },
-      crearElemento("p", { clase: "producto-admin-titulo", texto: producto.titulo }),
+      { clase: "item-admin-datos" },
+      crearElemento("p", { clase: "item-admin-titulo", texto: producto.titulo }),
       crearElemento("p", {
-        clase: "producto-admin-detalle",
+        clase: "item-admin-detalle",
         texto: [producto.tipo, artista?.nombre, formatearPrecio(producto.precio)].filter(Boolean).join(" · "),
       }),
     ),
-    crearElemento("div", { clase: "producto-admin-acciones" }, botonEditar, botonEliminar),
+    crearElemento("div", { clase: "item-admin-acciones" }, botonEditar, botonEliminar),
   );
 }
 
@@ -305,13 +188,6 @@ function dibujarLista() {
 }
 
 // ---------- Inicio ----------
-
-function completarOpciones(select, opciones) {
-  select.replaceChildren(
-    crearElemento("option", { texto: "Elegí una opción", atributos: { value: "" } }),
-    ...opciones.map(({ valor, texto }) => crearElemento("option", { texto, atributos: { value: valor } })),
-  );
-}
 
 async function iniciar() {
   completarOpciones(
@@ -336,10 +212,4 @@ async function iniciar() {
   }
 }
 
-// Si se cierra la sesión (o vence) desde otra parte, se sale.
-window.addEventListener(CAMBIO_SESION, () => {
-  if (!esAdmin()) location.replace(rutaDesdeRaiz("index.html"));
-});
-
-if (esAdmin()) iniciar();
-else location.replace(rutaDesdeRaiz("index.html"));
+if (protegerPaginaAdmin()) iniciar();

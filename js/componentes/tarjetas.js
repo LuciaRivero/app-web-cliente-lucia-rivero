@@ -19,7 +19,11 @@ import { crearElemento } from "../utilidades/dom.js";
 
 const URL_PRODUCTO = rutaDesdeRaiz("pages/producto.html");
 const URL_CUENTA = rutaDesdeRaiz("pages/cuenta.html");
-const IMAGEN_REEMPLAZO = rutaDesdeRaiz("assets/img/productos/sin-imagen.svg");
+// Imagen que se ve cuando un producto o artista no tiene una.
+const IMAGEN_REEMPLAZO = {
+  producto: rutaDesdeRaiz("assets/img/productos/sin-imagen.svg"),
+  artista: rutaDesdeRaiz("assets/img/artistas/sin-imagen.svg"),
+};
 // Opciones del formulario de compra según el tipo de producto.
 // Las entradas no tienen opciones: se elige la cantidad.
 const OPCIONES_COMPRA = {
@@ -37,34 +41,37 @@ export function formatearPrecio(precio) {
   return `$${precio.toLocaleString("es-AR")}`;
 }
 
-// Imagen de un producto o artista. Sin imagen guardada, o si la
-// guardada no carga (URL rota, archivo borrado), muestra la de reemplazo.
-export function crearImagen(imagen, { clase, alt = "" } = {}) {
-  const img = crearElemento("img", {
-    clase,
-    atributos: { src: imagen ? rutaDesdeRaiz(imagen) : IMAGEN_REEMPLAZO, alt },
-  });
+// Pone en `img` la imagen de un producto o artista (`tipo`). Sin
+// imagen guardada, o si la guardada no carga (URL rota, archivo
+// borrado), muestra la de reemplazo.
+export function mostrarImagen(img, imagen, tipo = "producto") {
+  const reemplazo = IMAGEN_REEMPLAZO[tipo];
+  img.src = imagen ? rutaDesdeRaiz(imagen) : reemplazo;
   img.addEventListener(
     "error",
     () => {
-      img.src = IMAGEN_REEMPLAZO;
+      img.src = reemplazo;
     },
     { once: true },
   );
   return img;
 }
 
-function crearFigura(imagen, alt, titulo) {
+export function crearImagen(imagen, { clase, alt = "", tipo = "producto" } = {}) {
+  return mostrarImagen(crearElemento("img", { clase, atributos: { alt } }), imagen, tipo);
+}
+
+function crearFigura(imagen, alt, titulo, tipo) {
   return crearElemento(
     "figure",
     {},
-    crearImagen(imagen, { alt }),
+    crearImagen(imagen, { alt, tipo }),
     crearElemento("figcaption", { texto: titulo }),
   );
 }
 
-function crearFiguraConEnlace(href, imagen, alt, titulo) {
-  return crearElemento("a", { atributos: { href } }, crearFigura(imagen, alt, titulo));
+function crearFiguraConEnlace(href, imagen, alt, titulo, tipo) {
+  return crearElemento("a", { atributos: { href } }, crearFigura(imagen, alt, titulo, tipo));
 }
 
 // Botón de alternar: aria-pressed dice si ya se sigue al artista
@@ -107,7 +114,13 @@ export function crearTarjetaArtista(artista) {
   return crearElemento(
     "article",
     { clase: "tarjeta-artista" },
-    crearFiguraConEnlace(urlArtista(artista.id), artista.imagen, `Imagen de ${artista.nombre}`, artista.nombre),
+    crearFiguraConEnlace(
+      urlArtista(artista.id),
+      artista.imagen,
+      `Imagen de ${artista.nombre}`,
+      artista.nombre,
+      "artista",
+    ),
     crearElemento("p", { clase: "genero-artista", texto: artista.genero }),
     prepararBotonSeguir(
       crearElemento("button", { clase: "boton-seguir-artista", atributos: { type: "button" } }),
@@ -268,11 +281,12 @@ export function crearProductoMerch(producto, { conCompra = false } = {}) {
 }
 
 // Fila compacta para el desplegable del buscador.
-export function crearResultadoBuscador({ href, imagen, titulo, detalle }) {
+// `tipo`: "producto" o "artista", para la imagen de reemplazo.
+export function crearResultadoBuscador({ href, imagen, tipo, titulo, detalle }) {
   return crearElemento(
     "a",
     { clase: "resultado-buscador", atributos: { href } },
-    crearImagen(imagen),
+    crearImagen(imagen, { tipo }),
     crearElemento(
       "span",
       {},

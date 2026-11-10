@@ -31,7 +31,9 @@
     <link rel="modulepreload" href="../js/componentes/navigation.js" />
     <link rel="modulepreload" href="../js/componentes/tarjetas.js" />
     <link rel="modulepreload" href="../js/servicios/sesion.js" />
+    <link rel="modulepreload" href="../js/servicios/catalogo-admin.js" />
     <link rel="modulepreload" href="../js/servicios/productos-admin.js" />
+    <link rel="modulepreload" href="../js/componentes/panel-admin.js" />
     <link rel="stylesheet" href="../css/main.css" />
     <!-- cuenta.css: estilos de .mensaje-formulario y .ayuda-campo -->
     <link rel="stylesheet" href="../css/paginas/cuenta.css" />
@@ -56,7 +58,7 @@
       <!-- js/paginas/admin.js arma la lista y maneja el formulario.
            Solo para administradores: al resto lo lleva a la home. -->
       <div class="admin-panel">
-        <article class="formulario-cuenta formulario-producto">
+        <article class="formulario-cuenta formulario-admin">
           <h2 id="titulo-formulario" tabindex="-1">Nuevo producto</h2>
 
           <form novalidate>
@@ -120,9 +122,9 @@
 
             <div class="campo">
               <label for="producto-imagen">Imagen</label>
-              <div class="imagen-producto">
+              <div class="imagen-admin">
                 <img class="vista-previa" src="../assets/img/productos/sin-imagen.svg" alt="" />
-                <div class="imagen-producto-controles">
+                <div class="imagen-admin-controles">
                   <input
                     type="file"
                     id="producto-imagen"
@@ -164,7 +166,7 @@
 
         <section class="admin-lista" aria-labelledby="titulo-lista">
           <h2 id="titulo-lista" tabindex="-1">Productos</h2>
-          <ul class="lista-productos"></ul>
+          <ul class="lista-admin"></ul>
         </section>
       </div>
     </main>
@@ -173,11 +175,9 @@
          el foco, se cierra con Escape y deja inerte el resto. -->
     <dialog class="modal-eliminar" aria-labelledby="titulo-eliminar" aria-describedby="texto-eliminar">
       <div class="modal-contenido">
-        <h2 id="titulo-eliminar">¿Eliminar producto?</h2>
-        <p id="texto-eliminar">
-          Vas a eliminar <strong class="modal-producto"></strong>. También se
-          quita de los carritos donde esté. Esta acción no se puede deshacer.
-        </p>
+        <h2 id="titulo-eliminar" class="modal-titulo">¿Eliminar producto?</h2>
+        <!-- js/componentes/panel-admin.js completa el título y el texto. -->
+        <p id="texto-eliminar" class="modal-texto"></p>
         <p class="mensaje-formulario" aria-live="polite"></p>
         <div class="modal-acciones">
           <!-- autofocus: la opción segura queda elegida al abrir. -->

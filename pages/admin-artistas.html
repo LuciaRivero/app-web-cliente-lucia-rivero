@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Administrar artistas de Whiplash - Cargá, editá y eliminá artistas."
+    />
+    <meta name="robots" content="noindex" />
+    <title>Administrar artistas | Whiplash</title>
+    <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml" />
+    <!-- Precarga: fuentes y módulos compartidos se piden en paralelo
+         en vez de esperar a que los descubra main.css / main.js. -->
+    <link
+      rel="preload"
+      href="../assets/fuentes/anton-regular.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="../assets/fuentes/inter-variable.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link rel="modulepreload" href="../js/servicios/datos.js" />
+    <link rel="modulepreload" href="../js/utilidades/dom.js" />
+    <link rel="modulepreload" href="../js/componentes/navigation.js" />
+    <link rel="modulepreload" href="../js/componentes/tarjetas.js" />
+    <link rel="modulepreload" href="../js/servicios/sesion.js" />
+    <link rel="modulepreload" href="../js/servicios/catalogo-admin.js" />
+    <link rel="modulepreload" href="../js/servicios/artistas-admin.js" />
+    <link rel="modulepreload" href="../js/componentes/panel-admin.js" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <!-- cuenta.css: estilos de .mensaje-formulario y .ayuda-campo -->
+    <link rel="stylesheet" href="../css/paginas/cuenta.css" />
+    <link rel="stylesheet" href="../css/paginas/admin.css" />
+    <script type="module" src="../js/main.js"></script>
+    <script type="module" src="../js/paginas/admin-artistas.js"></script>
+  </head>
+  <body>
+    <a class="enlace-saltar" href="#contenido-principal">Saltar al contenido</a>
+
+    <site-header current="admin-artistas"></site-header>
+
+    <main id="contenido-principal">
+      <site-breadcrumbs><span>Administrar artistas</span></site-breadcrumbs>
+
+      <h1>Administrar artistas</h1>
+      <p class="subtitulo">
+        Cargá artistas nuevos, editá su información y sus canciones o
+        eliminalos.
+      </p>
+
+      <!-- js/paginas/admin-artistas.js arma la lista y maneja el
+           formulario. Solo para administradores: al resto lo lleva
+           a la home. -->
+      <div class="admin-panel">
+        <article class="formulario-cuenta formulario-admin">
+          <h2 id="titulo-formulario" tabindex="-1">Nuevo artista</h2>
+
+          <form novalidate>
+            <div class="campo">
+              <label for="artista-nombre">Nombre</label>
+              <input
+                type="text"
+                id="artista-nombre"
+                name="nombre"
+                placeholder="Por ejemplo: Los Cráteres"
+                maxlength="80"
+                aria-describedby="error-nombre"
+                required
+              />
+              <small id="error-nombre" class="error-campo"></small>
+            </div>
+
+            <div class="campo">
+              <label for="artista-genero">Género</label>
+              <select
+                id="artista-genero"
+                name="genero"
+                aria-describedby="error-genero"
+                required
+              >
+                <option value="">Cargando géneros…</option>
+              </select>
+              <small id="error-genero" class="error-campo"></small>
+            </div>
+
+            <div class="campo">
+              <label for="artista-bio">Bio</label>
+              <textarea
+                id="artista-bio"
+                name="bio"
+                rows="4"
+                maxlength="600"
+                placeholder="Contá en pocas líneas quiénes son y cómo suenan."
+                aria-describedby="ayuda-bio"
+              ></textarea>
+              <small id="ayuda-bio" class="ayuda-campo">Opcional. Hasta 600 caracteres.</small>
+            </div>
+
+            <div class="campo">
+              <label for="artista-imagen">Imagen</label>
+              <div class="imagen-admin">
+                <img class="vista-previa" src="../assets/img/artistas/sin-imagen.svg" alt="" />
+                <div class="imagen-admin-controles">
+                  <input
+                    type="file"
+                    id="artista-imagen"
+                    name="imagen"
+                    accept="image/jpeg,image/png,image/webp"
+                    aria-describedby="ayuda-imagen error-imagen"
+                  />
+                  <small id="ayuda-imagen" class="ayuda-campo"
+                    >JPG, PNG o WebP de hasta 2 MB. Si no subís ninguna, se
+                    muestra una imagen de reemplazo.</small
+                  >
+                  <!-- aria-live: este error aparece al elegir el archivo,
+                       sin que el foco se mueva. -->
+                  <small
+                    id="error-imagen"
+                    class="error-campo"
+                    aria-live="polite"
+                  ></small>
+                  <label class="quitar-imagen" hidden>
+                    <input type="checkbox" name="quitarImagen" />
+                    Quitar la imagen actual
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Las filas de canciones las arma js/paginas/admin-artistas.js.
+                 Las filas vacías no se guardan. -->
+            <fieldset class="campo campo-tracks" name="tracks" aria-describedby="ayuda-tracks error-tracks">
+              <legend>Canciones</legend>
+              <small id="ayuda-tracks" class="ayuda-campo"
+                >Título y duración en minutos y segundos (por ejemplo,
+                3:24).</small
+              >
+              <ol class="lista-tracks-admin"></ol>
+              <small id="error-tracks" class="error-campo"></small>
+              <button class="boton-agregar-track" type="button">+ Agregar canción</button>
+            </fieldset>
+
+            <!-- Cancelar va primero para que el orden del teclado
+                 coincida con el visual: guardar queda a la derecha. -->
+            <div class="acciones-formulario">
+              <button class="boton-cancelar" type="button" hidden>
+                Cancelar edición
+              </button>
+              <button type="submit">Agregar artista</button>
+            </div>
+          </form>
+
+          <p class="mensaje-formulario" aria-live="polite"></p>
+        </article>
+
+        <section class="admin-lista" aria-labelledby="titulo-lista">
+          <h2 id="titulo-lista" tabindex="-1">Artistas</h2>
+          <ul class="lista-admin"></ul>
+        </section>
+      </div>
+    </main>
+
+    <!-- Confirmación de "Eliminar": <dialog> con showModal() atrapa
+         el foco, se cierra con Escape y deja inerte el resto. -->
+    <dialog class="modal-eliminar" aria-labelledby="titulo-eliminar" aria-describedby="texto-eliminar">
+      <div class="modal-contenido">
+        <!-- js/componentes/panel-admin.js completa el título y el texto. -->
+        <h2 id="titulo-eliminar" class="modal-titulo">¿Eliminar artista?</h2>
+        <p id="texto-eliminar" class="modal-texto"></p>
+        <p class="mensaje-formulario" aria-live="polite"></p>
+        <div class="modal-acciones">
+          <!-- autofocus: la opción segura queda elegida al abrir. -->
+          <button class="boton-modal" type="button" data-accion="cancelar" autofocus>
+            Cancelar
+          </button>
+          <button class="boton-modal boton-modal-eliminar" type="button" data-accion="eliminar">
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </dialog>
+
+    <site-footer></site-footer>
+  </body>
+</html>
