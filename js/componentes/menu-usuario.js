@@ -3,7 +3,7 @@
    Con sesión abierta, el acceso a la cuenta de <site-header>
    es un avatar que despliega nombre, email, Mi perfil, Ayuda
    y Cerrar sesión. Los administradores ven además
-   Administrar productos. Sigue el patrón "disclosure": un botón con
+   Administrar productos y Administrar artistas. Sigue el patrón "disclosure": un botón con
    aria-expanded que muestra u oculta un panel de enlaces.
    Se cierra con Escape, con un clic afuera o cuando el foco
    sale del menú.
@@ -22,6 +22,13 @@ const ID_PANEL = "menu-usuario-panel";
 const OPCIONES = [
   { id: "cuenta", texto: "Mi perfil", ruta: "pages/cuenta.html", icono: "perfil" },
   { id: "admin", texto: "Administrar productos", ruta: "pages/admin.html", icono: "administrar", soloAdmin: true },
+  {
+    id: "admin-artistas",
+    texto: "Administrar artistas",
+    ruta: "pages/admin-artistas.html",
+    icono: "microfono",
+    soloAdmin: true,
+  },
   { id: "ayuda", texto: "Ayuda", ruta: "pages/ayuda.html", icono: "ayuda" },
 ];
 

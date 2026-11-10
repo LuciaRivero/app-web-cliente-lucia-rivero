@@ -82,6 +82,7 @@ export function iniciarBuscador() {
         crearResultadoBuscador({
           href: urlArtista(artista.id),
           imagen: artista.imagen,
+          tipo: "artista",
           titulo: artista.nombre,
           detalle: artista.genero,
         }),

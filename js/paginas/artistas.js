@@ -6,7 +6,7 @@
    ========================================================= */
 
 import { dejarDeSeguir, leerSeguidos } from "../servicios/artistas-seguidos.js";
-import { urlArtista } from "../componentes/tarjetas.js";
+import { crearImagen, urlArtista } from "../componentes/tarjetas.js";
 import { obtenerArtistas, rutaDesdeRaiz } from "../servicios/datos.js";
 import { usuarioActual } from "../servicios/sesion.js";
 import { crearCargando, crearElemento } from "../utilidades/dom.js";
@@ -34,10 +34,7 @@ function crearItem(artista) {
     crearElemento(
       "a",
       { clase: "artista-guardado-enlace", atributos: { href: urlArtista(artista.id) } },
-      crearElemento("img", {
-        clase: "avatar",
-        atributos: { src: rutaDesdeRaiz(artista.imagen), alt: `Avatar de ${artista.nombre}` },
-      }),
+      crearImagen(artista.imagen, { clase: "avatar", alt: `Avatar de ${artista.nombre}`, tipo: "artista" }),
       crearElemento("span", { clase: "artista-guardado-nombre", texto: artista.nombre }),
       crearElemento("span", { clase: "artista-guardado-genero", texto: artista.genero }),
     ),

@@ -9,8 +9,8 @@
    sistema) y, donde no existe, copia el link al portapapeles.
    ========================================================= */
 
-import { obtenerArtistas, obtenerProductos, rutaDesdeRaiz } from "../servicios/datos.js";
-import { prepararBotonSeguir } from "../componentes/tarjetas.js";
+import { obtenerArtistas, obtenerProductos } from "../servicios/datos.js";
+import { mostrarImagen, prepararBotonSeguir } from "../componentes/tarjetas.js";
 import { crearElemento } from "../utilidades/dom.js";
 
 const ID_POR_DEFECTO = 1;
@@ -57,7 +57,7 @@ function mostrarArtista(artista, cantidadMerch) {
   if (actual) actual.textContent = artista.nombre;
 
   const portada = perfil.querySelector(".portada-artista img");
-  portada.src = rutaDesdeRaiz(artista.imagen);
+  mostrarImagen(portada, artista.imagen, "artista");
   portada.alt = `Portada del artista ${artista.nombre}`;
   portada.hidden = false;
 

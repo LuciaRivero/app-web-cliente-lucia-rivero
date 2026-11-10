@@ -1,5 +1,5 @@
 /* =========================================================
-   Whiplash — Página Administrar productos
+   Whiplash — Páginas de admin (productos y artistas)
    El formulario reutiliza .formulario-cuenta
    (css/componentes/formulario.css).
    ========================================================= */
@@ -30,7 +30,7 @@
 /* ---------- Selects y precio ---------- */
 /* La flecha nativa del select queda pegada al borde: se reemplaza
    por un chevron propio con aire a la derecha. */
-.formulario-producto select {
+.formulario-admin select {
   appearance: none;
   padding-right: 44px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a8a29e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
@@ -87,8 +87,114 @@
   outline-color: var(--color-error);
 }
 
+/* ---------- Bio (formulario.css no incluye textarea en .formulario-cuenta) ---------- */
+.formulario-admin textarea {
+  background-color: var(--color-base);
+  color: var(--color-texto);
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  padding: 12px 14px;
+  font-family: var(--fuente-cuerpo);
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.formulario-admin textarea::placeholder {
+  color: var(--color-texto-dim);
+}
+
+.formulario-admin textarea:focus {
+  outline: 2px solid var(--color-primario);
+}
+
+/* ---------- Canciones (pages/admin-artistas.html) ---------- */
+.campo-tracks {
+  border: none;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.campo-tracks legend {
+  padding: 0;
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.lista-tracks-admin {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lista-tracks-admin:not(:empty) {
+  margin-top: 4px;
+}
+
+.track-admin {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.track-numero {
+  width: 20px;
+  flex-shrink: 0;
+  color: var(--color-texto-dim);
+  font-size: 13px;
+  text-align: right;
+}
+
+.formulario-cuenta .track-admin input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+}
+
+.formulario-cuenta .track-admin .track-duracion-admin {
+  flex: 0 0 76px;
+  text-align: center;
+}
+
+/* Botones secundarios: sin el relleno violeta de .formulario-cuenta button. */
+.formulario-cuenta .quitar-track,
+.formulario-cuenta .boton-agregar-track {
+  background-color: transparent;
+  border: 1px solid var(--color-gris-suave);
+  color: var(--color-texto-dim);
+  font-size: 14px;
+}
+
+.formulario-cuenta .quitar-track {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+}
+
+.formulario-cuenta .boton-agregar-track {
+  padding: 10px 16px;
+  margin-top: 4px;
+}
+
+.formulario-cuenta .quitar-track:hover,
+.formulario-cuenta .quitar-track:focus-visible {
+  background-color: transparent;
+  border-color: var(--color-error);
+  color: var(--color-error);
+}
+
+.formulario-cuenta .boton-agregar-track:hover,
+.formulario-cuenta .boton-agregar-track:focus-visible {
+  background-color: transparent;
+  border-color: var(--color-primario);
+  color: var(--color-primario-claro);
+}
+
 /* ---------- Imagen ---------- */
-.imagen-producto {
+.imagen-admin {
   display: flex;
   gap: 16px;
   align-items: flex-start;
@@ -104,14 +210,14 @@
   background-color: var(--color-gris-suave);
 }
 
-.imagen-producto-controles {
+.imagen-admin-controles {
   display: flex;
   flex-direction: column;
   gap: 8px;
   min-width: 0;
 }
 
-.formulario-cuenta .imagen-producto-controles input[type="file"] {
+.formulario-cuenta .imagen-admin-controles input[type="file"] {
   padding: 8px;
   max-width: 100%;
 }
@@ -152,14 +258,14 @@
   color: var(--color-texto);
 }
 
-/* ---------- Lista de productos ---------- */
-.lista-productos {
+/* ---------- Lista (productos o artistas) ---------- */
+.lista-admin {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.producto-admin {
+.item-admin {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -169,7 +275,7 @@
   padding: 12px 16px;
 }
 
-.producto-admin-imagen {
+.item-admin-imagen {
   width: 56px;
   height: 56px;
   flex-shrink: 0;
@@ -178,21 +284,26 @@
   background-color: var(--color-gris-suave);
 }
 
-.producto-admin-datos {
+/* Los artistas se muestran con avatar redondo, como en Mis artistas. */
+.item-admin-avatar {
+  border-radius: var(--radio-pildora);
+}
+
+.item-admin-datos {
   flex: 1;
   min-width: 0;
 }
 
-.producto-admin-titulo {
+.item-admin-titulo {
   font-weight: 700;
 }
 
-.producto-admin-detalle {
+.item-admin-detalle {
   color: var(--color-texto-dim);
   font-size: 13px;
 }
 
-.producto-admin-acciones {
+.item-admin-acciones {
   display: flex;
   gap: 8px;
 }
@@ -275,7 +386,7 @@
   line-height: 1.5;
 }
 
-.modal-producto {
+.modal-texto strong {
   color: var(--color-texto);
 }
 
@@ -339,11 +450,11 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .producto-admin {
+  .item-admin {
     flex-wrap: wrap;
   }
 
-  .producto-admin-acciones {
+  .item-admin-acciones {
     width: 100%;
     justify-content: flex-end;
   }
