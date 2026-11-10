@@ -1,9 +1,11 @@
 /* =========================================================
-   Whiplash — Página Administrar artistas
-   Solo para administradores: al resto lo lleva a la home.
-   Arma la lista de artistas con "Editar" y "Eliminar" y
-   maneja el formulario (alta o edición del artista elegido),
-   con filas de canciones que se agregan y se quitan.
+   Whiplash — Página Administrar artistas / Mi perfil de artista
+   Para el admin global: lista de todos los artistas con
+   "Editar" y "Eliminar" y el formulario de alta o edición.
+   Para una cuenta de artista: solo su perfil, con el
+   formulario abierto para editarlo (sin alta). Al resto lo
+   lleva a la home. El formulario tiene filas de canciones que
+   se agregan y se quitan.
    Un artista con productos no se puede eliminar: el modal lo
    avisa en lugar de ofrecer la baja.
    Las piezas comunes con Administrar productos están en
@@ -12,10 +14,12 @@
 
 import {
   completarOpciones,
+  mostrarSinPerfil,
   prepararErrores,
   prepararImagen,
   prepararModalEliminar,
-  protegerPaginaAdmin,
+  protegerPanel,
+  titularPagina,
 } from "../componentes/panel-admin.js";
 import { crearImagen } from "../componentes/tarjetas.js";
 import {
@@ -23,6 +27,7 @@ import {
   eliminarArtista,
   guardarArtista,
   obtenerArtistasAdmin,
+  obtenerMiArtista,
 } from "../servicios/artistas-admin.js";
 import { validarImagen } from "../servicios/catalogo-admin.js";
 import { obtenerGeneros, obtenerProductos, rutaDesdeRaiz } from "../servicios/datos.js";
@@ -43,6 +48,8 @@ let artistas = [];
 let productosPorArtista = new Map();
 // Artista que se está editando; null = alta.
 let editando = null;
+// true con una cuenta de artista: solo ve y edita su perfil.
+let soloPropio = false;
 // Para que los id de los campos de cada fila no se repitan.
 let siguienteFila = 0;
 
@@ -189,7 +196,8 @@ function limpiarFormulario() {
   botonCancelar.hidden = true;
 }
 
-function editar(artista) {
+// `enfocar`: lleva el foco al formulario (al tocar "Editar").
+function editar(artista, { enfocar = true } = {}) {
   editando = artista;
   campos.nombre.value = artista.nombre;
   campos.genero.value = artista.genero;
@@ -197,12 +205,13 @@ function editar(artista) {
   errores.limpiar();
   imagen.mostrar(artista.imagen);
   mostrarTracks(artista.tracks ?? []);
-  tituloFormulario.textContent = `Editar “${artista.nombre}”`;
+  tituloFormulario.textContent = soloPropio ? "Tu perfil" : `Editar “${artista.nombre}”`;
   botonGuardar.textContent = "Guardar cambios";
-  botonCancelar.hidden = false;
+  // Una cuenta de artista no tiene alta: no hay edición que cancelar.
+  botonCancelar.hidden = soloPropio;
   mostrarMensaje(mensaje, "");
   // El formulario queda arriba de la lista: se lleva el foco ahí.
-  tituloFormulario.focus();
+  if (enfocar) tituloFormulario.focus();
 }
 
 botonCancelar.addEventListener("click", () => {
@@ -238,7 +247,9 @@ formulario.addEventListener("submit", async (evento) => {
     ? artistas.map((actual) => (actual.id === artista.id ? artista : actual))
     : [...artistas, artista];
   dibujarLista();
-  limpiarFormulario();
+  // La cuenta de artista sigue editando su perfil, ya actualizado.
+  if (soloPropio) editar(artista, { enfocar: false });
+  else limpiarFormulario();
   mostrarToast(
     eraEdicion ? `Guardamos los cambios de “${artista.nombre}”.` : `Agregamos a “${artista.nombre}” al catálogo.`,
   );
@@ -258,7 +269,9 @@ async function eliminar(artista) {
       texto: [
         nombre,
         ` tiene ${textoCantidad(cantidadProductos, "producto", "productos")} en la tienda. `,
-        "Eliminalos o asignalos a otro artista desde Administrar productos y volvé a intentar.",
+        soloPropio
+          ? "Eliminalos desde Mi merch y volvé a intentar."
+          : "Eliminalos o asignalos a otro artista desde Administrar productos y volvé a intentar.",
       ],
       bloqueado: true,
     });
@@ -276,6 +289,11 @@ async function eliminar(artista) {
   });
   if (!eliminado) return;
 
+  if (soloPropio) {
+    mostrarSinPerfil("Eliminaste tu perfil de artista. Tu cuenta sigue activa como usuario.");
+    mostrarToast("Eliminamos tu perfil de artista.");
+    return;
+  }
   if (editando?.id === artista.id) limpiarFormulario();
   artistas = artistas.filter((actual) => actual.id !== artista.id);
   dibujarLista();
@@ -330,15 +348,28 @@ function dibujarLista() {
 
 // ---------- Inicio ----------
 
-async function iniciar() {
+async function iniciar(usuario) {
+  soloPropio = !usuario.esAdmin;
+  if (soloPropio) {
+    titularPagina({
+      titulo: "Mi perfil de artista",
+      subtitulo: "Actualizá tu información, tu imagen y tus canciones.",
+    });
+    document.querySelector("#titulo-lista").textContent = "Así te ven";
+  }
+
   mostrarTracks([]);
   lista.replaceChildren(crearElemento("li", {}, crearCargando("Cargando artistas…")));
   try {
     const [todos, generos, productos] = await Promise.all([
-      obtenerArtistasAdmin(),
+      soloPropio ? obtenerMiArtista(usuario).then((artista) => (artista ? [artista] : [])) : obtenerArtistasAdmin(),
       obtenerGeneros(),
       obtenerProductos(),
     ]);
+    if (soloPropio && !todos.length) {
+      mostrarSinPerfil("Tu cuenta no tiene un perfil de artista. Si creés que es un error, escribinos desde Contacto.");
+      return;
+    }
     completarOpciones(
       campos.genero,
       generos.map((genero) => ({ valor: genero.nombre, texto: genero.nombre })),
@@ -349,6 +380,7 @@ async function iniciar() {
     }
     artistas = todos;
     dibujarLista();
+    if (soloPropio) editar(artistas[0], { enfocar: false });
   } catch (error) {
     console.error(error);
     lista.replaceChildren(
@@ -357,4 +389,5 @@ async function iniciar() {
   }
 }
 
-if (protegerPaginaAdmin()) iniciar();
+const usuario = protegerPanel();
+if (usuario) iniciar(usuario);

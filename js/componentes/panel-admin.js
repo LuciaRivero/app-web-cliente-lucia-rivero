@@ -1,7 +1,9 @@
 /* =========================================================
    Whiplash — Piezas comunes de las páginas de admin
-   (pages/admin.html y pages/admin-artistas.html):
-   - protegerPaginaAdmin: saca de la página a quien no es admin.
+   (pages/admin.html y pages/admin-artistas.html), que usan el
+   admin global y, filtradas a lo suyo, las cuentas de artista:
+   - protegerPanel: saca de la página a quien no es admin ni artista.
+   - titularPagina / mostrarSinPerfil: textos según quién la usa.
    - prepararErrores: errores debajo de cada campo.
    - prepararImagen: campo de imagen con vista previa y
      "Quitar la imagen actual".
@@ -16,17 +18,39 @@ import { rutaDesdeRaiz } from "../servicios/datos.js";
 import { CAMBIO_SESION, usuarioActual } from "../servicios/sesion.js";
 import { crearElemento, mostrarMensaje } from "../utilidades/dom.js";
 
-// Ocultar la página no protege nada: Supabase rechaza los cambios
-// de quien no es administrador (RLS). Devuelve true si puede seguir.
-export function protegerPaginaAdmin() {
-  const esAdmin = () => Boolean(usuarioActual()?.esAdmin);
+// Entran el admin global y las cuentas de artista; al resto lo
+// lleva a la home. Ocultar la página no protege nada: Supabase
+// rechaza los cambios de quien no tiene permiso (RLS).
+// Devuelve el usuario si puede seguir, o null.
+export function protegerPanel() {
+  const puedeEntrar = () => {
+    const usuario = usuarioActual();
+    return usuario?.esAdmin || usuario?.esArtista ? usuario : null;
+  };
   const salir = () => location.replace(rutaDesdeRaiz("index.html"));
   // Si se cierra la sesión (o vence) desde otra parte, se sale.
   window.addEventListener(CAMBIO_SESION, () => {
-    if (!esAdmin()) salir();
+    if (!puedeEntrar()) salir();
   });
-  if (!esAdmin()) salir();
-  return esAdmin();
+  const usuario = puedeEntrar();
+  if (!usuario) salir();
+  return usuario;
+}
+
+// Textos de la página según quién la usa: el admin global o una
+// cuenta de artista. Actualiza <title>, <h1>, subtítulo y miga actual.
+export function titularPagina({ titulo, subtitulo }) {
+  document.title = `${titulo} | Whiplash`;
+  document.querySelector("h1").textContent = titulo;
+  document.querySelector("main > .subtitulo").textContent = subtitulo;
+  const miga = document.querySelector('.migas-de-pan [aria-current="page"]');
+  if (miga) miga.textContent = titulo;
+}
+
+// Reemplaza el formulario y la lista por un aviso (por ejemplo,
+// una cuenta de artista que ya no tiene perfil).
+export function mostrarSinPerfil(texto) {
+  document.querySelector(".admin-panel").replaceChildren(crearElemento("p", { clase: "admin-vacio", texto }));
 }
 
 export function completarOpciones(select, opciones) {

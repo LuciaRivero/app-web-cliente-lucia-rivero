@@ -35,6 +35,7 @@
       <h1>Creá tu cuenta</h1>
       <p class="subtitulo">
         Registrate para guardar artistas, seguir tus favoritos y comprar merch.
+        Si sos artista, armá tu perfil y vendé tu merch.
       </p>
 
       <section class="cuenta-panel" aria-labelledby="titulo-registro">
@@ -89,6 +90,39 @@
                 autocomplete="new-password"
                 required
               />
+            </div>
+
+            <div class="consentimiento">
+              <input type="checkbox" id="reg-artista" name="artista" />
+              <label for="reg-artista"
+                >Soy artista o banda: quiero tener mi perfil en Whiplash y
+                vender mi merch.</label
+              >
+            </div>
+
+            <!-- Se muestran al marcar "Soy artista" (js/paginas/registro.js).
+                 Deshabilitados mientras están ocultos, así el navegador
+                 no los valida ni los envía. -->
+            <div class="campos-artista" hidden>
+              <div class="campo">
+                <label for="reg-nombre-artistico">Nombre artístico o de la banda</label>
+                <input
+                  type="text"
+                  id="reg-nombre-artistico"
+                  name="nombre_artistico"
+                  placeholder="Por ejemplo: Los Cráteres"
+                  maxlength="80"
+                  required
+                  disabled
+                />
+              </div>
+
+              <div class="campo">
+                <label for="reg-genero">Género</label>
+                <select id="reg-genero" name="genero" required disabled>
+                  <option value="">Elegí un género</option>
+                </select>
+              </div>
             </div>
 
             <div class="consentimiento">

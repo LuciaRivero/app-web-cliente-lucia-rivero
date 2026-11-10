@@ -53,8 +53,9 @@ function guardarSesion(sesion) {
 // Lo que necesitan las páginas del usuario de Supabase.
 // `imagen` (URL del avatar) es opcional; sin ella se usan las iniciales.
 // `esAdmin` sale de app_metadata, que el usuario no puede editar
-// (ver supabase/esquema.sql). Solo decide qué se muestra: lo que
-// protege los productos son las políticas RLS.
+// (ver supabase/esquema.sql). `esArtista`: la cuenta se registró
+// como artista. Los dos solo deciden qué se muestra: lo que protege
+// artistas y productos son las políticas RLS.
 function datosPublicos(usuario) {
   const metadatos = usuario.user_metadata ?? {};
   return {
@@ -63,6 +64,7 @@ function datosPublicos(usuario) {
     email: usuario.email,
     imagen: metadatos.imagen ?? null,
     esAdmin: usuario.app_metadata?.rol === "admin",
+    esArtista: metadatos.artista === true,
   };
 }
 
@@ -146,11 +148,18 @@ export async function obtenerToken() {
 
 // Si Supabase pide confirmar el email, la cuenta se crea pero
 // sin sesión: devuelve { confirmar: true } para avisarlo.
-export async function registrarUsuario({ nombre, email, password }) {
+// `artista` ({ nombre, genero }, opcional): registro como artista.
+// Con esos datos, la base crea el perfil del artista (trigger en
+// supabase/esquema.sql).
+export async function registrarUsuario({ nombre, email, password, artista = null }) {
+  const datos = { nombre: nombre.trim() };
+  if (artista) {
+    Object.assign(datos, { artista: true, nombre_artistico: artista.nombre.trim(), genero: artista.genero });
+  }
   try {
     const respuesta = await pedirAuth("signup", {
       metodo: "POST",
-      cuerpo: { email: email.trim(), password, data: { nombre: nombre.trim() } },
+      cuerpo: { email: email.trim(), password, data: datos },
     });
     if (!respuesta.access_token) return { confirmar: true };
     const sesion = sesionDesde(respuesta);

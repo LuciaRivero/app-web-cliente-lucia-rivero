@@ -52,3 +52,11 @@
 .cuenta-alternativa a:focus {
   color: var(--color-acento);
 }
+
+/* Registro como artista: los campos aparecen al marcar "Soy artista".
+   :not([hidden]) para que el display no pise el atributo hidden. */
+.campos-artista:not([hidden]) {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
