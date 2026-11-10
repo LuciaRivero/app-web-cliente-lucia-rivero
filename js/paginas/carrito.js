@@ -16,7 +16,7 @@ import {
   leerCarrito,
 } from "../servicios/carrito.js";
 import { obtenerProductosConArtista, rutaDesdeRaiz } from "../servicios/datos.js";
-import { formatearPrecio } from "../componentes/tarjetas.js";
+import { crearImagen, formatearPrecio } from "../componentes/tarjetas.js";
 import { crearCargando, crearElemento } from "../utilidades/dom.js";
 
 const ENVIO = 2500;
@@ -102,10 +102,7 @@ function crearItem(item, producto) {
   const fila = crearElemento(
     "article",
     { clase: "carrito-item", atributos: { "data-clave": clave } },
-    crearElemento("img", {
-      clase: "item-imagen",
-      atributos: { src: rutaDesdeRaiz(producto.imagen), alt: "" },
-    }),
+    crearImagen(producto.imagen, { clase: "item-imagen" }),
     crearElemento(
       "div",
       { clase: "item-detalle" },

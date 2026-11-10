@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Administrar productos de Whiplash - Cargá, editá y eliminá productos."
+    />
+    <meta name="robots" content="noindex" />
+    <title>Administrar productos | Whiplash</title>
+    <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml" />
+    <!-- Precarga: fuentes y módulos compartidos se piden en paralelo
+         en vez de esperar a que los descubra main.css / main.js. -->
+    <link
+      rel="preload"
+      href="../assets/fuentes/anton-regular.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="../assets/fuentes/inter-variable.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link rel="modulepreload" href="../js/servicios/datos.js" />
+    <link rel="modulepreload" href="../js/utilidades/dom.js" />
+    <link rel="modulepreload" href="../js/componentes/navigation.js" />
+    <link rel="modulepreload" href="../js/componentes/tarjetas.js" />
+    <link rel="modulepreload" href="../js/servicios/sesion.js" />
+    <link rel="modulepreload" href="../js/servicios/productos-admin.js" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <!-- cuenta.css: estilos de .mensaje-formulario y .ayuda-campo -->
+    <link rel="stylesheet" href="../css/paginas/cuenta.css" />
+    <link rel="stylesheet" href="../css/paginas/admin.css" />
+    <script type="module" src="../js/main.js"></script>
+    <script type="module" src="../js/paginas/admin.js"></script>
+  </head>
+  <body>
+    <a class="enlace-saltar" href="#contenido-principal">Saltar al contenido</a>
+
+    <site-header current="admin"></site-header>
+
+    <main id="contenido-principal">
+      <site-breadcrumbs><span>Administrar productos</span></site-breadcrumbs>
+
+      <h1>Administrar productos</h1>
+      <p class="subtitulo">
+        Cargá productos nuevos, editá los que ya están en la tienda o
+        eliminalos.
+      </p>
+
+      <!-- js/paginas/admin.js arma la lista y maneja el formulario.
+           Solo para administradores: al resto lo lleva a la home. -->
+      <div class="admin-panel">
+        <article class="formulario-cuenta formulario-producto">
+          <h2 id="titulo-formulario" tabindex="-1">Nuevo producto</h2>
+
+          <form novalidate>
+            <div class="campo">
+              <label for="producto-titulo">Título</label>
+              <input
+                type="text"
+                id="producto-titulo"
+                name="titulo"
+                placeholder="Por ejemplo: Andén (LP)"
+                maxlength="120"
+                required
+              />
+            </div>
+
+            <div class="campo">
+              <label for="producto-tipo">Tipo</label>
+              <select id="producto-tipo" name="tipo" required></select>
+            </div>
+
+            <div class="campo">
+              <label for="producto-precio">Precio (en pesos)</label>
+              <input
+                type="number"
+                id="producto-precio"
+                name="precio"
+                placeholder="15000"
+                min="0"
+                step="1"
+                inputmode="numeric"
+                required
+              />
+            </div>
+
+            <div class="campo">
+              <label for="producto-artista">Artista</label>
+              <select id="producto-artista" name="artista_id" required>
+                <option value="">Cargando artistas…</option>
+              </select>
+            </div>
+
+            <div class="campo">
+              <label for="producto-imagen">Imagen</label>
+              <div class="imagen-producto">
+                <img class="vista-previa" src="../assets/img/productos/sin-imagen.svg" alt="" />
+                <div class="imagen-producto-controles">
+                  <input
+                    type="file"
+                    id="producto-imagen"
+                    name="imagen"
+                    accept="image/jpeg,image/png,image/webp"
+                    aria-describedby="ayuda-imagen"
+                  />
+                  <small id="ayuda-imagen" class="ayuda-campo"
+                    >JPG, PNG o WebP de hasta 2 MB. Si no subís ninguna, se
+                    muestra una imagen de reemplazo.</small
+                  >
+                  <label class="quitar-imagen" hidden>
+                    <input type="checkbox" name="quitarImagen" />
+                    Quitar la imagen actual
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="acciones-formulario">
+              <button type="submit">Agregar producto</button>
+              <button class="boton-cancelar" type="button" hidden>
+                Cancelar edición
+              </button>
+            </div>
+          </form>
+
+          <p class="mensaje-formulario" aria-live="polite"></p>
+        </article>
+
+        <section class="admin-lista" aria-labelledby="titulo-lista">
+          <h2 id="titulo-lista" tabindex="-1">Productos</h2>
+          <p class="admin-aviso sr-only" aria-live="polite"></p>
+          <ul class="lista-productos"></ul>
+        </section>
+      </div>
+    </main>
+
+    <site-footer></site-footer>
+  </body>
+</html>

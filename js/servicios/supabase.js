@@ -1,7 +1,7 @@
 /* =========================================================
    Whiplash — Conexión con Supabase
-   Pedidos con fetch a la API REST (tablas) y a Auth, sin
-   librerías. La clave publicable está pensada para ir en el
+   Pedidos con fetch a la API REST (tablas), a Auth y a
+   Storage (imágenes), sin librerías. La clave publicable está pensada para ir en el
    navegador: lo que protege los datos son las políticas RLS
    de supabase/esquema.sql. La clave secreta nunca va acá.
    ========================================================= */
@@ -19,10 +19,13 @@ export class ErrorSupabase extends Error {
   }
 }
 
-async function pedir(url, { metodo = "GET", cuerpo, token, prefer, mantener = false } = {}) {
+// `archivo` (un File) se manda tal cual, para subirlo a Storage;
+// `cuerpo` se manda como JSON.
+async function pedir(url, { metodo = "GET", cuerpo, archivo, token, prefer, mantener = false } = {}) {
   const encabezados = { apikey: SUPABASE_CLAVE };
   if (token) encabezados.Authorization = `Bearer ${token}`;
   if (cuerpo !== undefined) encabezados["Content-Type"] = "application/json";
+  if (archivo) encabezados["Content-Type"] = archivo.type;
   if (prefer) encabezados.Prefer = prefer;
 
   let respuesta;
@@ -30,7 +33,7 @@ async function pedir(url, { metodo = "GET", cuerpo, token, prefer, mantener = fa
     respuesta = await fetch(url, {
       method: metodo,
       headers: encabezados,
-      body: cuerpo === undefined ? undefined : JSON.stringify(cuerpo),
+      body: archivo ?? (cuerpo === undefined ? undefined : JSON.stringify(cuerpo)),
       // keepalive: el pedido termina aunque la página cambie
       // (por ejemplo, cerrar sesión y volver a la home).
       keepalive: mantener,
@@ -58,4 +61,9 @@ export function pedirTabla(consulta, opciones) {
 // Auth: pedirAuth("token?grant_type=password", { metodo: "POST", cuerpo })
 export function pedirAuth(ruta, opciones) {
   return pedir(`${SUPABASE_URL}/auth/v1/${ruta}`, opciones);
+}
+
+// Storage: pedirStorage("object/productos/foto.jpg", { metodo: "POST", archivo, token })
+export function pedirStorage(ruta, opciones) {
+  return pedir(`${SUPABASE_URL}/storage/v1/${ruta}`, opciones);
 }

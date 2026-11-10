@@ -2,7 +2,8 @@
    Whiplash — Menú de usuario del encabezado
    Con sesión abierta, el acceso a la cuenta de <site-header>
    es un avatar que despliega nombre, email, Mi perfil, Ayuda
-   y Cerrar sesión. Sigue el patrón "disclosure": un botón con
+   y Cerrar sesión. Los administradores ven además
+   Administrar productos. Sigue el patrón "disclosure": un botón con
    aria-expanded que muestra u oculta un panel de enlaces.
    Se cierra con Escape, con un clic afuera o cuando el foco
    sale del menú.
@@ -16,9 +17,12 @@ const ICONOS = rutaDesdeRaiz("assets/img/iconos/iconos.svg");
 const SVG_NS = "http://www.w3.org/2000/svg";
 const ID_PANEL = "menu-usuario-panel";
 
+// `id` es el valor de current de <site-header> que marca la opción
+// con aria-current="page"; `soloAdmin` la muestra solo a administradores.
 const OPCIONES = [
-  { texto: "Mi perfil", ruta: "pages/cuenta.html", icono: "perfil" },
-  { texto: "Ayuda", ruta: "pages/ayuda.html", icono: "ayuda" },
+  { id: "cuenta", texto: "Mi perfil", ruta: "pages/cuenta.html", icono: "perfil" },
+  { id: "admin", texto: "Administrar productos", ruta: "pages/admin.html", icono: "administrar", soloAdmin: true },
+  { id: "ayuda", texto: "Ayuda", ruta: "pages/ayuda.html", icono: "ayuda" },
 ];
 
 // "Ana Torres" → "AT", "Ana" → "A"
@@ -58,7 +62,7 @@ function crearAvatar(usuario, clase = "") {
   return avatar;
 }
 
-export function crearMenuUsuario(usuario, { actual = false } = {}) {
+export function crearMenuUsuario(usuario, { actual = null } = {}) {
   const boton = crearElemento(
     "button",
     {
@@ -88,15 +92,14 @@ export function crearMenuUsuario(usuario, { actual = false } = {}) {
   const opciones = crearElemento(
     "ul",
     { clase: "menu-usuario-opciones" },
-    ...OPCIONES.map(({ texto, ruta, icono }) => {
+    ...OPCIONES.filter((opcion) => !opcion.soloAdmin || usuario.esAdmin).map(({ id, texto, ruta, icono }) => {
       const enlace = crearElemento(
         "a",
         { clase: "menu-usuario-opcion", atributos: { href: rutaDesdeRaiz(ruta) } },
         crearIcono(icono),
         crearElemento("span", { texto }),
       );
-      // Mi perfil se marca en la página Mi cuenta.
-      if (actual && ruta === "pages/cuenta.html") enlace.setAttribute("aria-current", "page");
+      if (id === actual) enlace.setAttribute("aria-current", "page");
       return crearElemento("li", {}, enlace);
     }),
   );

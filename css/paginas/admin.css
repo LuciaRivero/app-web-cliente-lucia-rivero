@@ -1,0 +1,188 @@
+/* =========================================================
+   Whiplash — Página Administrar productos
+   El formulario reutiliza .formulario-cuenta
+   (css/componentes/formulario.css).
+   ========================================================= */
+
+.admin-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+  gap: var(--espaciado-grande);
+  align-items: start;
+  margin-bottom: var(--espaciado-grande);
+}
+
+.admin-panel .formulario-cuenta {
+  margin-bottom: 0;
+}
+
+/* Reciben el foco por JS al editar o eliminar. */
+#titulo-formulario:focus,
+#titulo-lista:focus {
+  outline: none;
+}
+
+.admin-lista h2 {
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+
+/* ---------- Imagen ---------- */
+.imagen-producto {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.vista-previa {
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+  object-fit: cover;
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  background-color: var(--color-gris-suave);
+}
+
+.imagen-producto-controles {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.formulario-cuenta .imagen-producto-controles input[type="file"] {
+  padding: 8px;
+  max-width: 100%;
+}
+
+.formulario-cuenta .quitar-imagen {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 400;
+}
+
+.formulario-cuenta .quitar-imagen[hidden] {
+  display: none;
+}
+
+.quitar-imagen input {
+  accent-color: var(--color-primario);
+}
+
+/* ---------- Botones del formulario ---------- */
+.acciones-formulario {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.formulario-cuenta .boton-cancelar {
+  background-color: transparent;
+  border: 1px solid var(--color-gris-suave);
+  color: var(--color-texto-dim);
+}
+
+.formulario-cuenta .boton-cancelar:hover,
+.formulario-cuenta .boton-cancelar:focus-visible {
+  background-color: transparent;
+  border-color: var(--color-texto-dim);
+  color: var(--color-texto);
+}
+
+/* ---------- Lista de productos ---------- */
+.lista-productos {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.producto-admin {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: var(--color-gris-oscuro);
+  border: var(--borde);
+  border-radius: var(--radio-base);
+  padding: 12px 16px;
+}
+
+.producto-admin-imagen {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  object-fit: cover;
+  border-radius: 8px;
+  background-color: var(--color-gris-suave);
+}
+
+.producto-admin-datos {
+  flex: 1;
+  min-width: 0;
+}
+
+.producto-admin-titulo {
+  font-weight: 700;
+}
+
+.producto-admin-detalle {
+  color: var(--color-texto-dim);
+  font-size: 13px;
+}
+
+.producto-admin-acciones {
+  display: flex;
+  gap: 8px;
+}
+
+.boton-admin {
+  background: none;
+  border: var(--borde);
+  border-color: var(--color-gris-suave);
+  color: var(--color-texto);
+  border-radius: var(--radio-base);
+  padding: 8px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.boton-admin:hover,
+.boton-admin:focus-visible {
+  border-color: var(--color-primario);
+  color: var(--color-primario-claro);
+}
+
+.boton-admin-eliminar:hover,
+.boton-admin-eliminar:focus-visible {
+  border-color: var(--color-error);
+  color: var(--color-error);
+}
+
+.boton-admin:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.admin-vacio {
+  color: var(--color-texto-dim);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .admin-panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .producto-admin {
+    flex-wrap: wrap;
+  }
+
+  .producto-admin-acciones {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

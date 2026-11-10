@@ -19,6 +19,7 @@ import { crearElemento } from "../utilidades/dom.js";
 
 const URL_PRODUCTO = rutaDesdeRaiz("pages/producto.html");
 const URL_CUENTA = rutaDesdeRaiz("pages/cuenta.html");
+const IMAGEN_REEMPLAZO = rutaDesdeRaiz("assets/img/productos/sin-imagen.svg");
 // Opciones del formulario de compra según el tipo de producto.
 // Las entradas no tienen opciones: se elige la cantidad.
 const OPCIONES_COMPRA = {
@@ -36,11 +37,28 @@ export function formatearPrecio(precio) {
   return `$${precio.toLocaleString("es-AR")}`;
 }
 
+// Imagen de un producto o artista. Sin imagen guardada, o si la
+// guardada no carga (URL rota, archivo borrado), muestra la de reemplazo.
+export function crearImagen(imagen, { clase, alt = "" } = {}) {
+  const img = crearElemento("img", {
+    clase,
+    atributos: { src: imagen ? rutaDesdeRaiz(imagen) : IMAGEN_REEMPLAZO, alt },
+  });
+  img.addEventListener(
+    "error",
+    () => {
+      img.src = IMAGEN_REEMPLAZO;
+    },
+    { once: true },
+  );
+  return img;
+}
+
 function crearFigura(imagen, alt, titulo) {
   return crearElemento(
     "figure",
     {},
-    crearElemento("img", { atributos: { src: rutaDesdeRaiz(imagen), alt } }),
+    crearImagen(imagen, { alt }),
     crearElemento("figcaption", { texto: titulo }),
   );
 }
@@ -254,7 +272,7 @@ export function crearResultadoBuscador({ href, imagen, titulo, detalle }) {
   return crearElemento(
     "a",
     { clase: "resultado-buscador", atributos: { href } },
-    crearElemento("img", { atributos: { src: rutaDesdeRaiz(imagen), alt: "" } }),
+    crearImagen(imagen),
     crearElemento(
       "span",
       {},
