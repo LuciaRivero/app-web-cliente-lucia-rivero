@@ -18,7 +18,7 @@ import {
   validarImagen,
 } from "../servicios/productos-admin.js";
 import { CAMBIO_SESION, usuarioActual } from "../servicios/sesion.js";
-import { crearCargando, crearElemento, enviando, mostrarMensaje } from "../utilidades/dom.js";
+import { crearCargando, crearElemento, enviando, mostrarMensaje, mostrarToast } from "../utilidades/dom.js";
 
 const IMAGEN_REEMPLAZO = rutaDesdeRaiz("assets/img/productos/sin-imagen.svg");
 
@@ -30,7 +30,6 @@ const quitarImagen = formulario.querySelector(".quitar-imagen");
 const botonGuardar = formulario.querySelector('[type="submit"]');
 const botonCancelar = formulario.querySelector(".boton-cancelar");
 const lista = document.querySelector(".lista-productos");
-const aviso = document.querySelector(".admin-aviso");
 const campos = formulario.elements;
 const modal = document.querySelector(".modal-eliminar");
 const modalProducto = modal.querySelector(".modal-producto");
@@ -206,10 +205,8 @@ formulario.addEventListener("submit", async (evento) => {
     : [...productos, producto];
   dibujarLista();
   limpiarFormulario();
-  mostrarMensaje(
-    mensaje,
+  mostrarToast(
     eraEdicion ? `Guardamos los cambios de “${producto.titulo}”.` : `Agregamos “${producto.titulo}” a la tienda.`,
-    "exito",
   );
 });
 
@@ -249,7 +246,7 @@ async function eliminar() {
   if (editando?.id === producto.id) limpiarFormulario();
   productos = productos.filter((actual) => actual.id !== producto.id);
   dibujarLista();
-  aviso.textContent = `Eliminamos “${producto.titulo}”.`;
+  mostrarToast(`Eliminamos “${producto.titulo}”.`);
   // El botón que abrió el modal ya no existe: el foco pasa al título de la lista.
   document.querySelector("#titulo-lista").focus();
 }

@@ -1,0 +1,85 @@
+/* =========================================================
+   Whiplash — Toast (js/utilidades/dom.js → mostrarToast)
+   Aviso breve abajo de la pantalla que se va solo.
+   ========================================================= */
+
+.toasts {
+  position: fixed;
+  left: 50%;
+  bottom: var(--espaciado-grande);
+  transform: translateX(-50%);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: min(420px, calc(100vw - 2 * var(--espaciado)));
+  /* Los clics pasan a la página: el toast no tiene acciones. */
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background-color: var(--color-gris-oscuro);
+  color: var(--color-texto);
+  border: 1px solid var(--color-gris-suave);
+  border-left: 4px solid var(--color-acento);
+  border-radius: var(--radio-base);
+  box-shadow: var(--sombra);
+  padding: 14px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  animation: toast-entrar 0.25s ease-out;
+}
+
+/* El ícono es decorativo: el texto alternativo vacío evita que el lector de
+   pantalla lo lea (quien no lo soporta usa la línea anterior). */
+.toast::before {
+  content: "✓";
+  content: "✓" / "";
+  color: var(--color-acento);
+  font-weight: 700;
+}
+
+.toast[data-tipo="error"] {
+  border-left-color: var(--color-error);
+}
+
+.toast[data-tipo="error"]::before {
+  content: "!";
+  content: "!" / "";
+  color: var(--color-error);
+}
+
+.toast-saliendo {
+  animation: toast-salir 0.25s ease-in forwards;
+}
+
+@keyframes toast-entrar {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@keyframes toast-salir {
+  to {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+/* Sin movimiento, pero con una animación mínima: mostrarToast
+   espera el animationend para quitar el toast. */
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation: none;
+  }
+
+  .toast-saliendo {
+    animation: toast-salir 0.01ms forwards;
+  }
+}
