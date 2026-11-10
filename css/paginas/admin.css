@@ -68,6 +68,25 @@
   margin: 0;
 }
 
+/* ---------- Errores por campo (js/paginas/admin.js) ---------- */
+.error-campo {
+  color: var(--color-error);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.error-campo:empty {
+  display: none;
+}
+
+.formulario-cuenta [aria-invalid="true"] {
+  border-color: var(--color-error);
+}
+
+.formulario-cuenta [aria-invalid="true"]:focus {
+  outline-color: var(--color-error);
+}
+
 /* ---------- Imagen ---------- */
 .imagen-producto {
   display: flex;
@@ -116,6 +135,7 @@
 .acciones-formulario {
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 12px;
 }
 

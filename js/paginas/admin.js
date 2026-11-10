@@ -50,6 +50,53 @@ function esAdmin() {
   return Boolean(usuarioActual()?.esAdmin);
 }
 
+// ---------- Errores por campo ----------
+
+// Cada regla devuelve el error del campo o un valor falso.
+const VALIDACIONES = {
+  titulo: (campo) => !campo.value.trim() && "Escribí el título del producto.",
+  tipo: (campo) => !campo.value && "Elegí el tipo de producto.",
+  precio: (campo) => {
+    const precio = Number(campo.value);
+    return (
+      (campo.value === "" || !Number.isInteger(precio) || precio < 0) &&
+      "Ingresá un número entero mayor o igual a 0."
+    );
+  },
+  artista_id: (campo) => !campo.value && "Elegí el artista.",
+  imagen: (campo) => campo.files[0] && validarImagen(campo.files[0]),
+};
+
+// El error va en el <small id="error-<name>"> debajo del campo,
+// que el campo ya tiene en aria-describedby.
+function mostrarErrorCampo(campo, texto) {
+  document.querySelector(`#error-${campo.name}`).textContent = texto || "";
+  if (texto) campo.setAttribute("aria-invalid", "true");
+  else campo.removeAttribute("aria-invalid");
+}
+
+function limpiarErrores() {
+  for (const nombre of Object.keys(VALIDACIONES)) mostrarErrorCampo(campos[nombre], null);
+}
+
+// Marca todos los campos con error y enfoca el primero.
+// Devuelve true si el formulario es válido.
+function validar() {
+  let primero = null;
+  for (const [nombre, regla] of Object.entries(VALIDACIONES)) {
+    const error = regla(campos[nombre]);
+    mostrarErrorCampo(campos[nombre], error);
+    if (error) primero ??= campos[nombre];
+  }
+  primero?.focus();
+  return !primero;
+}
+
+// Al corregir un campo, su error desaparece.
+formulario.addEventListener("input", (evento) => {
+  if (evento.target.name in VALIDACIONES) mostrarErrorCampo(evento.target, null);
+});
+
 // ---------- Formulario ----------
 
 function mostrarVistaPrevia(src) {
@@ -61,6 +108,7 @@ function mostrarVistaPrevia(src) {
 function limpiarFormulario() {
   editando = null;
   formulario.reset();
+  limpiarErrores();
   mostrarVistaPrevia(null);
   quitarImagen.hidden = true;
   tituloFormulario.textContent = "Nuevo producto";
@@ -76,6 +124,7 @@ function editar(producto) {
   campos.artista_id.value = producto.artista_id;
   campos.imagen.value = "";
   campos.quitarImagen.checked = false;
+  limpiarErrores();
   quitarImagen.hidden = !producto.imagen;
   mostrarVistaPrevia(producto.imagen ? rutaDesdeRaiz(producto.imagen) : null);
   tituloFormulario.textContent = `Editar “${producto.titulo}”`;
@@ -84,27 +133,6 @@ function editar(producto) {
   mostrarMensaje(mensaje, "");
   // El formulario queda arriba de la lista: se lleva el foco ahí.
   tituloFormulario.focus();
-}
-
-// Devuelve el primer error (y enfoca su campo) o null.
-function validar() {
-  const precio = Number(campos.precio.value);
-  const archivo = campos.imagen.files[0];
-  const errores = [
-    [campos.titulo, !campos.titulo.value.trim() && "Escribí el título del producto."],
-    [campos.tipo, !campos.tipo.value && "Elegí el tipo de producto."],
-    [
-      campos.precio,
-      (campos.precio.value === "" || !Number.isInteger(precio) || precio < 0) &&
-        "El precio tiene que ser un número entero mayor o igual a 0.",
-    ],
-    [campos.artista_id, !campos.artista_id.value && "Elegí el artista."],
-    [campos.imagen, archivo && validarImagen(archivo)],
-  ];
-  const [campo, error] = errores.find(([, error]) => error) ?? [];
-  if (!error) return null;
-  campo.focus();
-  return error;
 }
 
 // Si la imagen guardada no carga, la vista previa muestra la de reemplazo.
@@ -120,11 +148,10 @@ campos.imagen.addEventListener("change", () => {
   }
   const error = validarImagen(archivo);
   if (error) {
-    mostrarMensaje(mensaje, error);
     campos.imagen.value = "";
+    mostrarErrorCampo(campos.imagen, error);
     return;
   }
-  mostrarMensaje(mensaje, "");
   mostrarVistaPrevia(null);
   urlPrevia = URL.createObjectURL(archivo);
   vistaPrevia.src = urlPrevia;
@@ -149,13 +176,9 @@ botonCancelar.addEventListener("click", () => {
 
 formulario.addEventListener("submit", async (evento) => {
   evento.preventDefault();
-  const error = validar();
-  if (error) {
-    mostrarMensaje(mensaje, error);
-    return;
-  }
-
   mostrarMensaje(mensaje, "");
+  if (!validar()) return;
+
   const eraEdicion = Boolean(editando);
   const { producto, error: errorGuardado } = await enviando(formulario, "Guardando…", () =>
     guardarProducto(

@@ -68,13 +68,21 @@
                 name="titulo"
                 placeholder="Por ejemplo: Andén (LP)"
                 maxlength="120"
+                aria-describedby="error-titulo"
                 required
               />
+              <small id="error-titulo" class="error-campo"></small>
             </div>
 
             <div class="campo">
               <label for="producto-tipo">Tipo</label>
-              <select id="producto-tipo" name="tipo" required></select>
+              <select
+                id="producto-tipo"
+                name="tipo"
+                aria-describedby="error-tipo"
+                required
+              ></select>
+              <small id="error-tipo" class="error-campo"></small>
             </div>
 
             <div class="campo">
@@ -90,16 +98,24 @@
                   min="0"
                   step="1"
                   inputmode="numeric"
+                  aria-describedby="error-precio"
                   required
                 />
               </div>
+              <small id="error-precio" class="error-campo"></small>
             </div>
 
             <div class="campo">
               <label for="producto-artista">Artista</label>
-              <select id="producto-artista" name="artista_id" required>
+              <select
+                id="producto-artista"
+                name="artista_id"
+                aria-describedby="error-artista_id"
+                required
+              >
                 <option value="">Cargando artistas…</option>
               </select>
+              <small id="error-artista_id" class="error-campo"></small>
             </div>
 
             <div class="campo">
@@ -112,12 +128,19 @@
                     id="producto-imagen"
                     name="imagen"
                     accept="image/jpeg,image/png,image/webp"
-                    aria-describedby="ayuda-imagen"
+                    aria-describedby="ayuda-imagen error-imagen"
                   />
                   <small id="ayuda-imagen" class="ayuda-campo"
                     >JPG, PNG o WebP de hasta 2 MB. Si no subís ninguna, se
                     muestra una imagen de reemplazo.</small
                   >
+                  <!-- aria-live: este error aparece al elegir el archivo,
+                       sin que el foco se mueva. -->
+                  <small
+                    id="error-imagen"
+                    class="error-campo"
+                    aria-live="polite"
+                  ></small>
                   <label class="quitar-imagen" hidden>
                     <input type="checkbox" name="quitarImagen" />
                     Quitar la imagen actual
@@ -126,11 +149,13 @@
               </div>
             </div>
 
+            <!-- Cancelar va primero para que el orden del teclado
+                 coincida con el visual: guardar queda a la derecha. -->
             <div class="acciones-formulario">
-              <button type="submit">Agregar producto</button>
               <button class="boton-cancelar" type="button" hidden>
                 Cancelar edición
               </button>
+              <button type="submit">Agregar producto</button>
             </div>
           </form>
 
