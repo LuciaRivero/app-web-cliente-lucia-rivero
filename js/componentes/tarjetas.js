@@ -20,9 +20,12 @@ import { crearElemento } from "../utilidades/dom.js";
 const URL_PRODUCTO = rutaDesdeRaiz("pages/producto.html");
 const URL_CUENTA = rutaDesdeRaiz("pages/cuenta.html");
 const URL_EXPLORAR = rutaDesdeRaiz("pages/explorar.html");
-// Imagen que se ve cuando un producto o artista no tiene una.
+// Imagen que se ve cuando un producto o artista no tiene una:
+// la del tipo de producto, o la de artista.
 const IMAGEN_REEMPLAZO = {
-  producto: rutaDesdeRaiz("assets/img/productos/sin-imagen.svg"),
+  Disco: rutaDesdeRaiz("assets/img/productos/disco.svg"),
+  Entrada: rutaDesdeRaiz("assets/img/productos/entrada.svg"),
+  Remera: rutaDesdeRaiz("assets/img/productos/remera.svg"),
   artista: rutaDesdeRaiz("assets/img/artistas/sin-imagen.svg"),
 };
 // Opciones del formulario de compra según el tipo de producto.
@@ -48,11 +51,17 @@ export function formatearPrecio(precio) {
   return `$${precio.toLocaleString("es-AR")}`;
 }
 
-// Pone en `img` la imagen de un producto o artista (`tipo`). Sin
-// imagen guardada, o si la guardada no carga (URL rota, archivo
-// borrado), muestra la de reemplazo.
-export function mostrarImagen(img, imagen, tipo = "producto") {
-  const reemplazo = IMAGEN_REEMPLAZO[tipo];
+// `tipo`: "artista" o el tipo del producto ("Disco", "Entrada",
+// "Remera"). Un tipo desconocido usa la imagen de disco.
+export function imagenReemplazo(tipo) {
+  return IMAGEN_REEMPLAZO[tipo] ?? IMAGEN_REEMPLAZO.Disco;
+}
+
+// Pone en `img` la imagen de un producto o artista (ver `tipo` en
+// imagenReemplazo()). Sin imagen guardada, o si la guardada no carga
+// (URL rota, archivo borrado), muestra la de reemplazo de su tipo.
+export function mostrarImagen(img, imagen, tipo) {
+  const reemplazo = imagenReemplazo(tipo);
   img.src = imagen ? rutaDesdeRaiz(imagen) : reemplazo;
   img.addEventListener(
     "error",
@@ -64,7 +73,7 @@ export function mostrarImagen(img, imagen, tipo = "producto") {
   return img;
 }
 
-export function crearImagen(imagen, { clase, alt = "", tipo = "producto" } = {}) {
+export function crearImagen(imagen, { clase, alt = "", tipo } = {}) {
   return mostrarImagen(crearElemento("img", { clase, atributos: { alt } }), imagen, tipo);
 }
 
@@ -266,8 +275,8 @@ export function crearProductoMerch(producto, { conCompra = false } = {}) {
     : `${producto.tipo} ${producto.titulo}`;
 
   const portada = conCompra
-    ? crearFigura(producto.imagen, alt, producto.titulo)
-    : crearFiguraConEnlace(urlArtista(producto.artista_id), producto.imagen, alt, producto.titulo);
+    ? crearFigura(producto.imagen, alt, producto.titulo, producto.tipo)
+    : crearFiguraConEnlace(urlArtista(producto.artista_id), producto.imagen, alt, producto.titulo, producto.tipo);
 
   const accion = conCompra
     ? crearFormularioCompra(producto)
@@ -288,7 +297,7 @@ export function crearProductoMerch(producto, { conCompra = false } = {}) {
 }
 
 // Fila compacta para el desplegable del buscador.
-// `tipo`: "producto" o "artista", para la imagen de reemplazo.
+// `tipo`: "artista" o el tipo del producto, para la imagen de reemplazo.
 export function crearResultadoBuscador({ href, imagen, tipo, titulo, detalle }) {
   return crearElemento(
     "a",

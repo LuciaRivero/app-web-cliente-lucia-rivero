@@ -309,22 +309,22 @@ insert into public.generos (id, nombre) values
 on conflict (id) do update set nombre = excluded.nombre;
 
 insert into public.artistas (id, nombre, genero, imagen, bio, tracks) values
-  (1, 'Los Cráteres', 'Rock independiente', 'assets/img/artistas/artista1.jpg',
+  (1, 'Los Cráteres', 'Rock independiente', null,
    'Banda de rock indie con guitarras crudas y letras que hablan de la ciudad. Desde su primer demo autoeditado, construyeron su propio camino sin intermediarios.',
    '[{"titulo": "Ruido blanco", "duracion": "3:24"}, {"titulo": "Andén", "duracion": "4:01"}, {"titulo": "Enero", "duracion": "3:47"}]'::jsonb),
-  (2, 'Marea Onda', 'Folk indie', 'assets/img/artistas/artista2.jpg',
+  (2, 'Marea Onda', 'Folk indie', null,
    'Dúo de folk indie que graba en casa, con guitarras acústicas, armonías de dos voces y canciones sobre el mar y los viajes cortos.',
    '[{"titulo": "Bajamar", "duracion": "3:58"}, {"titulo": "Faro apagado", "duracion": "4:12"}, {"titulo": "Sal en la piel", "duracion": "3:31"}]'::jsonb),
-  (3, 'Valle Silente', 'Electrónica cruda', 'assets/img/artistas/artista3.jpg',
+  (3, 'Valle Silente', 'Electrónica cruda', null,
    'Proyecto de electrónica cruda nacido en un sótano: sintetizadores analógicos, cajas de ritmos gastadas y paisajes que suenan mejor de noche.',
    '[{"titulo": "Estática", "duracion": "5:06"}, {"titulo": "Llanura", "duracion": "4:44"}, {"titulo": "Señal débil", "duracion": "6:02"}]'::jsonb),
-  (4, 'Tejido Rojo', 'Pop alternativo', 'assets/img/artistas/artista4.jpg',
+  (4, 'Tejido Rojo', 'Pop alternativo', null,
    'Banda de pop alternativo con estribillos pegadizos y letras melancólicas. Tocan en centros culturales y editan todo de forma independiente.',
    '[{"titulo": "Hilo suelto", "duracion": "3:18"}, {"titulo": "Carmín", "duracion": "3:42"}, {"titulo": "Telar", "duracion": "4:05"}]'::jsonb),
-  (5, 'Risa Cósmica', 'Punk DIY', 'assets/img/artistas/artista2.jpg',
+  (5, 'Risa Cósmica', 'Punk DIY', null,
    'Punk DIY rápido y directo, grabado en vivo en una sola toma. Canciones cortas, mucho volumen y fechas en cada rincón del conurbano.',
    '[{"titulo": "Risa nerviosa", "duracion": "1:58"}, {"titulo": "Fotocopia", "duracion": "2:21"}, {"titulo": "Ruido de fondo", "duracion": "2:07"}]'::jsonb),
-  (6, 'Norte Adentro', 'Hip-hop under', 'assets/img/artistas/artista3.jpg',
+  (6, 'Norte Adentro', 'Hip-hop under', null,
    'Crew de hip-hop under del norte del país: rimas sobre el barrio, beats hechos con samples de discos viejos y producción propia.',
    '[{"titulo": "Tierra adentro", "duracion": "3:36"}, {"titulo": "Ruta 9", "duracion": "3:52"}, {"titulo": "Siesta", "duracion": "3:14"}]'::jsonb)
 -- Los artistas ahora los edita el administrador: volver a
@@ -332,16 +332,22 @@ insert into public.artistas (id, nombre, genero, imagen, bio, tracks) values
 on conflict (id) do nothing;
 
 insert into public.productos (id, titulo, tipo, precio, artista_id, imagen) values
-  (1, 'Ruido blanco (EP)', 'Disco', 12000, 1, 'assets/img/productos/disco1.jpg'),
-  (2, 'Andén (LP)', 'Disco', 15000, 1, 'assets/img/productos/disco2.jpg'),
-  (3, 'Show en Vorterix', 'Entrada', 25000, 1, 'assets/img/productos/entrada1.jpg'),
-  (4, 'Marea Onda (EP)', 'Disco', 10000, 2, 'assets/img/productos/disco3.jpg'),
-  (5, 'Caminos (LP)', 'Disco', 10000, 3, 'assets/img/productos/disco4.jpg'),
-  (6, 'Remera "Andén"', 'Remera', 9500, 1, 'assets/img/productos/disco1.jpg'),
-  (7, 'Show en Niceto', 'Entrada', 18000, 2, 'assets/img/productos/disco3.jpg')
+  (1, 'Ruido blanco (EP)', 'Disco', 12000, 1, null),
+  (2, 'Andén (LP)', 'Disco', 15000, 1, null),
+  (3, 'Show en Vorterix', 'Entrada', 25000, 1, null),
+  (4, 'Marea Onda (EP)', 'Disco', 10000, 2, null),
+  (5, 'Caminos (LP)', 'Disco', 10000, 3, null),
+  (6, 'Remera "Andén"', 'Remera', 9500, 1, null),
+  (7, 'Show en Niceto', 'Entrada', 18000, 2, null)
 -- Los productos ahora los edita el administrador: volver a
 -- ejecutar el esquema no pisa esos cambios.
 on conflict (id) do nothing;
+
+-- Las imágenes de ejemplo de assets/img/ ya no están en el sitio:
+-- las filas que las usaban quedan sin imagen y muestran la de
+-- reemplazo de su tipo (disco, entrada, remera o artista).
+update public.artistas set imagen = null where imagen like 'assets/img/%';
+update public.productos set imagen = null where imagen like 'assets/img/%';
 
 -- Los ids cargados a mano no avanzan el contador: los artistas
 -- y productos nuevos siguen después del más alto.

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+  <!-- Imagen de reemplazo para entradas sin imagen (o cuya imagen no
+       carga): ticket violeta con talón de acento y rayo, sin texto. -->
+  <defs>
+    <!-- Muescas del troquel: se recortan del ticket (no se pintan
+         encima), así la sombra también las respeta. -->
+    <mask id="troquel">
+      <rect width="800" height="800" fill="#fff" />
+      <circle cx="540" cy="165" r="25" fill="#000" />
+      <circle cx="540" cy="635" r="25" fill="#000" />
+    </mask>
+    <filter id="sombra" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000" flood-opacity="0.55" />
+    </filter>
+  </defs>
+  <rect width="800" height="800" fill="#1a1a1a" />
+  <g filter="url(#sombra)">
+    <g mask="url(#troquel)">
+      <path d="M102 165H540V635H102A22 22 0 0 1 80 613V187A22 22 0 0 1 102 165Z" fill="#8b5cf6" />
+      <path d="M540 165H698A22 22 0 0 1 720 187V613A22 22 0 0 1 698 635H540Z" fill="#c6f135" />
+    </g>
+  </g>
+  <!-- Perforado -->
+  <path d="M540 205V595" stroke="#0a0a0a" stroke-width="10" stroke-linecap="round" stroke-dasharray="0 26" />
+  <!-- Rayo -->
+  <path d="M652 295L590 390H628L606 445L675 345H636L660 295Z" fill="#0a0a0a" />
+</svg>

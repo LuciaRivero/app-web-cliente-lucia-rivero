@@ -19,10 +19,10 @@ import {
   protegerPanel,
   titularPagina,
 } from "../componentes/panel-admin.js";
-import { crearImagen, formatearPrecio } from "../componentes/tarjetas.js";
+import { crearImagen, formatearPrecio, imagenReemplazo } from "../componentes/tarjetas.js";
 import { obtenerMiArtista } from "../servicios/artistas-admin.js";
 import { validarImagen } from "../servicios/catalogo-admin.js";
-import { obtenerArtistas, rutaDesdeRaiz } from "../servicios/datos.js";
+import { obtenerArtistas } from "../servicios/datos.js";
 import {
   TIPOS_PRODUCTO,
   eliminarProducto,
@@ -58,7 +58,9 @@ const errores = prepararErrores(formulario, {
   artista_id: (campo) => !campo.value && "Elegí el artista.",
   imagen: (campo) => campo.files[0] && validarImagen(campo.files[0]),
 });
-const imagen = prepararImagen(formulario, errores, rutaDesdeRaiz("assets/img/productos/sin-imagen.svg"));
+// Sin imagen, la vista previa muestra la de reemplazo del tipo elegido.
+const imagen = prepararImagen(formulario, errores, () => imagenReemplazo(campos.tipo.value));
+campos.tipo.addEventListener("change", () => imagen.actualizarReemplazo());
 const pedirConfirmacion = prepararModalEliminar(document.querySelector(".modal-eliminar"));
 
 // ---------- Formulario ----------
@@ -168,7 +170,7 @@ function crearItem(producto) {
   return crearElemento(
     "li",
     { clase: "item-admin" },
-    crearImagen(producto.imagen, { clase: "item-admin-imagen" }),
+    crearImagen(producto.imagen, { clase: "item-admin-imagen", tipo: producto.tipo }),
     crearElemento(
       "div",
       { clase: "item-admin-datos" },

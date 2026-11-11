@@ -102,7 +102,7 @@ function crearItem(item, producto) {
   const fila = crearElemento(
     "article",
     { clase: "carrito-item", atributos: { "data-clave": clave } },
-    crearImagen(producto.imagen, { clase: "item-imagen" }),
+    crearImagen(producto.imagen, { clase: "item-imagen", tipo: producto.tipo }),
     crearElemento(
       "div",
       { clase: "item-detalle" },

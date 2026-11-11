@@ -95,6 +95,7 @@ export function iniciarBuscador() {
         crearResultadoBuscador({
           href: urlArtista(producto.artista_id),
           imagen: producto.imagen,
+          tipo: producto.tipo,
           titulo: producto.titulo,
           detalle: [producto.artista?.nombre, formatearPrecio(producto.precio)]
             .filter(Boolean)

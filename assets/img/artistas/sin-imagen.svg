@@ -1,16 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
-  <!-- Imagen de reemplazo para artistas sin imagen (o cuya imagen
-       no carga): un micrófono apagado, con los colores del sitio. -->
-  <rect width="400" height="400" fill="#1a1a1a" />
-  <g fill="none" stroke="#3f3f46" stroke-width="12" stroke-linecap="round">
-    <!-- Soporte -->
-    <path d="M130 170a70 70 0 0 0 140 0M200 240v50M160 290h80" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+  <!-- Imagen de reemplazo para artistas sin imagen (o cuya imagen no
+       carga): micrófono de escenario bajo un foco violeta, con ondas
+       de sonido en los colores del sitio. Sin texto. -->
+  <defs>
+    <radialGradient id="foco" cx="50%" cy="38%" r="55%">
+      <stop offset="0" stop-color="#8b5cf6" stop-opacity="0.55" />
+      <stop offset="0.6" stop-color="#5b21b6" stop-opacity="0.18" />
+      <stop offset="1" stop-color="#1a1a1a" stop-opacity="0" />
+    </radialGradient>
+    <clipPath id="capsula">
+      <rect x="320" y="150" width="160" height="250" rx="80" />
+    </clipPath>
+  </defs>
+  <rect width="800" height="800" fill="#1a1a1a" />
+  <rect width="800" height="800" fill="url(#foco)" />
+  <!-- Ondas de sonido -->
+  <g fill="none" stroke-width="10" stroke-linecap="round">
+    <path d="M260 210A140 140 0 0 0 260 400" stroke="#c6f135" />
+    <path d="M210 170A200 200 0 0 0 210 440" stroke="#f4f1ea" stroke-opacity="0.8" />
+    <path d="M540 210A140 140 0 0 1 540 400" stroke="#c6f135" />
+    <path d="M590 170A200 200 0 0 1 590 440" stroke="#f4f1ea" stroke-opacity="0.8" />
   </g>
-  <!-- Cápsula -->
-  <rect x="160" y="70" width="80" height="140" rx="40" fill="#2a2a2a" stroke="#3f3f46" stroke-width="6" />
-  <g stroke="#3f3f46" stroke-width="4">
-    <path d="M175 110h50M175 135h50M175 160h50" />
+  <!-- Soporte -->
+  <g fill="none" stroke="#f4f1ea" stroke-width="14" stroke-linecap="round">
+    <path d="M285 330A115 115 0 0 0 515 330" />
+    <path d="M400 445V585" />
   </g>
-  <text x="200" y="350" fill="#a8a29e" font-family="Inter, Helvetica, Arial, sans-serif"
-    font-size="24" font-weight="600" text-anchor="middle">Sin imagen</text>
+  <ellipse cx="400" cy="620" rx="120" ry="22" fill="#0a0a0a" stroke="#2a2a2a" stroke-width="4" />
+  <path d="M400 585V612" stroke="#f4f1ea" stroke-width="14" />
+  <!-- Cápsula con rejilla -->
+  <rect x="320" y="150" width="160" height="250" rx="80" fill="#0a0a0a" />
+  <g clip-path="url(#capsula)" stroke="#8b5cf6" stroke-width="5">
+    <path d="M320 190H480M320 220H480M320 250H480M320 280H480" />
+    <path d="M350 150V290M380 150V290M410 150V290M440 150V290" stroke-opacity="0.6" />
+  </g>
+  <rect x="320" y="300" width="160" height="16" fill="#c6f135" />
+  <rect x="320" y="150" width="160" height="250" rx="80" fill="none" stroke="#f4f1ea" stroke-width="8" />
 </svg>
