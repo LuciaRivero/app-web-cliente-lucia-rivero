@@ -1,5 +1,7 @@
 /* =========================================================
    Whiplash — Página Explorar
+   - La grilla de artistas muestra los primeros 6 y "Cargar
+     más" suma de a 6 hasta mostrar todos.
    - Los chips de <genre-chips filter> filtran la grilla
      de artistas por género.
    - Si la URL trae ?q=..., reemplaza la grilla general por
@@ -64,30 +66,65 @@ async function mostrarBusqueda() {
   }
 }
 
-function iniciarFiltroGenero() {
+// "Mostrando 6 de 14 artistas" / "Mostrando 3 artistas"
+function textoMostrando(cantidad, total) {
+  return total > cantidad
+    ? `Mostrando ${cantidad} de ${total} artistas`
+    : `Mostrando ${cantidad} ${cantidad === 1 ? "artista" : "artistas"}`;
+}
+
+// Listado general: la grilla arranca con `limit` artistas y "Cargar
+// más" suma otros tantos por vez. Con un género elegido se ven todos
+// los de ese género y "Cargar más" se oculta; "Todos" vuelve a lo que
+// ya se había cargado.
+function iniciarListado() {
   const info = document.querySelector(".info-resultados");
   const grillaArtistas = document.querySelector(".explorar-resultados artist-grid");
+  const botonMas = document.querySelector(".boton-inferior");
+  const paso = Number(grillaArtistas.getAttribute("limit"));
+  let visibles = paso;
+  let artistas = null;
 
-  document.addEventListener("genre-change", async ({ detail }) => {
-    let artistas;
-    try {
-      artistas = await obtenerArtistas();
-    } catch (error) {
+  function actualizar() {
+    const cantidad = Math.min(visibles, artistas.length);
+    info.textContent = textoMostrando(cantidad, artistas.length);
+    botonMas.hidden = cantidad >= artistas.length;
+  }
+
+  // Es el mismo pedido que hace la grilla (datos.js lo guarda).
+  obtenerArtistas()
+    .then((lista) => {
+      artistas = lista;
+      actualizar();
+    })
+    .catch((error) => {
       console.error(error);
       info.textContent = "No pudimos cargar los artistas. Probá de nuevo en un rato.";
+    });
+
+  botonMas.addEventListener("click", () => {
+    const nuevas = grillaArtistas.agregar(artistas.slice(visibles, visibles + paso));
+    visibles += nuevas.length;
+    actualizar();
+    // El foco pasa a la primera tarjeta nueva para seguir desde ahí
+    // (si el botón se ocultó, el foco no se pierde).
+    nuevas[0]?.querySelector("a")?.focus();
+  });
+
+  document.addEventListener("genre-change", ({ detail }) => {
+    if (!artistas) return;
+    if (!detail.genre) {
+      grillaArtistas.mostrar(artistas.slice(0, visibles));
+      actualizar();
       return;
     }
-
-    // "Todos" vuelve al listado inicial, con el mismo límite que la grilla.
-    const limite = Number(grillaArtistas.getAttribute("limit")) || artistas.length;
-    const lista = detail.genre
-      ? artistas.filter((artista) => artista.genero === detail.genre)
-      : artistas.slice(0, limite);
-
+    const lista = artistas.filter((artista) => artista.genero === detail.genre);
     grillaArtistas.mostrar(lista);
-    info.textContent = `Mostrando ${lista.length} ${lista.length === 1 ? "artista" : "artistas"}`;
+    info.textContent = textoMostrando(lista.length, lista.length);
+    botonMas.hidden = true;
   });
 }
 
-iniciarFiltroGenero();
-mostrarBusqueda();
+// Con ?q= la página muestra una búsqueda en lugar del listado general.
+if (leerConsulta()) mostrarBusqueda();
+else iniciarListado();
