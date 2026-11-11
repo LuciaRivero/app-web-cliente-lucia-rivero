@@ -1,21 +1,26 @@
 /* =========================================================
-   Whiplash — Página Administrar productos
-   Solo para administradores: al resto lo lleva a la home.
+   Whiplash — Página Administrar productos / Mi merch
    Arma la lista de productos con "Editar" y "Eliminar" y
    maneja el formulario, que sirve para el alta y, al tocar
    "Editar", para la edición del producto elegido.
+   El admin global ve todos los productos; una cuenta de
+   artista, solo los suyos, con el artista fijo en el
+   formulario. Al resto lo lleva a la home.
    Las piezas comunes con Administrar artistas están en
    js/componentes/panel-admin.js.
    ========================================================= */
 
 import {
   completarOpciones,
+  mostrarSinPerfil,
   prepararErrores,
   prepararImagen,
   prepararModalEliminar,
-  protegerPaginaAdmin,
+  protegerPanel,
+  titularPagina,
 } from "../componentes/panel-admin.js";
 import { crearImagen, formatearPrecio } from "../componentes/tarjetas.js";
+import { obtenerMiArtista } from "../servicios/artistas-admin.js";
 import { validarImagen } from "../servicios/catalogo-admin.js";
 import { obtenerArtistas, rutaDesdeRaiz } from "../servicios/datos.js";
 import {
@@ -189,20 +194,49 @@ function dibujarLista() {
 
 // ---------- Inicio ----------
 
-async function iniciar() {
+// Cuenta de artista: el único artista posible es el suyo. Va como
+// opción seleccionada por defecto, así formulario.reset() la mantiene.
+function fijarArtista(artista) {
+  campos.artista_id.replaceChildren(
+    crearElemento("option", { texto: artista.nombre, atributos: { value: artista.id, selected: "" } }),
+  );
+  campos.artista_id.disabled = true;
+}
+
+async function iniciar(usuario) {
+  const soloPropio = !usuario.esAdmin;
+  if (soloPropio) {
+    titularPagina({
+      titulo: "Mi merch",
+      subtitulo: "Cargá tus productos, editá los que ya están en la tienda o eliminalos.",
+    });
+  }
+
   completarOpciones(
     campos.tipo,
     TIPOS_PRODUCTO.map((tipo) => ({ valor: tipo, texto: tipo })),
   );
   lista.replaceChildren(crearElemento("li", {}, crearCargando("Cargando productos…")));
   try {
-    const [artistas, todos] = await Promise.all([obtenerArtistas(), obtenerProductosAdmin()]);
+    const [artistas, todos, miArtista] = await Promise.all([
+      obtenerArtistas(),
+      obtenerProductosAdmin(),
+      soloPropio ? obtenerMiArtista(usuario) : null,
+    ]);
+    if (soloPropio && !miArtista) {
+      mostrarSinPerfil("Tu cuenta no tiene un perfil de artista, así que no podés cargar merch.");
+      return;
+    }
     artistasPorId = new Map(artistas.map((artista) => [artista.id, artista]));
-    completarOpciones(
-      campos.artista_id,
-      artistas.map((artista) => ({ valor: artista.id, texto: artista.nombre })),
-    );
-    productos = todos;
+    if (soloPropio) {
+      fijarArtista(miArtista);
+    } else {
+      completarOpciones(
+        campos.artista_id,
+        artistas.map((artista) => ({ valor: artista.id, texto: artista.nombre })),
+      );
+    }
+    productos = soloPropio ? todos.filter((producto) => producto.artista_id === miArtista.id) : todos;
     dibujarLista();
   } catch (error) {
     console.error(error);
@@ -212,4 +246,5 @@ async function iniciar() {
   }
 }
 
-if (protegerPaginaAdmin()) iniciar();
+const usuario = protegerPanel();
+if (usuario) iniciar(usuario);

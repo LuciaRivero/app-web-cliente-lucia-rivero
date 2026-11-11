@@ -4,14 +4,15 @@
    (productos y artistas) con su imagen en Supabase Storage.
    Lo usan productos-admin.js y artistas-admin.js.
    Supabase solo acepta estos pedidos con el token de un
-   administrador (políticas RLS de supabase/esquema.sql).
+   administrador o del dueño del artista (políticas RLS de
+   supabase/esquema.sql).
 
    Igual que sesion.js, las funciones devuelven { error } con
    un mensaje listo para mostrar, o el resultado si salió bien.
    ========================================================= */
 
 import { SUPABASE_URL, pedirStorage, pedirTabla } from "./supabase.js";
-import { obtenerToken } from "./sesion.js";
+import { obtenerToken, usuarioActual } from "./sesion.js";
 
 // Los mismos límites que tienen los buckets en Storage.
 export const TIPOS_IMAGEN = ["image/jpeg", "image/png", "image/webp"];
@@ -50,10 +51,12 @@ function urlImagenes(bucket) {
   return `${SUPABASE_URL}/storage/v1/object/public/${bucket}/`;
 }
 
-// Nombre único para no pisar otra imagen con el mismo nombre.
+// Nombre único para no pisar otra imagen con el mismo nombre, en la
+// carpeta de la cuenta: las cuentas de artista solo pueden escribir
+// en la suya (políticas de Storage en supabase/esquema.sql).
 async function subirImagen(bucket, archivo, token) {
   const extension = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" }[archivo.type];
-  const nombre = `${crypto.randomUUID()}.${extension}`;
+  const nombre = `${usuarioActual().id}/${crypto.randomUUID()}.${extension}`;
   await pedirStorage(`object/${bucket}/${nombre}`, { metodo: "POST", archivo, token });
   return urlImagenes(bucket) + nombre;
 }

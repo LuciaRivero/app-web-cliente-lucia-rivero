@@ -5,12 +5,19 @@
 --
 -- - generos, artistas y productos: el catálogo del sitio.
 --   Lectura pública. Los artistas y los productos los carga,
---   edita y borra solo un administrador (pages/admin.html y
---   pages/admin-artistas.html).
+--   edita y borra un administrador (pages/admin.html y
+--   pages/admin-artistas.html). Una cuenta de artista edita
+--   y borra solo su perfil y sus productos.
 -- - seguidos y carrito_items: datos de cada usuario de
 --   Supabase Auth. Cada uno ve y edita solo sus filas (RLS).
 -- - Buckets "productos" y "artistas" de Storage: sus imágenes.
---   Lectura pública, escritura solo para administradores.
+--   Lectura pública. Cada cuenta sube a su carpeta (<user_id>/);
+--   un administrador, a cualquiera.
+--
+-- Cuentas de artista: quien se registra con "Soy artista"
+-- (pages/registro.html) queda como dueño de un artista nuevo
+-- (artistas.user_id). El permiso sale de esa fila, no de un
+-- dato que el usuario pueda cambiar.
 --
 -- Administradores: el rol va en app_metadata, que el usuario
 -- no puede cambiar desde el navegador (user_metadata sí).
@@ -39,7 +46,10 @@ create table if not exists public.artistas (
   imagen text,
   bio text,
   -- [{ "titulo": "Ruido blanco", "duracion": "3:24" }, ...]
-  tracks jsonb not null default '[]'::jsonb
+  tracks jsonb not null default '[]'::jsonb,
+  -- Cuenta dueña del perfil (null = lo maneja solo el admin).
+  -- Si se borra la cuenta, el artista queda para el admin.
+  user_id uuid unique references auth.users (id) on delete set null
 );
 
 -- imagen null = sin imagen: el sitio muestra la de reemplazo.
@@ -78,6 +88,10 @@ create table if not exists public.seguidos (
   primary key (user_id, artista_id)
 );
 
+-- Para bases creadas antes de las cuentas de artista.
+alter table public.artistas
+  add column if not exists user_id uuid unique references auth.users (id) on delete set null;
+
 -- opcion vacía ('') = producto sin opciones (por ejemplo, entradas).
 create table if not exists public.carrito_items (
   user_id uuid not null default auth.uid() references auth.users (id) on delete cascade,
@@ -100,6 +114,19 @@ as $$
   select coalesce((auth.jwt() -> 'app_metadata' ->> 'rol') = 'admin', false)
 $$;
 
+-- true si el artista es de la cuenta del token.
+create or replace function public.es_duenio_artista(artista bigint)
+returns boolean
+language sql
+stable
+set search_path = ''
+as $$
+  select exists (
+    select 1 from public.artistas
+    where id = artista and user_id = (select auth.uid())
+  )
+$$;
+
 alter table public.generos enable row level security;
 alter table public.artistas enable row level security;
 alter table public.productos enable row level security;
@@ -107,7 +134,7 @@ alter table public.seguidos enable row level security;
 alter table public.carrito_items enable row level security;
 
 grant select on public.generos, public.artistas, public.productos to anon, authenticated;
--- RLS decide quién puede usarlos: solo los administradores.
+-- RLS decide quién puede usarlos: administradores y dueños.
 grant insert, update, delete on public.artistas, public.productos to authenticated;
 grant select, insert, delete on public.seguidos to authenticated;
 grant select, insert, update, delete on public.carrito_items to authenticated;
@@ -128,29 +155,42 @@ drop policy if exists "Admin carga artistas" on public.artistas;
 create policy "Admin carga artistas" on public.artistas
   for insert to authenticated with check ((select public.es_admin()));
 
+-- Políticas de la versión anterior, solo para administradores.
 drop policy if exists "Admin edita artistas" on public.artistas;
-create policy "Admin edita artistas" on public.artistas
-  for update to authenticated
-  using ((select public.es_admin()))
-  with check ((select public.es_admin()));
-
 drop policy if exists "Admin borra artistas" on public.artistas;
-create policy "Admin borra artistas" on public.artistas
-  for delete to authenticated using ((select public.es_admin()));
-
 drop policy if exists "Admin carga productos" on public.productos;
-create policy "Admin carga productos" on public.productos
-  for insert to authenticated with check ((select public.es_admin()));
-
 drop policy if exists "Admin edita productos" on public.productos;
-create policy "Admin edita productos" on public.productos
-  for update to authenticated
-  using ((select public.es_admin()))
-  with check ((select public.es_admin()));
-
 drop policy if exists "Admin borra productos" on public.productos;
-create policy "Admin borra productos" on public.productos
-  for delete to authenticated using ((select public.es_admin()));
+
+-- El with check impide que el dueño pase su perfil a otra cuenta.
+drop policy if exists "Admin o dueño edita artistas" on public.artistas;
+create policy "Admin o dueño edita artistas" on public.artistas
+  for update to authenticated
+  using ((select public.es_admin()) or (select auth.uid()) = user_id)
+  with check ((select public.es_admin()) or (select auth.uid()) = user_id);
+
+drop policy if exists "Admin o dueño borra artistas" on public.artistas;
+create policy "Admin o dueño borra artistas" on public.artistas
+  for delete to authenticated
+  using ((select public.es_admin()) or (select auth.uid()) = user_id);
+
+-- Un artista solo carga, edita y borra productos propios, y el
+-- with check impide pasarle un producto a otro artista.
+drop policy if exists "Admin o artista carga productos" on public.productos;
+create policy "Admin o artista carga productos" on public.productos
+  for insert to authenticated
+  with check ((select public.es_admin()) or public.es_duenio_artista(artista_id));
+
+drop policy if exists "Admin o artista edita productos" on public.productos;
+create policy "Admin o artista edita productos" on public.productos
+  for update to authenticated
+  using ((select public.es_admin()) or public.es_duenio_artista(artista_id))
+  with check ((select public.es_admin()) or public.es_duenio_artista(artista_id));
+
+drop policy if exists "Admin o artista borra productos" on public.productos;
+create policy "Admin o artista borra productos" on public.productos
+  for delete to authenticated
+  using ((select public.es_admin()) or public.es_duenio_artista(artista_id));
 
 drop policy if exists "Cada usuario ve sus seguidos" on public.seguidos;
 create policy "Cada usuario ve sus seguidos" on public.seguidos
@@ -187,21 +227,75 @@ drop policy if exists "Admin ve imágenes de productos" on storage.objects;
 drop policy if exists "Admin sube imágenes de productos" on storage.objects;
 drop policy if exists "Admin borra imágenes de productos" on storage.objects;
 
--- Borrar un archivo pide poder verlo (select) además de delete.
 drop policy if exists "Admin ve imágenes del catálogo" on storage.objects;
-create policy "Admin ve imágenes del catálogo" on storage.objects
-  for select to authenticated
-  using (bucket_id in ('productos', 'artistas') and (select public.es_admin()));
-
 drop policy if exists "Admin sube imágenes del catálogo" on storage.objects;
-create policy "Admin sube imágenes del catálogo" on storage.objects
-  for insert to authenticated
-  with check (bucket_id in ('productos', 'artistas') and (select public.es_admin()));
-
 drop policy if exists "Admin borra imágenes del catálogo" on storage.objects;
-create policy "Admin borra imágenes del catálogo" on storage.objects
+
+-- Cada cuenta usa su carpeta: <user_id>/archivo.jpg. El admin, todas.
+-- Borrar un archivo pide poder verlo (select) además de delete.
+drop policy if exists "Admin o dueño ve imágenes del catálogo" on storage.objects;
+create policy "Admin o dueño ve imágenes del catálogo" on storage.objects
+  for select to authenticated
+  using (
+    bucket_id in ('productos', 'artistas')
+    and ((select public.es_admin()) or (storage.foldername(name))[1] = (select auth.uid())::text)
+  );
+
+drop policy if exists "Admin o dueño sube imágenes del catálogo" on storage.objects;
+create policy "Admin o dueño sube imágenes del catálogo" on storage.objects
+  for insert to authenticated
+  with check (
+    bucket_id in ('productos', 'artistas')
+    and ((select public.es_admin()) or (storage.foldername(name))[1] = (select auth.uid())::text)
+  );
+
+drop policy if exists "Admin o dueño borra imágenes del catálogo" on storage.objects;
+create policy "Admin o dueño borra imágenes del catálogo" on storage.objects
   for delete to authenticated
-  using (bucket_id in ('productos', 'artistas') and (select public.es_admin()));
+  using (
+    bucket_id in ('productos', 'artistas')
+    and ((select public.es_admin()) or (storage.foldername(name))[1] = (select auth.uid())::text)
+  );
+
+-- ---------- Registro como artista ----------
+
+-- Si la cuenta se registra con "artista": true en sus datos
+-- (user_metadata), se crea su perfil de artista. Lo hace la base
+-- y no el navegador porque, si Supabase pide confirmar el email,
+-- el registro no abre sesión. security definer: corre con los
+-- permisos del dueño de la función, por encima de RLS.
+-- Un género que no existe se reemplaza por el primero de la tabla.
+create or replace function public.crear_artista_al_registrarse()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  if new.raw_user_meta_data ->> 'artista' = 'true' then
+    insert into public.artistas (nombre, genero, user_id)
+    values (
+      coalesce(
+        nullif(trim(new.raw_user_meta_data ->> 'nombre_artistico'), ''),
+        nullif(trim(new.raw_user_meta_data ->> 'nombre'), ''),
+        split_part(new.email, '@', 1)
+      ),
+      coalesce(
+        (select nombre from public.generos where nombre = new.raw_user_meta_data ->> 'genero'),
+        (select nombre from public.generos order by id limit 1),
+        'Sin género'
+      ),
+      new.id
+    );
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists crear_artista_al_registrarse on auth.users;
+create trigger crear_artista_al_registrarse
+  after insert on auth.users
+  for each row execute function public.crear_artista_al_registrarse();
 
 -- ---------- Datos del catálogo ----------
 

@@ -1,11 +1,13 @@
 /* =========================================================
-   Whiplash — Gestión de artistas (administradores)
+   Whiplash — Gestión de artistas (admin y cuentas de artista)
    Alta, edición y baja de artistas con su imagen en el
    bucket "artistas". Lo usa pages/admin-artistas.html; el
-   trabajo con Supabase lo hace catalogo-admin.js.
+   trabajo con Supabase lo hace catalogo-admin.js. Una cuenta
+   de artista solo puede editar o borrar su propio perfil.
    ========================================================= */
 
 import { eliminarFila, guardarFila, obtenerFilas } from "./catalogo-admin.js";
+import { pedirTabla } from "./supabase.js";
 
 // "3:24", "12:05": minutos y segundos.
 export const FORMATO_DURACION = /^\d{1,2}:[0-5]\d$/;
@@ -22,6 +24,13 @@ const ARTISTAS = {
 
 export function obtenerArtistasAdmin() {
   return obtenerFilas(ARTISTAS.tabla);
+}
+
+// Perfil de la cuenta de artista (artistas.user_id), o null si
+// no tiene (por ejemplo, porque el admin lo eliminó).
+export async function obtenerMiArtista(usuario) {
+  const [artista] = await pedirTabla(`artistas?select=*&user_id=eq.${usuario.id}`);
+  return artista ?? null;
 }
 
 // `artista` sin id = alta; con id = edición. Ver guardarFila().

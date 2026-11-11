@@ -3,7 +3,9 @@
    Con sesión abierta, el acceso a la cuenta de <site-header>
    es un avatar que despliega nombre, email, Mi perfil, Ayuda
    y Cerrar sesión. Los administradores ven además
-   Administrar productos y Administrar artistas. Sigue el patrón "disclosure": un botón con
+   Administrar productos y Administrar artistas; las cuentas
+   de artista, Mi perfil de artista y Mi merch.
+   Sigue el patrón "disclosure": un botón con
    aria-expanded que muestra u oculta un panel de enlaces.
    Se cierra con Escape, con un clic afuera o cuando el foco
    sale del menú.
@@ -18,19 +20,35 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 const ID_PANEL = "menu-usuario-panel";
 
 // `id` es el valor de current de <site-header> que marca la opción
-// con aria-current="page"; `soloAdmin` la muestra solo a administradores.
+// con aria-current="page". `para` limita quién la ve: "admin" (admin
+// global) o "artista" (cuenta de artista que no es admin). Las dos
+// versiones usan las mismas páginas, filtradas según quién entra.
 const OPCIONES = [
   { id: "cuenta", texto: "Mi perfil", ruta: "pages/cuenta.html", icono: "perfil" },
-  { id: "admin", texto: "Administrar productos", ruta: "pages/admin.html", icono: "administrar", soloAdmin: true },
+  { id: "admin", texto: "Administrar productos", ruta: "pages/admin.html", icono: "administrar", para: "admin" },
   {
     id: "admin-artistas",
     texto: "Administrar artistas",
     ruta: "pages/admin-artistas.html",
     icono: "microfono",
-    soloAdmin: true,
+    para: "admin",
   },
+  {
+    id: "admin-artistas",
+    texto: "Mi perfil de artista",
+    ruta: "pages/admin-artistas.html",
+    icono: "microfono",
+    para: "artista",
+  },
+  { id: "admin", texto: "Mi merch", ruta: "pages/admin.html", icono: "administrar", para: "artista" },
   { id: "ayuda", texto: "Ayuda", ruta: "pages/ayuda.html", icono: "ayuda" },
 ];
+
+function corresponde(opcion, usuario) {
+  if (opcion.para === "admin") return usuario.esAdmin;
+  if (opcion.para === "artista") return usuario.esArtista && !usuario.esAdmin;
+  return true;
+}
 
 // "Ana Torres" → "AT", "Ana" → "A"
 export function iniciales(nombre) {
@@ -99,7 +117,7 @@ export function crearMenuUsuario(usuario, { actual = null } = {}) {
   const opciones = crearElemento(
     "ul",
     { clase: "menu-usuario-opciones" },
-    ...OPCIONES.filter((opcion) => !opcion.soloAdmin || usuario.esAdmin).map(({ id, texto, ruta, icono }) => {
+    ...OPCIONES.filter((opcion) => corresponde(opcion, usuario)).map(({ id, texto, ruta, icono }) => {
       const enlace = crearElemento(
         "a",
         { clase: "menu-usuario-opcion", atributos: { href: rutaDesdeRaiz(ruta) } },
