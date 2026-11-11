@@ -65,12 +65,22 @@ export class DataGrid extends HTMLElement {
   mostrar(items) {
     this.ultimoPedido = Symbol();
     this.removeAttribute("aria-busy");
-    this.replaceChildren(
-      ...items.map((item, indice) => {
-        const tarjeta = this.crearTarjeta(item);
-        tarjeta.style.setProperty("--orden", indice);
-        return tarjeta;
-      }),
-    );
+    this.replaceChildren(...this.crearTarjetas(items));
+  }
+
+  // Suma las tarjetas de `items` al final sin redibujar las que ya
+  // están (por ejemplo, "Cargar más" en Explorar). Devuelve las nuevas.
+  agregar(items) {
+    const tarjetas = this.crearTarjetas(items);
+    this.append(...tarjetas);
+    return tarjetas;
+  }
+
+  crearTarjetas(items) {
+    return items.map((item, indice) => {
+      const tarjeta = this.crearTarjeta(item);
+      tarjeta.style.setProperty("--orden", indice);
+      return tarjeta;
+    });
   }
 }
