@@ -43,7 +43,7 @@
         </div>
       </section>
 
-      <p class="info-resultados">Mostrando 6 artistas</p>
+      <p class="info-resultados" aria-live="polite">Cargando artistas…</p>
 
       <section class="explorar-resultados" aria-labelledby="titulo-resultados">
         <h2 id="titulo-resultados" class="sr-only">
@@ -53,7 +53,8 @@
         <artist-grid limit="6"></artist-grid>
       </section>
 
-      <a class="boton boton-contorno boton-inferior" href="explorar.html">Cargar más</a>
+      <!-- js/paginas/explorar.js lo muestra si quedan artistas por ver. -->
+      <button class="boton boton-contorno boton-inferior" type="button" hidden>Cargar más</button>
     </main>
 
     <site-footer></site-footer>
