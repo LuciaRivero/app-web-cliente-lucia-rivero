@@ -3,7 +3,8 @@
    - La grilla de artistas muestra los primeros 6 y "Cargar
      más" suma de a 6 hasta mostrar todos.
    - Los chips de <genre-chips filter> filtran la grilla
-     de artistas por género.
+     de artistas por género. Con ?genero=... (los chips de la
+     home y de Géneros) la página abre con ese género elegido.
    - Si la URL trae ?q=..., reemplaza la grilla general por
      los artistas y el merch que coinciden con la búsqueda.
    ========================================================= */
@@ -73,6 +74,15 @@ function textoMostrando(cantidad, total) {
     : `Mostrando ${cantidad} ${cantidad === 1 ? "artista" : "artistas"}`;
 }
 
+// El género elegido queda en la URL (?genero=...), así recargar o
+// compartir la página mantiene el filtro.
+function guardarGeneroEnUrl(genero) {
+  const url = new URL(location.href);
+  if (genero) url.searchParams.set("genero", genero);
+  else url.searchParams.delete("genero");
+  history.replaceState(null, "", url);
+}
+
 // Listado general: la grilla arranca con `limit` artistas y "Cargar
 // más" suma otros tantos por vez. Con un género elegido se ven todos
 // los de ese género y "Cargar más" se oculta; "Todos" vuelve a lo que
@@ -80,10 +90,14 @@ function textoMostrando(cantidad, total) {
 function iniciarListado() {
   const info = document.querySelector(".info-resultados");
   const grillaArtistas = document.querySelector(".explorar-resultados artist-grid");
+  const chips = document.querySelector(".barra-filtros genre-chips");
   const botonMas = document.querySelector(".boton-inferior");
   const paso = Number(grillaArtistas.getAttribute("limit"));
   let visibles = paso;
   let artistas = null;
+  let genero = new URLSearchParams(location.search).get("genero")?.trim() || null;
+
+  if (genero) chips.setAttribute("selected", genero);
 
   function actualizar() {
     const cantidad = Math.min(visibles, artistas.length);
@@ -91,11 +105,27 @@ function iniciarListado() {
     botonMas.hidden = cantidad >= artistas.length;
   }
 
-  // Es el mismo pedido que hace la grilla (datos.js lo guarda).
+  function mostrarGenero() {
+    if (!genero) {
+      grillaArtistas.mostrar(artistas.slice(0, visibles));
+      actualizar();
+      return;
+    }
+    const lista = artistas.filter((artista) => artista.genero === genero);
+    grillaArtistas.mostrar(lista);
+    info.textContent = lista.length
+      ? textoMostrando(lista.length, lista.length)
+      : "Todavía no hay artistas de este género.";
+    botonMas.hidden = true;
+  }
+
+  // Es el mismo pedido que hace la grilla (datos.js lo guarda). Si
+  // llegó un género, esta lista reemplaza a la que arma la grilla.
   obtenerArtistas()
     .then((lista) => {
       artistas = lista;
-      actualizar();
+      if (genero) mostrarGenero();
+      else actualizar();
     })
     .catch((error) => {
       console.error(error);
@@ -111,17 +141,12 @@ function iniciarListado() {
     nuevas[0]?.querySelector("a")?.focus();
   });
 
+  // Si los artistas todavía no llegaron, el género queda guardado
+  // y se aplica cuando lleguen.
   document.addEventListener("genre-change", ({ detail }) => {
-    if (!artistas) return;
-    if (!detail.genre) {
-      grillaArtistas.mostrar(artistas.slice(0, visibles));
-      actualizar();
-      return;
-    }
-    const lista = artistas.filter((artista) => artista.genero === detail.genre);
-    grillaArtistas.mostrar(lista);
-    info.textContent = textoMostrando(lista.length, lista.length);
-    botonMas.hidden = true;
+    genero = detail.genre;
+    guardarGeneroEnUrl(genero);
+    if (artistas) mostrarGenero();
   });
 }
 

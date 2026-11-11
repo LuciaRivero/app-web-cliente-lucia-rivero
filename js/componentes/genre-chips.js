@@ -1,21 +1,25 @@
 /* =========================================================
    Whiplash — <genre-chips limit="4" filter>
-   Chips de género armados desde la tabla generos (Supabase).
+   Chips de género armados desde la tabla generos (Supabase),
+   solo con los géneros que tienen artistas.
    - Sin filter: cada chip es un enlace a Explorar con
-     ?q=<género>, que muestra los resultados de ese género.
+     ?genero=<género>, que abre el listado con ese género elegido.
    - filter: botones "Todos" + un género por botón, con
      aria-pressed. Al elegir uno dispara el evento
      "genre-change" con detail.genre (null para "Todos").
+   - selected: género elegido en los filtros (sin él, "Todos").
+     La página lo fija si llega un género en la URL.
    - limit: cantidad máxima de géneros (opcional).
    ========================================================= */
 
-import { obtenerGeneros, rutaDesdeRaiz } from "../servicios/datos.js";
+import { obtenerGenerosConArtistas } from "../servicios/datos.js";
 import { crearElemento } from "../utilidades/dom.js";
 import { DataGrid } from "./data-grid.js";
-
-const URL_EXPLORAR = rutaDesdeRaiz("pages/explorar.html");
+import { urlGenero } from "./tarjetas.js";
 
 class GenreChips extends DataGrid {
+  static observedAttributes = ["selected"];
+
   get esFiltro() {
     return this.hasAttribute("filter");
   }
@@ -36,8 +40,12 @@ class GenreChips extends DataGrid {
     }
   }
 
+  attributeChangedCallback() {
+    this.marcarElegido();
+  }
+
   cargar() {
-    return obtenerGeneros();
+    return obtenerGenerosConArtistas();
   }
 
   crearTarjeta(genero) {
@@ -46,7 +54,7 @@ class GenreChips extends DataGrid {
     return crearElemento("a", {
       clase: "chip-genero",
       texto: genero.nombre,
-      atributos: { href: `${URL_EXPLORAR}?q=${encodeURIComponent(genero.nombre)}` },
+      atributos: { href: urlGenero(genero.nombre) },
     });
   }
 
@@ -64,18 +72,27 @@ class GenreChips extends DataGrid {
     super.mostrar(generos);
     if (!this.esFiltro) return;
 
-    const todos = this.crearBoton("Todos", "");
-    todos.setAttribute("aria-pressed", "true");
-    this.prepend(todos);
+    this.prepend(this.crearBoton("Todos", ""));
+    this.marcarElegido();
+  }
+
+  // aria-pressed en el chip de `selected`; si no hay ninguno con
+  // ese género (o no hay selected), queda marcado "Todos".
+  marcarElegido() {
+    const botones = [...this.querySelectorAll("button.chip-genero")];
+    const valor = this.getAttribute("selected") ?? "";
+    const elegido = botones.find((boton) => boton.dataset.genero === valor) ?? botones[0];
+    for (const boton of botones) {
+      boton.setAttribute("aria-pressed", String(boton === elegido));
+    }
   }
 
   elegir(evento) {
     const elegido = evento.target.closest("button.chip-genero");
     if (!elegido || elegido.getAttribute("aria-pressed") === "true") return;
 
-    for (const boton of this.querySelectorAll("button.chip-genero")) {
-      boton.setAttribute("aria-pressed", String(boton === elegido));
-    }
+    if (elegido.dataset.genero) this.setAttribute("selected", elegido.dataset.genero);
+    else this.removeAttribute("selected");
     this.dispatchEvent(
       new CustomEvent("genre-change", {
         bubbles: true,

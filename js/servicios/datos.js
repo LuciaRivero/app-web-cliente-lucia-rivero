@@ -49,6 +49,14 @@ export async function obtenerGeneros() {
   return generos;
 }
 
+// Solo los géneros que tienen al menos un artista (para los
+// chips: elegir uno vacío no mostraría nada).
+export async function obtenerGenerosConArtistas() {
+  const [artistas, , generos] = await cargarDatos();
+  const usados = new Set(artistas.map((artista) => artista.genero));
+  return generos.filter((genero) => usados.has(genero.nombre));
+}
+
 // Cada producto se completa con su artista para poder buscar
 // por el nombre de la banda y mostrarlo en las tarjetas.
 export async function obtenerProductosConArtista() {

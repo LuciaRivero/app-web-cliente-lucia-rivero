@@ -75,7 +75,8 @@
    pisa el transform del :hover de las tarjetas. */
 .grilla-artistas > :not(.cargando),
 .grilla-merch > :not(.cargando),
-genre-chips > :not(.cargando) {
+genre-chips > :not(.cargando),
+.grilla-generos > .tarjeta-genero {
   animation: aparecer 0.45s ease backwards;
   animation-delay: calc(var(--orden, 0) * 60ms);
 }

@@ -19,6 +19,7 @@ import { crearElemento } from "../utilidades/dom.js";
 
 const URL_PRODUCTO = rutaDesdeRaiz("pages/producto.html");
 const URL_CUENTA = rutaDesdeRaiz("pages/cuenta.html");
+const URL_EXPLORAR = rutaDesdeRaiz("pages/explorar.html");
 // Imagen que se ve cuando un producto o artista no tiene una.
 const IMAGEN_REEMPLAZO = {
   producto: rutaDesdeRaiz("assets/img/productos/sin-imagen.svg"),
@@ -35,6 +36,12 @@ const OPCIONES_COMPRA = {
 // página propia, así que sus enlaces llevan al perfil de su artista.
 export function urlArtista(id) {
   return `${URL_PRODUCTO}?id=${id}`;
+}
+
+// Explorar con un género ya elegido en los filtros:
+// pages/explorar.html?genero=Deathcore.
+export function urlGenero(genero) {
+  return `${URL_EXPLORAR}?genero=${encodeURIComponent(genero)}`;
 }
 
 export function formatearPrecio(precio) {
