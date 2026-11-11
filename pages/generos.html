@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/paginas/generos.css" />
     <script type="module" src="../js/main.js"></script>
+    <script type="module" src="../js/paginas/generos.js"></script>
   </head>
   <body>
     <a class="enlace-saltar" href="#contenido-principal">Saltar al contenido</a>
@@ -33,74 +34,21 @@
       <h1>Géneros</h1>
       <p class="subtitulo">Elegí un género y entrá de lleno en la escena.</p>
 
-      <section class="indice-generos" aria-labelledby="titulo-indice">
+      <section class="barra-filtros" aria-labelledby="titulo-indice">
         <h2 id="titulo-indice" class="sr-only">Índice de géneros</h2>
-
-        <genre-chips></genre-chips>
+        <div>
+          <span class="info-filtro">Filtrar por género</span>
+          <genre-chips filter></genre-chips>
+        </div>
       </section>
+
+      <p class="info-resultados" aria-live="polite">Cargando géneros…</p>
 
       <section class="grilla-generos" aria-labelledby="titulo-todos-generos">
         <h2 id="titulo-todos-generos">Todos los géneros</h2>
 
-        <article class="tarjeta-genero">
-          <h3>Rock independiente</h3>
-          <ul>
-            <li><a href="producto.html">Los Cráteres</a></li>
-            <li><a href="producto.html">Corteza</a></li>
-            <li><a href="producto.html">Piedra Solar</a></li>
-          </ul>
-          <a class="boton" href="explorar.html">Ver artistas</a>
-        </article>
-
-        <article class="tarjeta-genero">
-          <h3>Folk indie</h3>
-          <ul>
-            <li><a href="producto.html">Marea Onda</a></li>
-            <li><a href="producto.html">Tierra Fértil</a></li>
-            <li><a href="producto.html">Último Lago</a></li>
-          </ul>
-          <a class="boton" href="explorar.html">Ver artistas</a>
-        </article>
-
-        <article class="tarjeta-genero">
-          <h3>Electrónica cruda</h3>
-          <ul>
-            <li><a href="producto.html">Valle Silente</a></li>
-            <li><a href="producto.html">Módulo Tres</a></li>
-            <li><a href="producto.html">Hexágono</a></li>
-          </ul>
-          <a class="boton" href="explorar.html">Ver artistas</a>
-        </article>
-
-        <article class="tarjeta-genero">
-          <h3>Pop alternativo</h3>
-          <ul>
-            <li><a href="producto.html">Tejido Rojo</a></li>
-            <li><a href="producto.html">Vidrio Fácil</a></li>
-            <li><a href="producto.html">Playa Interior</a></li>
-          </ul>
-          <a class="boton" href="explorar.html">Ver artistas</a>
-        </article>
-
-        <article class="tarjeta-genero">
-          <h3>Punk DIY</h3>
-          <ul>
-            <li><a href="producto.html">Risa Cósmica</a></li>
-            <li><a href="producto.html">Ruido Local</a></li>
-            <li><a href="producto.html">Zócalo</a></li>
-          </ul>
-          <a class="boton" href="explorar.html">Ver artistas</a>
-        </article>
-
-        <article class="tarjeta-genero">
-          <h3>Hip-hop under</h3>
-          <ul>
-            <li><a href="producto.html">Norte Adentro</a></li>
-            <li><a href="producto.html">Barrio Cerrado</a></li>
-            <li><a href="producto.html">Línea de Fuga</a></li>
-          </ul>
-          <a class="boton" href="explorar.html">Ver artistas</a>
-        </article>
+        <!-- js/paginas/generos.js arma una .tarjeta-genero por
+             cada género de la tabla generos, con sus artistas. -->
       </section>
 
       <promo-banner
