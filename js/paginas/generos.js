@@ -1,12 +1,12 @@
 /* =========================================================
    Whiplash — Página Géneros
    - Arma una .tarjeta-genero por cada género de la tabla
-     generos (Supabase), con la lista de sus artistas.
+     generos (Supabase) que tiene artistas, con su lista.
    - Los chips de <genre-chips filter> filtran las tarjetas
      en la misma página; "Todos" vuelve a mostrarlas todas.
    ========================================================= */
 
-import { obtenerArtistas, obtenerGeneros } from "../servicios/datos.js";
+import { obtenerArtistas, obtenerGenerosConArtistas } from "../servicios/datos.js";
 import { urlArtista, urlGenero } from "../componentes/tarjetas.js";
 import { crearCargando, crearElemento } from "../utilidades/dom.js";
 
@@ -28,13 +28,6 @@ function crearTarjetaGenero(genero, artistas) {
   const tarjeta = crearElemento("article", { clase: "tarjeta-genero" }, crearElemento("h3", { texto: genero.nombre }));
   tarjeta.dataset.genero = genero.nombre;
   tarjeta.dataset.artistas = artistas.length;
-
-  if (!artistas.length) {
-    tarjeta.append(
-      crearElemento("p", { clase: "tarjeta-genero-vacio", texto: "Todavía no hay artistas de este género." }),
-    );
-    return tarjeta;
-  }
 
   tarjeta.append(
     crearElemento(
@@ -84,7 +77,7 @@ async function mostrarGeneros() {
   let generos;
   let artistas;
   try {
-    [generos, artistas] = await Promise.all([obtenerGeneros(), obtenerArtistas()]);
+    [generos, artistas] = await Promise.all([obtenerGenerosConArtistas(), obtenerArtistas()]);
   } catch (error) {
     console.error(error);
     info.textContent = "No pudimos cargar los géneros. Probá de nuevo en un rato.";

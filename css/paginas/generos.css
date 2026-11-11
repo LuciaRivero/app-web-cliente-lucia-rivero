@@ -59,13 +59,6 @@
   color: var(--color-texto);
 }
 
-/* Género que todavía no tiene artistas. */
-.tarjeta-genero-vacio {
-  color: var(--color-texto-dim);
-  font-size: 14px;
-  margin-bottom: var(--espaciado);
-}
-
 .tarjeta-genero .boton {
   margin-top: auto;
   align-self: flex-start;
