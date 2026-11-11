@@ -1,6 +1,7 @@
 /* =========================================================
    Whiplash — <genre-chips limit="4" filter>
-   Chips de género armados desde la tabla generos (Supabase).
+   Chips de género armados desde la tabla generos (Supabase),
+   solo con los géneros que tienen artistas.
    - Sin filter: cada chip es un enlace a Explorar con
      ?genero=<género>, que abre el listado con ese género elegido.
    - filter: botones "Todos" + un género por botón, con
@@ -11,7 +12,7 @@
    - limit: cantidad máxima de géneros (opcional).
    ========================================================= */
 
-import { obtenerGeneros } from "../servicios/datos.js";
+import { obtenerGenerosConArtistas } from "../servicios/datos.js";
 import { crearElemento } from "../utilidades/dom.js";
 import { DataGrid } from "./data-grid.js";
 import { urlGenero } from "./tarjetas.js";
@@ -44,7 +45,7 @@ class GenreChips extends DataGrid {
   }
 
   cargar() {
-    return obtenerGeneros();
+    return obtenerGenerosConArtistas();
   }
 
   crearTarjeta(genero) {
