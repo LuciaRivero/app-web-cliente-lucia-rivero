@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/paginas/merch.css" />
     <script type="module" src="../js/main.js"></script>
+    <script type="module" src="../js/paginas/merch.js"></script>
   </head>
   <body>
     <a class="enlace-saltar" href="#contenido-principal">Saltar al contenido</a>
@@ -38,24 +39,26 @@
       <section class="barra-filtros" aria-label="Filtros de merch">
         <div>
           <span class="info-filtro">Tipo de producto</span>
+          <!-- data-tipo: el tipo de la tabla productos ("" = todos).
+               js/paginas/merch.js filtra la grilla con estos chips. -->
           <div class="grupo-filtros">
-            <button type="button" class="chip-genero" aria-pressed="true">
+            <button type="button" class="chip-genero" data-tipo="" aria-pressed="true">
               Todos
             </button>
-            <button type="button" class="chip-genero" aria-pressed="false">
+            <button type="button" class="chip-genero" data-tipo="Disco" aria-pressed="false">
               Discos
             </button>
-            <button type="button" class="chip-genero" aria-pressed="false">
+            <button type="button" class="chip-genero" data-tipo="Entrada" aria-pressed="false">
               Entradas
             </button>
-            <button type="button" class="chip-genero" aria-pressed="false">
+            <button type="button" class="chip-genero" data-tipo="Remera" aria-pressed="false">
               Remeras
             </button>
           </div>
         </div>
       </section>
 
-      <p class="info-resultados">Mostrando 6 productos</p>
+      <p class="info-resultados" aria-live="polite">Cargando productos…</p>
 
       <section class="catalogo-merch" aria-labelledby="titulo-catalogo">
         <h2 id="titulo-catalogo" class="sr-only">Catálogo de merch</h2>
@@ -63,7 +66,8 @@
         <product-grid limit="6" with-purchase></product-grid>
       </section>
 
-      <a class="boton boton-contorno boton-inferior" href="merch.html">Ver más merch</a>
+      <!-- js/paginas/merch.js lo muestra si quedan productos por ver. -->
+      <button class="boton boton-contorno boton-inferior" type="button" hidden>Ver más merch</button>
     </main>
 
     <site-footer></site-footer>
