@@ -114,17 +114,33 @@ export function prepararImagen(formulario, errores, reemplazo) {
   // URL temporal de la imagen elegida, para la vista previa.
   let urlPrevia = null;
 
+  // `reemplazo`: URL de la imagen de reemplazo, o una función que la
+  // devuelve (por ejemplo, según el tipo de producto elegido).
+  const urlReemplazo = () => (typeof reemplazo === "function" ? reemplazo() : reemplazo);
+  // true mientras la vista previa muestra la imagen de reemplazo.
+  let enReemplazo = true;
+
+  function mostrarReemplazo() {
+    enReemplazo = true;
+    vistaPrevia.src = urlReemplazo();
+  }
+
   function mostrarVistaPrevia(src) {
     if (urlPrevia) URL.revokeObjectURL(urlPrevia);
     urlPrevia = null;
-    vistaPrevia.src = src || reemplazo;
+    if (!src) {
+      mostrarReemplazo();
+      return;
+    }
+    enReemplazo = false;
+    vistaPrevia.src = src;
   }
 
   const mostrarActual = () => mostrarVistaPrevia(actual ? rutaDesdeRaiz(actual) : null);
 
   // Si la imagen guardada no carga, la vista previa muestra la de reemplazo.
   vistaPrevia.addEventListener("error", () => {
-    if (vistaPrevia.src !== reemplazo) vistaPrevia.src = reemplazo;
+    if (!enReemplazo) mostrarReemplazo();
   });
 
   campos.imagen.addEventListener("change", () => {
@@ -141,6 +157,7 @@ export function prepararImagen(formulario, errores, reemplazo) {
     }
     mostrarVistaPrevia(null);
     urlPrevia = URL.createObjectURL(archivo);
+    enReemplazo = false;
     vistaPrevia.src = urlPrevia;
     campos.quitarImagen.checked = false;
   });
@@ -163,6 +180,11 @@ export function prepararImagen(formulario, errores, reemplazo) {
       campos.quitarImagen.checked = false;
       quitarImagen.hidden = !actual;
       mostrarActual();
+    },
+    // Si la vista previa muestra la imagen de reemplazo, la vuelve a
+    // pedir (por ejemplo, porque cambió el tipo de producto).
+    actualizarReemplazo() {
+      if (enReemplazo) mostrarReemplazo();
     },
     // Lo que espera guardarFila() de catalogo-admin.js.
     datos() {
