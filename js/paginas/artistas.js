@@ -5,84 +5,84 @@
    orden en que los siguió) y maneja el botón "Quitar".
    ========================================================= */
 
-import { dejarDeSeguir, leerSeguidos } from "../servicios/artistas-seguidos.js";
-import { crearImagen, urlArtista } from "../componentes/tarjetas.js";
-import { obtenerArtistas, rutaDesdeRaiz } from "../servicios/datos.js";
-import { usuarioActual } from "../servicios/sesion.js";
-import { crearCargando, crearElemento } from "../utilidades/dom.js";
+import { unfollow, getFollowed } from "../servicios/artistas-seguidos.js";
+import { createImage, getArtistUrl } from "../componentes/tarjetas.js";
+import { getArtists, getRootPath } from "../servicios/datos.js";
+import { getCurrentUser } from "../servicios/sesion.js";
+import { createLoader, createElement } from "../utilidades/dom.js";
 
-const lista = document.querySelector(".lista-artistas");
-const vacio = document.querySelector(".artistas-vacio");
-const aviso = document.querySelector(".artistas-aviso");
-const titulo = document.querySelector("#titulo-mis-artistas");
+const list = document.querySelector(".lista-artistas");
+const emptyState = document.querySelector(".artistas-vacio");
+const notice = document.querySelector(".artistas-aviso");
+const title = document.querySelector("#titulo-mis-artistas");
 
-function mostrarVacio() {
-  lista.hidden = true;
-  vacio.hidden = false;
+function showEmpty() {
+  list.hidden = true;
+  emptyState.hidden = false;
 }
 
-function crearItem(artista) {
-  const quitar = crearElemento("button", {
-    clase: "quitar",
-    texto: "Quitar",
-    atributos: { type: "button", "aria-label": `Quitar a ${artista.nombre} de mis artistas` },
+function createItem(artist) {
+  const removeButton = createElement("button", {
+    className: "quitar",
+    text: "Quitar",
+    attributes: { type: "button", "aria-label": `Quitar a ${artist.nombre} de mis artistas` },
   });
 
-  const item = crearElemento(
+  const item = createElement(
     "li",
-    { clase: "artista-guardado" },
-    crearElemento(
+    { className: "artista-guardado" },
+    createElement(
       "a",
-      { clase: "artista-guardado-enlace", atributos: { href: urlArtista(artista.id) } },
-      crearImagen(artista.imagen, { clase: "avatar", alt: `Avatar de ${artista.nombre}`, tipo: "artista" }),
-      crearElemento("span", { clase: "artista-guardado-nombre", texto: artista.nombre }),
-      crearElemento("span", { clase: "artista-guardado-genero", texto: artista.genero }),
+      { className: "artista-guardado-enlace", attributes: { href: getArtistUrl(artist.id) } },
+      createImage(artist.imagen, { className: "avatar", alt: `Avatar de ${artist.nombre}`, type: "artista" }),
+      createElement("span", { className: "artista-guardado-nombre", text: artist.nombre }),
+      createElement("span", { className: "artista-guardado-genero", text: artist.genero }),
     ),
-    quitar,
+    removeButton,
   );
 
-  quitar.addEventListener("click", async () => {
-    quitar.disabled = true;
+  removeButton.addEventListener("click", async () => {
+    removeButton.disabled = true;
     try {
-      await dejarDeSeguir(artista.id);
+      await unfollow(artist.id);
     } catch (error) {
       console.error(error);
-      quitar.disabled = false;
-      aviso.textContent = `No pudimos quitar a ${artista.nombre}. Probá de nuevo.`;
+      removeButton.disabled = false;
+      notice.textContent = `No pudimos quitar a ${artist.nombre}. Probá de nuevo.`;
       return;
     }
     // El foco pasa al "Quitar" siguiente (o al anterior); si la
     // lista queda vacía, al título, para no perderse con el teclado.
-    const vecino = item.nextElementSibling ?? item.previousElementSibling;
+    const sibling = item.nextElementSibling ?? item.previousElementSibling;
     item.remove();
-    aviso.textContent = `Quitaste a ${artista.nombre} de tus artistas.`;
-    if (vecino) {
-      vecino.querySelector(".quitar").focus();
+    notice.textContent = `Quitaste a ${artist.nombre} de tus artistas.`;
+    if (sibling) {
+      sibling.querySelector(".quitar").focus();
     } else {
-      mostrarVacio();
-      titulo.focus();
+      showEmpty();
+      title.focus();
     }
   });
 
   return item;
 }
 
-async function iniciar() {
-  lista.replaceChildren(crearElemento("li", {}, crearCargando("Cargando tus artistas…")));
+async function init() {
+  list.replaceChildren(createElement("li", {}, createLoader("Cargando tus artistas…")));
   try {
-    const [ids, artistas] = await Promise.all([leerSeguidos(), obtenerArtistas()]);
-    const porId = new Map(artistas.map((artista) => [artista.id, artista]));
-    const seguidos = ids.map((id) => porId.get(id)).filter(Boolean);
-    if (!seguidos.length) {
-      mostrarVacio();
+    const [ids, artists] = await Promise.all([getFollowed(), getArtists()]);
+    const byId = new Map(artists.map((artist) => [artist.id, artist]));
+    const followed = ids.map((id) => byId.get(id)).filter(Boolean);
+    if (!followed.length) {
+      showEmpty();
       return;
     }
-    lista.replaceChildren(...seguidos.map(crearItem));
+    list.replaceChildren(...followed.map(createItem));
   } catch (error) {
     console.error(error);
-    lista.replaceChildren(crearElemento("li", { texto: "No pudimos cargar tus artistas." }));
+    list.replaceChildren(createElement("li", { text: "No pudimos cargar tus artistas." }));
   }
 }
 
-if (usuarioActual()) iniciar();
-else location.replace(rutaDesdeRaiz("pages/cuenta.html"));
+if (getCurrentUser()) init();
+else location.replace(getRootPath("pages/cuenta.html"));

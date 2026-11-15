@@ -11,33 +11,33 @@
    El último paso es la página actual (aria-current="page").
    ========================================================= */
 
-import { rutaDesdeRaiz } from "../servicios/datos.js";
-import { crearElemento } from "../utilidades/dom.js";
+import { getRootPath } from "../servicios/datos.js";
+import { createElement } from "../utilidades/dom.js";
 import { HOME } from "./navigation.js";
 
 class SiteBreadcrumbs extends HTMLElement {
   connectedCallback() {
     if (this.querySelector(".migas-de-pan")) return;
 
-    const inicio = crearElemento("a", {
-      texto: HOME.texto,
-      atributos: { href: rutaDesdeRaiz(HOME.ruta) },
+    const home = createElement("a", {
+      text: HOME.text,
+      attributes: { href: getRootPath(HOME.path) },
     });
-    const pasos = [inicio, ...this.children];
+    const steps = [home, ...this.children];
 
-    const items = pasos.map((paso, indice) => {
-      const ultimo = indice === pasos.length - 1;
+    const items = steps.map((step, index) => {
+      const isLast = index === steps.length - 1;
       // La página actual va como texto plano, sin enlace.
-      return ultimo
-        ? crearElemento("li", { texto: paso.textContent.trim(), atributos: { "aria-current": "page" } })
-        : crearElemento("li", {}, paso);
+      return isLast
+        ? createElement("li", { text: step.textContent.trim(), attributes: { "aria-current": "page" } })
+        : createElement("li", {}, step);
     });
 
     this.replaceChildren(
-      crearElemento(
+      createElement(
         "nav",
-        { clase: "migas-de-pan", atributos: { "aria-label": "Ruta de navegación" } },
-        crearElemento("ol", {}, ...items),
+        { className: "migas-de-pan", attributes: { "aria-label": "Ruta de navegación" } },
+        createElement("ol", {}, ...items),
       ),
     );
   }

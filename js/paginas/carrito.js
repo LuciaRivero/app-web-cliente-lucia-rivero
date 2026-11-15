@@ -7,168 +7,168 @@
    ========================================================= */
 
 import {
-  CANTIDAD_MAXIMA,
-  CANTIDAD_MINIMA,
-  cambiarCantidad,
-  carritoListo,
-  claveItem,
-  eliminarDelCarrito,
-  leerCarrito,
+  MAX_QUANTITY,
+  MIN_QUANTITY,
+  updateQuantity,
+  cartReady,
+  getItemKey,
+  removeFromCart,
+  getCart,
 } from "../servicios/carrito.js";
-import { obtenerProductosConArtista, rutaDesdeRaiz } from "../servicios/datos.js";
-import { crearImagen, formatearPrecio } from "../componentes/tarjetas.js";
-import { crearCargando, crearElemento } from "../utilidades/dom.js";
+import { getProductsWithArtist, getRootPath } from "../servicios/datos.js";
+import { createImage, formatPrice } from "../componentes/tarjetas.js";
+import { createLoader, createElement } from "../utilidades/dom.js";
 
-const ENVIO = 2500;
-const ICONOS = rutaDesdeRaiz("assets/img/iconos/iconos.svg");
+const SHIPPING_COST = 2500;
+const ICONS = getRootPath("assets/img/iconos/iconos.svg");
 const SVG_NS = "http://www.w3.org/2000/svg";
 
-const lista = document.querySelector(".carrito-items");
-const titulo = document.querySelector("#titulo-items");
-const aviso = document.querySelector(".carrito-aviso");
-const botonPagar = document.querySelector(".boton-pagar");
-const resumen = {
+const list = document.querySelector(".carrito-items");
+const title = document.querySelector("#titulo-items");
+const notice = document.querySelector(".carrito-aviso");
+const payButton = document.querySelector(".boton-pagar");
+const summary = {
   subtotal: document.querySelector('[data-resumen="subtotal"]'),
-  envio: document.querySelector('[data-resumen="envio"]'),
+  shipping: document.querySelector('[data-resumen="envio"]'),
   total: document.querySelector('[data-resumen="total"]'),
 };
 
 // Productos del catálogo indexados por id, para buscar
 // título, precio e imagen de cada ítem guardado.
-let productosPorId = new Map();
+let productsById = new Map();
 
 // El ícono va con createElementNS: los <svg> y <use> creados
 // con createElement no se dibujan.
-function crearIconoEliminar() {
+function createDeleteIcon() {
   const svg = document.createElementNS(SVG_NS, "svg");
   svg.setAttribute("class", "icono-eliminar");
   svg.setAttribute("viewBox", "0 0 32 32");
   svg.setAttribute("aria-hidden", "true");
-  for (const [id, clase] of [["eliminar-tapa", "tapa-eliminar"], ["eliminar-cuerpo", ""]]) {
-    const uso = document.createElementNS(SVG_NS, "use");
-    uso.setAttribute("href", `${ICONOS}#${id}`);
-    if (clase) uso.setAttribute("class", clase);
-    svg.append(uso);
+  for (const [id, className] of [["eliminar-tapa", "tapa-eliminar"], ["eliminar-cuerpo", ""]]) {
+    const use = document.createElementNS(SVG_NS, "use");
+    use.setAttribute("href", `${ICONS}#${id}`);
+    if (className) use.setAttribute("class", className);
+    svg.append(use);
   }
   return svg;
 }
 
 // Cruz que reemplaza al tacho en mobile (el CSS muestra uno u otro).
-function crearIconoCruz() {
+function createCrossIcon() {
   const svg = document.createElementNS(SVG_NS, "svg");
   svg.setAttribute("class", "icono-cruz");
   svg.setAttribute("viewBox", "0 0 24 24");
   svg.setAttribute("aria-hidden", "true");
-  const trazo = document.createElementNS(SVG_NS, "path");
-  trazo.setAttribute("d", "M6 6l12 12M18 6L6 18");
-  svg.append(trazo);
+  const path = document.createElementNS(SVG_NS, "path");
+  path.setAttribute("d", "M6 6l12 12M18 6L6 18");
+  svg.append(path);
   return svg;
 }
 
 // "Vinilo · Los Cráteres" / "Entrada · Los Cráteres"
-function crearSubtitulo(item, producto) {
-  return [item.opcion ?? producto.tipo, producto.artista?.nombre].filter(Boolean).join(" · ");
+function getSubtitle(item, product) {
+  return [item.opcion ?? product.tipo, product.artist?.nombre].filter(Boolean).join(" · ");
 }
 
-function nombreItem(item, producto) {
-  return item.opcion ? `${producto.titulo} (${item.opcion})` : producto.titulo;
+function getItemName(item, product) {
+  return item.opcion ? `${product.titulo} (${item.opcion})` : product.titulo;
 }
 
-function crearItem(item, producto) {
-  const clave = claveItem(item);
-  const nombre = nombreItem(item, producto);
+function createItem(item, product) {
+  const key = getItemKey(item);
+  const name = getItemName(item, product);
 
-  const restar = crearElemento("button", {
-    texto: "−",
-    atributos: { type: "button", "aria-label": `Restar una unidad de ${nombre}` },
+  const decrease = createElement("button", {
+    text: "−",
+    attributes: { type: "button", "aria-label": `Restar una unidad de ${name}` },
   });
-  const sumar = crearElemento("button", {
-    texto: "+",
-    atributos: { type: "button", "aria-label": `Sumar una unidad de ${nombre}` },
+  const increase = createElement("button", {
+    text: "+",
+    attributes: { type: "button", "aria-label": `Sumar una unidad de ${name}` },
   });
-  const cantidad = crearElemento("span", { texto: item.cantidad });
-  const precio = crearElemento("span", { clase: "item-precio" });
-  const eliminar = crearElemento(
+  const quantity = createElement("span", { text: item.cantidad });
+  const price = createElement("span", { className: "item-precio" });
+  const deleteButton = createElement(
     "button",
     {
-      clase: "boton-eliminar",
-      atributos: { type: "button", "aria-label": `Eliminar ${nombre} del carrito` },
+      className: "boton-eliminar",
+      attributes: { type: "button", "aria-label": `Eliminar ${name} del carrito` },
     },
-    crearIconoEliminar(),
-    crearIconoCruz(),
-    crearElemento("span", { clase: "texto-eliminar", texto: "Eliminar", atributos: { "aria-hidden": "true" } }),
+    createDeleteIcon(),
+    createCrossIcon(),
+    createElement("span", { className: "texto-eliminar", text: "Eliminar", attributes: { "aria-hidden": "true" } }),
   );
 
-  const fila = crearElemento(
+  const row = createElement(
     "article",
-    { clase: "carrito-item", atributos: { "data-clave": clave } },
-    crearImagen(producto.imagen, { clase: "item-imagen", tipo: producto.tipo }),
-    crearElemento(
+    { className: "carrito-item", attributes: { "data-clave": key } },
+    createImage(product.imagen, { className: "item-imagen", type: product.tipo }),
+    createElement(
       "div",
-      { clase: "item-detalle" },
-      crearElemento("h3", { clase: "item-titulo", texto: producto.titulo }),
-      crearElemento("p", { clase: "item-subtitulo", texto: crearSubtitulo(item, producto) }),
+      { className: "item-detalle" },
+      createElement("h3", { className: "item-titulo", text: product.titulo }),
+      createElement("p", { className: "item-subtitulo", text: getSubtitle(item, product) }),
     ),
-    crearElemento(
+    createElement(
       "div",
-      { clase: "item-controles" },
-      crearElemento("div", { clase: "selector-cantidad" }, restar, cantidad, sumar),
-      precio,
-      crearElemento("div", { clase: "item-eliminar" }, eliminar),
+      { className: "item-controles" },
+      createElement("div", { className: "selector-cantidad" }, decrease, quantity, increase),
+      price,
+      createElement("div", { className: "item-eliminar" }, deleteButton),
     ),
   );
 
-  function actualizarFila(unidades) {
-    cantidad.textContent = unidades;
-    precio.textContent = formatearPrecio(producto.precio * unidades);
-    restar.disabled = unidades <= CANTIDAD_MINIMA;
-    sumar.disabled = unidades >= CANTIDAD_MAXIMA;
+  function updateRow(units) {
+    quantity.textContent = units;
+    price.textContent = formatPrice(product.precio * units);
+    decrease.disabled = units <= MIN_QUANTITY;
+    increase.disabled = units >= MAX_QUANTITY;
   }
 
-  function cambiar(diferencia) {
-    const items = cambiarCantidad(clave, diferencia);
-    const unidades = items.find((actual) => claveItem(actual) === clave)?.cantidad ?? CANTIDAD_MINIMA;
-    actualizarFila(unidades);
-    actualizarResumen();
-    aviso.textContent = `${nombre}: ${unidades} ${unidades === 1 ? "unidad" : "unidades"}`;
+  function changeQuantity(difference) {
+    const items = updateQuantity(key, difference);
+    const units = items.find((current) => getItemKey(current) === key)?.cantidad ?? MIN_QUANTITY;
+    updateRow(units);
+    updateSummary();
+    notice.textContent = `${name}: ${units} ${units === 1 ? "unidad" : "unidades"}`;
     // Si el botón se deshabilitó (llegó al mínimo o al máximo),
     // el foco pasa al otro para no quedar en un botón muerto.
-    const [pulsado, otro] = diferencia < 0 ? [restar, sumar] : [sumar, restar];
-    if (pulsado.disabled) otro.focus();
+    const [pressed, other] = difference < 0 ? [decrease, increase] : [increase, decrease];
+    if (pressed.disabled) other.focus();
   }
 
-  restar.addEventListener("click", () => cambiar(-1));
-  sumar.addEventListener("click", () => cambiar(1));
-  eliminar.addEventListener("click", () => {
-    eliminarDelCarrito(clave);
+  decrease.addEventListener("click", () => changeQuantity(-1));
+  increase.addEventListener("click", () => changeQuantity(1));
+  deleteButton.addEventListener("click", () => {
+    removeFromCart(key);
     // El foco pasa al Eliminar del ítem siguiente (o anterior);
     // si no queda ninguno, al título de la lista.
-    const vecina = fila.nextElementSibling ?? fila.previousElementSibling;
-    fila.remove();
-    actualizarResumen();
-    aviso.textContent = `${nombre} se eliminó del carrito`;
-    if (vecina?.classList.contains("carrito-item")) {
-      vecina.querySelector(".boton-eliminar").focus();
+    const sibling = row.nextElementSibling ?? row.previousElementSibling;
+    row.remove();
+    updateSummary();
+    notice.textContent = `${name} se eliminó del carrito`;
+    if (sibling?.classList.contains("carrito-item")) {
+      sibling.querySelector(".boton-eliminar").focus();
     } else {
-      mostrarVacio();
-      titulo.focus();
+      showEmpty();
+      title.focus();
     }
   });
 
-  actualizarFila(item.cantidad);
-  return fila;
+  updateRow(item.cantidad);
+  return row;
 }
 
-function mostrarVacio() {
-  lista.replaceChildren(
-    crearElemento(
+function showEmpty() {
+  list.replaceChildren(
+    createElement(
       "div",
-      { clase: "carrito-vacio" },
-      crearElemento("p", { texto: "Tu carrito está vacío." }),
-      crearElemento("a", {
-        clase: "boton boton-contorno",
-        texto: "Ver merch",
-        atributos: { href: rutaDesdeRaiz("pages/merch.html") },
+      { className: "carrito-vacio" },
+      createElement("p", { text: "Tu carrito está vacío." }),
+      createElement("a", {
+        className: "boton boton-contorno",
+        text: "Ver merch",
+        attributes: { href: getRootPath("pages/merch.html") },
       }),
     ),
   );
@@ -176,44 +176,44 @@ function mostrarVacio() {
 
 // Ítems guardados cuyo producto existe (si uno se borra de
 // el catálogo, deja de mostrarse en vez de romper la página).
-function itemsValidos() {
-  return leerCarrito().filter((item) => productosPorId.has(item.id));
+function getValidItems() {
+  return getCart().filter((item) => productsById.has(item.id));
 }
 
-function actualizarResumen() {
-  const subtotal = itemsValidos().reduce(
-    (suma, item) => suma + productosPorId.get(item.id).precio * item.cantidad,
+function updateSummary() {
+  const subtotal = getValidItems().reduce(
+    (sum, item) => sum + productsById.get(item.id).precio * item.cantidad,
     0,
   );
-  const envio = subtotal > 0 ? ENVIO : 0;
-  resumen.subtotal.textContent = formatearPrecio(subtotal);
-  resumen.envio.textContent = formatearPrecio(envio);
-  resumen.total.textContent = formatearPrecio(subtotal + envio);
-  botonPagar.disabled = subtotal === 0;
+  const shipping = subtotal > 0 ? SHIPPING_COST : 0;
+  summary.subtotal.textContent = formatPrice(subtotal);
+  summary.shipping.textContent = formatPrice(shipping);
+  summary.total.textContent = formatPrice(subtotal + shipping);
+  payButton.disabled = subtotal === 0;
 }
 
-async function iniciarCarrito() {
-  lista.setAttribute("aria-busy", "true");
-  lista.replaceChildren(crearCargando("Cargando tu carrito…"));
+async function initCart() {
+  list.setAttribute("aria-busy", "true");
+  list.replaceChildren(createLoader("Cargando tu carrito…"));
   try {
     // Con sesión, primero llega el carrito guardado en la cuenta.
-    const [productos] = await Promise.all([obtenerProductosConArtista(), carritoListo]);
-    productosPorId = new Map(productos.map((producto) => [producto.id, producto]));
+    const [products] = await Promise.all([getProductsWithArtist(), cartReady]);
+    productsById = new Map(products.map((product) => [product.id, product]));
   } catch (error) {
     console.error(error);
-    lista.replaceChildren(crearElemento("p", { texto: "No pudimos cargar tu carrito." }));
+    list.replaceChildren(createElement("p", { text: "No pudimos cargar tu carrito." }));
     return;
   } finally {
-    lista.removeAttribute("aria-busy");
+    list.removeAttribute("aria-busy");
   }
 
-  const items = itemsValidos();
+  const items = getValidItems();
   if (items.length) {
-    lista.replaceChildren(...items.map((item) => crearItem(item, productosPorId.get(item.id))));
+    list.replaceChildren(...items.map((item) => createItem(item, productsById.get(item.id))));
   } else {
-    mostrarVacio();
+    showEmpty();
   }
-  actualizarResumen();
+  updateSummary();
 }
 
-iniciarCarrito();
+initCart();

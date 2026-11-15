@@ -5,7 +5,7 @@
    - current: id del link activo (ver navigation.js).
    Con sesión abierta, el link de la cuenta se reemplaza por el
    menú de usuario (menu-usuario.js) y aparecen los links marcados
-   con soloConSesion; se actualiza cada vez que la sesión cambia.
+   con signedInOnly; se actualiza cada vez que la sesión cambia.
    El ícono del carrito lleva un contador con las unidades que
    hay en el carrito, que se actualiza cuando el carrito cambia.
    En mobile, .nav-principal es un panel lateral (ver menu.js)
@@ -14,25 +14,25 @@
    css/layout/encabezado.css sin cambios.
    ========================================================= */
 
-import { contarUnidades, escucharCambiosCarrito } from "../servicios/carrito.js";
-import { rutaDesdeRaiz } from "../servicios/datos.js";
-import { CAMBIO_SESION, usuarioActual } from "../servicios/sesion.js";
-import { crearElemento } from "../utilidades/dom.js";
-import { crearMenuUsuario } from "./menu-usuario.js";
+import { countUnits, onCartChange } from "../servicios/carrito.js";
+import { getRootPath } from "../servicios/datos.js";
+import { SESSION_CHANGE, getCurrentUser } from "../servicios/sesion.js";
+import { createElement } from "../utilidades/dom.js";
+import { createUserMenu } from "./menu-usuario.js";
 import { ACCOUNT_NAV, HOME, MAIN_NAV } from "./navigation.js";
 
-const icono = (nombre) => rutaDesdeRaiz(`assets/img/iconos/icono-${nombre}.svg`);
+const getIconUrl = (name) => getRootPath(`assets/img/iconos/icono-${name}.svg`);
 
-function crearLista(links, actual, crearContenido) {
-  return crearElemento(
+function createList(links, current, fillLink) {
+  return createElement(
     "ul",
     {},
     ...links.map((link) => {
-      const enlace = crearElemento("a", { atributos: { href: rutaDesdeRaiz(link.ruta) } });
-      crearContenido(enlace, link);
-      if (link.id === actual) enlace.setAttribute("aria-current", "page");
-      const item = crearElemento("li", {}, enlace);
-      if (link.soloConSesion) item.dataset.soloConSesion = "";
+      const anchor = createElement("a", { attributes: { href: getRootPath(link.path) } });
+      fillLink(anchor, link);
+      if (link.id === current) anchor.setAttribute("aria-current", "page");
+      const item = createElement("li", {}, anchor);
+      if (link.signedInOnly) item.dataset.soloConSesion = "";
       return item;
     }),
   );
@@ -41,7 +41,7 @@ function crearLista(links, actual, crearContenido) {
 class SiteHeader extends HTMLElement {
   connectedCallback() {
     if (this.childElementCount) return;
-    const actual = this.getAttribute("current");
+    const current = this.getAttribute("current");
 
     // Estructura fija: no lleva datos externos, por eso se puede usar innerHTML.
     this.innerHTML = `
@@ -49,15 +49,15 @@ class SiteHeader extends HTMLElement {
         <div class="encabezado-superior">
           <button class="boton-menu" type="button" aria-label="Abrir menú"
             aria-expanded="false" aria-controls="menu-principal">
-            <img class="icono-menu" src="${icono("menu")}" alt="" />
+            <img class="icono-menu" src="${getIconUrl("menu")}" alt="" />
           </button>
 
-          <a class="logo" href="${rutaDesdeRaiz(HOME.ruta)}">
-            <img src="${rutaDesdeRaiz("assets/img/logo.svg")}" alt="Whiplash - logo" />
+          <a class="logo" href="${getRootPath(HOME.path)}">
+            <img src="${getRootPath("assets/img/logo.svg")}" alt="Whiplash - logo" />
             <span>Whi<span class="p-acento">p</span>lash</span>
           </a>
 
-          <form class="buscador" action="${rutaDesdeRaiz("pages/explorar.html")}" method="get" role="search">
+          <form class="buscador" action="${getRootPath("pages/explorar.html")}" method="get" role="search">
             <label class="sr-only" for="busqueda">Buscar artistas, tracks o géneros</label>
             <input type="search" id="busqueda" name="q"
               placeholder="Buscar artistas, tracks o géneros..." />
@@ -65,7 +65,7 @@ class SiteHeader extends HTMLElement {
           </form>
 
           <button class="boton-buscar" type="button" aria-label="Buscar">
-            <img class="icono-buscar" src="${icono("buscar")}" alt="" />
+            <img class="icono-buscar" src="${getIconUrl("buscar")}" alt="" />
           </button>
 
           <nav class="nav-cuenta" aria-label="Acciones de cuenta"></nav>
@@ -84,88 +84,88 @@ class SiteHeader extends HTMLElement {
     `;
 
     this.querySelector(".nav-cuenta").append(
-      crearLista(ACCOUNT_NAV, actual, (enlace, link) => {
-        enlace.className = link.clase;
-        enlace.setAttribute("aria-label", link.texto);
-        enlace.append(
-          crearElemento("img", {
-            clase: `icono-${link.icono}`,
-            atributos: { src: icono(link.icono), alt: "" },
+      createList(ACCOUNT_NAV, current, (anchor, link) => {
+        anchor.className = link.className;
+        anchor.setAttribute("aria-label", link.text);
+        anchor.append(
+          createElement("img", {
+            className: `icono-${link.icon}`,
+            attributes: { src: getIconUrl(link.icon), alt: "" },
           }),
         );
       }),
     );
-    this.enlaceCuenta = this.querySelector(".ir-cuenta");
-    this.itemCuenta = this.enlaceCuenta.parentElement;
-    this.enlaceCarrito = this.querySelector(".ir-carrito");
+    this.accountLink = this.querySelector(".ir-cuenta");
+    this.accountItem = this.accountLink.parentElement;
+    this.cartLink = this.querySelector(".ir-carrito");
     // Decorativo: la cantidad la lee el lector de pantalla del aria-label.
-    this.contadorCarrito = crearElemento("span", {
-      clase: "contador-carrito",
-      atributos: { "aria-hidden": "true" },
+    this.cartCounter = createElement("span", {
+      className: "contador-carrito",
+      attributes: { "aria-hidden": "true" },
     });
-    this.enlaceCarrito.append(this.contadorCarrito);
+    this.cartLink.append(this.cartCounter);
 
-    const listaPrincipal = crearLista(MAIN_NAV, actual, (enlace, link) => {
-      enlace.textContent = link.texto;
+    const mainList = createList(MAIN_NAV, current, (anchor, link) => {
+      anchor.textContent = link.text;
     });
     // Solo en el panel mobile: el Carrito con su contador.
-    const carrito = ACCOUNT_NAV.find((link) => link.id === "carrito");
-    this.contadorMenu = crearElemento("span", {
-      clase: "contador-menu",
-      atributos: { "aria-hidden": "true" },
+    const cart = ACCOUNT_NAV.find((link) => link.id === "carrito");
+    this.menuCounter = createElement("span", {
+      className: "contador-menu",
+      attributes: { "aria-hidden": "true" },
     });
-    this.enlaceCarritoMenu = crearElemento(
+    this.menuCartLink = createElement(
       "a",
-      { atributos: { href: rutaDesdeRaiz(carrito.ruta) } },
-      carrito.texto,
-      this.contadorMenu,
+      { attributes: { href: getRootPath(cart.path) } },
+      cart.text,
+      this.menuCounter,
     );
-    if (actual === carrito.id) this.enlaceCarritoMenu.setAttribute("aria-current", "page");
-    listaPrincipal.append(crearElemento("li", { clase: "solo-mobile" }, this.enlaceCarritoMenu));
-    this.querySelector(".nav-principal").append(listaPrincipal);
+    if (current === cart.id) this.menuCartLink.setAttribute("aria-current", "page");
+    mainList.append(createElement("li", { className: "solo-mobile" }, this.menuCartLink));
+    this.querySelector(".nav-principal").append(mainList);
 
-    this.actualizarSesion(actual);
-    window.addEventListener(CAMBIO_SESION, () => this.actualizarSesion(actual));
-    this.actualizarCarrito();
-    escucharCambiosCarrito(() => this.actualizarCarrito());
+    this.updateSession(current);
+    window.addEventListener(SESSION_CHANGE, () => this.updateSession(current));
+    this.updateCart();
+    onCartChange(() => this.updateCart());
   }
 
   // Muestra las unidades del carrito sobre el ícono y en el link
   // del panel mobile (ocultas si está vacío) y hace un "salto" en
   // el ícono cuando la cantidad sube.
-  actualizarCarrito() {
-    const unidades = contarUnidades();
-    const anterior = Number(this.contadorCarrito.dataset.unidades ?? unidades);
-    this.contadorCarrito.dataset.unidades = unidades;
-    const texto = unidades > 99 ? "99+" : String(unidades);
-    const etiqueta = unidades
-      ? `Carrito, ${unidades} ${unidades === 1 ? "producto" : "productos"}`
+  updateCart() {
+    const units = countUnits();
+    const previous = Number(this.cartCounter.dataset.unidades ?? units);
+    this.cartCounter.dataset.unidades = units;
+    const text = units > 99 ? "99+" : String(units);
+    const label = units
+      ? `Carrito, ${units} ${units === 1 ? "producto" : "productos"}`
       : "Carrito vacío";
-    for (const [enlace, contador] of [
-      [this.enlaceCarrito, this.contadorCarrito],
-      [this.enlaceCarritoMenu, this.contadorMenu],
+    for (const [link, counter] of [
+      [this.cartLink, this.cartCounter],
+      [this.menuCartLink, this.menuCounter],
     ]) {
-      contador.textContent = texto;
-      contador.hidden = unidades === 0;
-      enlace.setAttribute("aria-label", etiqueta);
+      counter.textContent = text;
+      counter.hidden = units === 0;
+      link.setAttribute("aria-label", label);
     }
-    if (unidades > anterior) {
-      this.contadorCarrito.classList.remove("contador-salto");
+    if (units > previous) {
+      this.cartCounter.classList.remove("contador-salto");
       // Fuerza un reflow para que la animación arranque de nuevo.
-      void this.contadorCarrito.offsetWidth;
-      this.contadorCarrito.classList.add("contador-salto");
+      void this.cartCounter.offsetWidth;
+      this.cartCounter.classList.add("contador-salto");
     }
   }
 
   // Alterna entre el link a Mi cuenta (sin sesión) y el menú de
   // usuario, y muestra u oculta los links que piden sesión.
-  actualizarSesion(actual) {
-    const usuario = usuarioActual();
-    this.itemCuenta.replaceChildren(
-      usuario ? crearMenuUsuario(usuario, { actual }) : this.enlaceCuenta,
+  updateSession(current) {
+    const user = getCurrentUser();
+    this.accountItem.replaceChildren(
+      user ? createUserMenu(user, { current }) : this.accountLink,
     );
     for (const item of this.querySelectorAll("[data-solo-con-sesion]")) {
-      item.hidden = !usuario;
+      item.hidden = !user;
     }
   }
 }

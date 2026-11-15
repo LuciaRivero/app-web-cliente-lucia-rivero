@@ -10,75 +10,75 @@
 
 const DESKTOP = window.matchMedia("(min-width: 769px)");
 
-export function iniciarMenu() {
-  const encabezado = document.querySelector(".encabezado-sitio");
-  const boton = encabezado?.querySelector(".boton-menu");
-  const menu = encabezado?.querySelector(".nav-principal");
-  if (!boton || !menu) return;
-  const cerrarMenu = menu.querySelector(".cerrar-menu");
-  const fondo = encabezado.querySelector(".menu-fondo");
+export function initMenu() {
+  const header = document.querySelector(".encabezado-sitio");
+  const button = header?.querySelector(".boton-menu");
+  const menu = header?.querySelector(".nav-principal");
+  if (!button || !menu) return;
+  const closeButton = menu.querySelector(".cerrar-menu");
+  const backdrop = header.querySelector(".menu-fondo");
 
-  const estaAbierto = () => encabezado.classList.contains("menu-abierto");
+  const isOpen = () => header.classList.contains("menu-abierto");
 
   // Botón de cierre y links visibles (Mis artistas se oculta sin sesión).
-  const enfocables = () =>
-    [...menu.querySelectorAll("button, a[href]")].filter((elemento) => !elemento.closest("[hidden]"));
+  const getFocusable = () =>
+    [...menu.querySelectorAll("button, a[href]")].filter((element) => !element.closest("[hidden]"));
 
-  function abrir() {
-    encabezado.classList.add("menu-abierto");
+  function open() {
+    header.classList.add("menu-abierto");
     document.body.classList.add("menu-lateral-abierto");
-    boton.setAttribute("aria-expanded", "true");
-    boton.setAttribute("aria-label", "Cerrar menú");
+    button.setAttribute("aria-expanded", "true");
+    button.setAttribute("aria-label", "Cerrar menú");
     menu.querySelector("li:not([hidden]) a")?.focus();
   }
 
-  function cerrar({ devolverFoco = false } = {}) {
-    if (!estaAbierto()) return;
-    encabezado.classList.remove("menu-abierto");
+  function close({ returnFocus = false } = {}) {
+    if (!isOpen()) return;
+    header.classList.remove("menu-abierto");
     document.body.classList.remove("menu-lateral-abierto");
-    boton.setAttribute("aria-expanded", "false");
-    boton.setAttribute("aria-label", "Abrir menú");
-    if (devolverFoco) boton.focus();
+    button.setAttribute("aria-expanded", "false");
+    button.setAttribute("aria-label", "Abrir menú");
+    if (returnFocus) button.focus();
   }
 
-  boton.addEventListener("click", (evento) => {
-    evento.stopPropagation();
-    if (estaAbierto()) cerrar();
-    else abrir();
+  button.addEventListener("click", (event) => {
+    event.stopPropagation();
+    if (isOpen()) close();
+    else open();
   });
 
-  cerrarMenu?.addEventListener("click", () => cerrar({ devolverFoco: true }));
-  fondo?.addEventListener("click", () => cerrar({ devolverFoco: true }));
+  closeButton?.addEventListener("click", () => close({ returnFocus: true }));
+  backdrop?.addEventListener("click", () => close({ returnFocus: true }));
 
-  document.addEventListener("keydown", (evento) => {
-    if (!estaAbierto()) return;
-    if (evento.key === "Escape") {
-      cerrar({ devolverFoco: true });
+  document.addEventListener("keydown", (event) => {
+    if (!isOpen()) return;
+    if (event.key === "Escape") {
+      close({ returnFocus: true });
       return;
     }
     // Foco atrapado: del último elemento vuelve al primero y al revés.
-    if (evento.key === "Tab" && !DESKTOP.matches) {
-      const elementos = enfocables();
-      const primero = elementos[0];
-      const ultimo = elementos.at(-1);
-      if (evento.shiftKey && document.activeElement === primero) {
-        evento.preventDefault();
-        ultimo.focus();
-      } else if (!evento.shiftKey && document.activeElement === ultimo) {
-        evento.preventDefault();
-        primero.focus();
+    if (event.key === "Tab" && !DESKTOP.matches) {
+      const elements = getFocusable();
+      const first = elements[0];
+      const last = elements.at(-1);
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
       } else if (!menu.contains(document.activeElement)) {
-        evento.preventDefault();
-        primero.focus();
+        event.preventDefault();
+        first.focus();
       }
     }
   });
 
-  document.addEventListener("click", (evento) => {
-    if (!encabezado.contains(evento.target)) cerrar();
+  document.addEventListener("click", (event) => {
+    if (!header.contains(event.target)) close();
   });
 
-  DESKTOP.addEventListener("change", (evento) => {
-    if (evento.matches) cerrar();
+  DESKTOP.addEventListener("change", (event) => {
+    if (event.matches) close();
   });
 }

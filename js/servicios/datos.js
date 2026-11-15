@@ -6,26 +6,26 @@
    forma que tenían los JSON locales.
    ========================================================= */
 
-import { pedirTabla } from "./supabase.js";
+import { fetchTable } from "./supabase.js";
 
 // Raíz del sitio calculada desde este archivo, así las rutas
 // funcionan igual desde index.html que desde pages/*.html.
-const RAIZ = new URL("../../", import.meta.url);
+const ROOT = new URL("../../", import.meta.url);
 
-export function rutaDesdeRaiz(ruta) {
-  return new URL(ruta, RAIZ).href;
+export function getRootPath(path) {
+  return new URL(path, ROOT).href;
 }
 
 // Se guarda la promesa para no volver a pedir las tablas en cada
 // tecla del buscador ni en cada grilla de la misma página.
 let cache = null;
 
-function cargarDatos() {
+function loadData() {
   if (!cache) {
     cache = Promise.all([
-      pedirTabla("artistas?select=*&order=id"),
-      pedirTabla("productos?select=*&order=id"),
-      pedirTabla("generos?select=*&order=id"),
+      fetchTable("artistas?select=*&order=id"),
+      fetchTable("productos?select=*&order=id"),
+      fetchTable("generos?select=*&order=id"),
     ]).catch((error) => {
       cache = null;
       throw error;
@@ -34,67 +34,67 @@ function cargarDatos() {
   return cache;
 }
 
-export async function obtenerArtistas() {
-  const [artistas] = await cargarDatos();
-  return artistas;
+export async function getArtists() {
+  const [artists] = await loadData();
+  return artists;
 }
 
-export async function obtenerProductos() {
-  const [, productos] = await cargarDatos();
-  return productos;
+export async function getProducts() {
+  const [, products] = await loadData();
+  return products;
 }
 
-export async function obtenerGeneros() {
-  const [, , generos] = await cargarDatos();
-  return generos;
+export async function getGenres() {
+  const [, , genres] = await loadData();
+  return genres;
 }
 
 // Solo los géneros que tienen al menos un artista (para los
 // chips: elegir uno vacío no mostraría nada).
-export async function obtenerGenerosConArtistas() {
-  const [artistas, , generos] = await cargarDatos();
-  const usados = new Set(artistas.map((artista) => artista.genero));
-  return generos.filter((genero) => usados.has(genero.nombre));
+export async function getGenresWithArtists() {
+  const [artists, , genres] = await loadData();
+  const used = new Set(artists.map((artist) => artist.genero));
+  return genres.filter((genre) => used.has(genre.nombre));
 }
 
 // Cada producto se completa con su artista para poder buscar
 // por el nombre de la banda y mostrarlo en las tarjetas.
-export async function obtenerProductosConArtista() {
-  const [artistas, productos] = await cargarDatos();
-  return productos.map((producto) => ({
-    ...producto,
-    artista: artistas.find((artista) => artista.id === producto.artista_id),
+export async function getProductsWithArtist() {
+  const [artists, products] = await loadData();
+  return products.map((product) => ({
+    ...product,
+    artist: artists.find((artist) => artist.id === product.artista_id),
   }));
 }
 
 // Pasa a minúsculas y saca tildes: "Cráteres" y "crateres" coinciden.
-export function normalizar(texto) {
-  return texto
+export function normalizeText(text) {
+  return text
     .toLowerCase()
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "")
     .trim();
 }
 
-export async function buscar(termino) {
-  const consulta = normalizar(termino);
-  if (!consulta) {
-    return { artistas: [], productos: [] };
+export async function search(term) {
+  const query = normalizeText(term);
+  if (!query) {
+    return { artists: [], products: [] };
   }
 
-  const [artistas, productos] = await Promise.all([
-    obtenerArtistas(),
-    obtenerProductosConArtista(),
+  const [artists, products] = await Promise.all([
+    getArtists(),
+    getProductsWithArtist(),
   ]);
-  const coincide = (...campos) => campos.some((campo) => normalizar(campo).includes(consulta));
+  const matches = (...fields) => fields.some((field) => normalizeText(field).includes(query));
 
-  const artistasEncontrados = artistas.filter((artista) =>
-    coincide(artista.nombre, artista.genero),
+  const foundArtists = artists.filter((artist) =>
+    matches(artist.nombre, artist.genero),
   );
 
-  const productosEncontrados = productos.filter((producto) =>
-    coincide(producto.titulo, producto.tipo, producto.artista?.nombre ?? ""),
+  const foundProducts = products.filter((product) =>
+    matches(product.titulo, product.tipo, product.artist?.nombre ?? ""),
   );
 
-  return { artistas: artistasEncontrados, productos: productosEncontrados };
+  return { artists: foundArtists, products: foundProducts };
 }

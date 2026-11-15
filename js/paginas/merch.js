@@ -7,85 +7,85 @@
      ya se había cargado.
    ========================================================= */
 
-import { obtenerProductosConArtista } from "../servicios/datos.js";
+import { getProductsWithArtist } from "../servicios/datos.js";
 
 const info = document.querySelector(".info-resultados");
-const grilla = document.querySelector(".catalogo-merch product-grid");
+const grid = document.querySelector(".catalogo-merch product-grid");
 const chips = document.querySelector(".barra-filtros .grupo-filtros");
-const botonMas = document.querySelector(".boton-inferior");
-const paso = Number(grilla.getAttribute("limit"));
-let visibles = paso;
-let productos = null;
-let tipo = "";
+const moreButton = document.querySelector(".boton-inferior");
+const step = Number(grid.getAttribute("limit"));
+let visibleCount = step;
+let products = null;
+let type = "";
 
 // Los tipos de la tabla en plural, para los mensajes.
-const PLURALES = { Disco: "discos", Entrada: "entradas", Remera: "remeras" };
+const PLURALS = { Disco: "discos", Entrada: "entradas", Remera: "remeras" };
 
 // "Mostrando 6 de 14 productos" / "Mostrando 1 producto"
-function textoMostrando(cantidad, total) {
-  return total > cantidad
-    ? `Mostrando ${cantidad} de ${total} productos`
-    : `Mostrando ${cantidad} ${cantidad === 1 ? "producto" : "productos"}`;
+function getShowingText(count, total) {
+  return total > count
+    ? `Mostrando ${count} de ${total} productos`
+    : `Mostrando ${count} ${count === 1 ? "producto" : "productos"}`;
 }
 
-function actualizar() {
-  if (!productos.length) {
+function updateInfo() {
+  if (!products.length) {
     info.textContent = "Todavía no hay productos.";
-    botonMas.hidden = true;
+    moreButton.hidden = true;
     return;
   }
-  const cantidad = Math.min(visibles, productos.length);
-  info.textContent = textoMostrando(cantidad, productos.length);
-  botonMas.hidden = cantidad >= productos.length;
+  const count = Math.min(visibleCount, products.length);
+  info.textContent = getShowingText(count, products.length);
+  moreButton.hidden = count >= products.length;
 }
 
-function mostrarTipo() {
-  if (!tipo) {
-    grilla.mostrar(productos.slice(0, visibles));
-    actualizar();
+function renderType() {
+  if (!type) {
+    grid.render(products.slice(0, visibleCount));
+    updateInfo();
     return;
   }
-  const lista = productos.filter((producto) => producto.tipo === tipo);
-  grilla.mostrar(lista);
-  info.textContent = lista.length
-    ? textoMostrando(lista.length, lista.length)
-    : `Todavía no hay ${PLURALES[tipo] ?? "productos de este tipo"}.`;
-  botonMas.hidden = true;
+  const filtered = products.filter((product) => product.tipo === type);
+  grid.render(filtered);
+  info.textContent = filtered.length
+    ? getShowingText(filtered.length, filtered.length)
+    : `Todavía no hay ${PLURALS[type] ?? "productos de este tipo"}.`;
+  moreButton.hidden = true;
 }
 
 // Es el mismo pedido que hace la grilla (datos.js lo guarda). Si
 // ya se eligió un tipo, esta lista reemplaza a la que arma la grilla.
-obtenerProductosConArtista()
-  .then((lista) => {
-    productos = lista;
-    if (tipo) mostrarTipo();
-    else actualizar();
+getProductsWithArtist()
+  .then((list) => {
+    products = list;
+    if (type) renderType();
+    else updateInfo();
   })
   .catch((error) => {
     console.error(error);
     info.textContent = "No pudimos cargar los productos. Probá de nuevo en un rato.";
   });
 
-botonMas.addEventListener("click", () => {
-  const nuevas = grilla.agregar(productos.slice(visibles, visibles + paso));
-  visibles += nuevas.length;
-  actualizar();
+moreButton.addEventListener("click", () => {
+  const added = grid.appendItems(products.slice(visibleCount, visibleCount + step));
+  visibleCount += added.length;
+  updateInfo();
   // El foco pasa al primer control habilitado del primer producto
   // nuevo (el "−" de cantidad arranca deshabilitado) para seguir
   // desde ahí
   // (si el botón se ocultó, el foco no se pierde).
-  nuevas[0]?.querySelector("a, button:enabled, input:enabled")?.focus();
+  added[0]?.querySelector("a, button:enabled, input:enabled")?.focus();
 });
 
 // Si los productos todavía no llegaron, el tipo queda guardado y
 // se aplica cuando lleguen.
-chips.addEventListener("click", (evento) => {
-  const elegido = evento.target.closest("button.chip-genero");
-  if (!elegido || elegido.getAttribute("aria-pressed") === "true") return;
+chips.addEventListener("click", (event) => {
+  const selected = event.target.closest("button.chip-genero");
+  if (!selected || selected.getAttribute("aria-pressed") === "true") return;
 
-  for (const boton of chips.querySelectorAll("button.chip-genero")) {
-    boton.setAttribute("aria-pressed", String(boton === elegido));
+  for (const button of chips.querySelectorAll("button.chip-genero")) {
+    button.setAttribute("aria-pressed", String(button === selected));
   }
-  tipo = elegido.dataset.tipo;
-  if (productos) mostrarTipo();
+  type = selected.dataset.tipo;
+  if (products) renderType();
 });

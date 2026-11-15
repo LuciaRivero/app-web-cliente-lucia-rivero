@@ -12,91 +12,91 @@
    - limit: cantidad máxima de géneros (opcional).
    ========================================================= */
 
-import { obtenerGenerosConArtistas } from "../servicios/datos.js";
-import { crearElemento } from "../utilidades/dom.js";
+import { getGenresWithArtists } from "../servicios/datos.js";
+import { createElement } from "../utilidades/dom.js";
 import { DataGrid } from "./data-grid.js";
-import { urlGenero } from "./tarjetas.js";
+import { getGenreUrl } from "./tarjetas.js";
 
 class GenreChips extends DataGrid {
   static observedAttributes = ["selected"];
 
-  get esFiltro() {
+  get isFilter() {
     return this.hasAttribute("filter");
   }
 
-  get claseCss() {
-    return this.esFiltro ? "grupo-filtros" : "generos-lista";
+  get cssClass() {
+    return this.isFilter ? "grupo-filtros" : "generos-lista";
   }
 
-  get cargandoChico() {
+  get hasSmallLoader() {
     return true;
   }
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.esFiltro && !this.escuchando) {
-      this.escuchando = true;
-      this.addEventListener("click", (evento) => this.elegir(evento));
+    if (this.isFilter && !this.isListening) {
+      this.isListening = true;
+      this.addEventListener("click", (event) => this.selectGenre(event));
     }
   }
 
   attributeChangedCallback() {
-    this.marcarElegido();
+    this.markSelected();
   }
 
-  cargar() {
-    return obtenerGenerosConArtistas();
+  load() {
+    return getGenresWithArtists();
   }
 
-  crearTarjeta(genero) {
-    if (this.esFiltro) return this.crearBoton(genero.nombre, genero.nombre);
+  createCard(genre) {
+    if (this.isFilter) return this.createButton(genre.nombre, genre.nombre);
 
-    return crearElemento("a", {
-      clase: "chip-genero",
-      texto: genero.nombre,
-      atributos: { href: urlGenero(genero.nombre) },
+    return createElement("a", {
+      className: "chip-genero",
+      text: genre.nombre,
+      attributes: { href: getGenreUrl(genre.nombre) },
     });
   }
 
-  crearBoton(texto, valor) {
-    const boton = crearElemento("button", {
-      clase: "chip-genero",
-      texto,
-      atributos: { type: "button", "aria-pressed": "false" },
+  createButton(text, value) {
+    const button = createElement("button", {
+      className: "chip-genero",
+      text,
+      attributes: { type: "button", "aria-pressed": "false" },
     });
-    boton.dataset.genero = valor;
-    return boton;
+    button.dataset.genero = value;
+    return button;
   }
 
-  mostrar(generos) {
-    super.mostrar(generos);
-    if (!this.esFiltro) return;
+  render(genres) {
+    super.render(genres);
+    if (!this.isFilter) return;
 
-    this.prepend(this.crearBoton("Todos", ""));
-    this.marcarElegido();
+    this.prepend(this.createButton("Todos", ""));
+    this.markSelected();
   }
 
   // aria-pressed en el chip de `selected`; si no hay ninguno con
   // ese género (o no hay selected), queda marcado "Todos".
-  marcarElegido() {
-    const botones = [...this.querySelectorAll("button.chip-genero")];
-    const valor = this.getAttribute("selected") ?? "";
-    const elegido = botones.find((boton) => boton.dataset.genero === valor) ?? botones[0];
-    for (const boton of botones) {
-      boton.setAttribute("aria-pressed", String(boton === elegido));
+  markSelected() {
+    const buttons = [...this.querySelectorAll("button.chip-genero")];
+    const value = this.getAttribute("selected") ?? "";
+    const selected = buttons.find((button) => button.dataset.genero === value) ?? buttons[0];
+    for (const button of buttons) {
+      button.setAttribute("aria-pressed", String(button === selected));
     }
   }
 
-  elegir(evento) {
-    const elegido = evento.target.closest("button.chip-genero");
-    if (!elegido || elegido.getAttribute("aria-pressed") === "true") return;
+  selectGenre(event) {
+    const selected = event.target.closest("button.chip-genero");
+    if (!selected || selected.getAttribute("aria-pressed") === "true") return;
 
-    if (elegido.dataset.genero) this.setAttribute("selected", elegido.dataset.genero);
+    if (selected.dataset.genero) this.setAttribute("selected", selected.dataset.genero);
     else this.removeAttribute("selected");
     this.dispatchEvent(
       new CustomEvent("genre-change", {
         bubbles: true,
-        detail: { genre: elegido.dataset.genero || null },
+        detail: { genre: selected.dataset.genero || null },
       }),
     );
   }

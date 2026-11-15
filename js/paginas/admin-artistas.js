@@ -13,381 +13,381 @@
    ========================================================= */
 
 import {
-  completarOpciones,
-  mostrarSinPerfil,
-  prepararErrores,
-  prepararImagen,
-  prepararModalEliminar,
-  protegerPanel,
-  titularPagina,
+  fillOptions,
+  showNoProfile,
+  setupFieldErrors,
+  setupImageField,
+  setupDeleteModal,
+  guardPanel,
+  setPageTitle,
 } from "../componentes/panel-admin.js";
-import { crearImagen } from "../componentes/tarjetas.js";
+import { createImage } from "../componentes/tarjetas.js";
 import {
-  FORMATO_DURACION,
-  eliminarArtista,
-  guardarArtista,
-  obtenerArtistasAdmin,
-  obtenerMiArtista,
+  DURATION_FORMAT,
+  deleteArtist,
+  saveArtist,
+  getAdminArtists,
+  getMyArtist,
 } from "../servicios/artistas-admin.js";
-import { validarImagen } from "../servicios/catalogo-admin.js";
-import { obtenerGeneros, obtenerProductos, rutaDesdeRaiz } from "../servicios/datos.js";
-import { crearCargando, crearElemento, enviando, mostrarMensaje, mostrarToast } from "../utilidades/dom.js";
+import { validateImage } from "../servicios/catalogo-admin.js";
+import { getGenres, getProducts, getRootPath } from "../servicios/datos.js";
+import { createLoader, createElement, withSubmitting, showMessage, showToast } from "../utilidades/dom.js";
 
-const formulario = document.querySelector(".formulario-admin form");
-const tituloFormulario = document.querySelector("#titulo-formulario");
-const mensaje = document.querySelector(".formulario-admin .mensaje-formulario");
-const botonGuardar = formulario.querySelector('[type="submit"]');
-const botonCancelar = formulario.querySelector(".boton-cancelar");
-const listaTracks = formulario.querySelector(".lista-tracks-admin");
-const botonAgregarTrack = formulario.querySelector(".boton-agregar-track");
-const lista = document.querySelector(".lista-admin");
-const campos = formulario.elements;
+const form = document.querySelector(".formulario-admin form");
+const formTitle = document.querySelector("#titulo-formulario");
+const message = document.querySelector(".formulario-admin .mensaje-formulario");
+const saveButton = form.querySelector('[type="submit"]');
+const cancelButton = form.querySelector(".boton-cancelar");
+const trackList = form.querySelector(".lista-tracks-admin");
+const addTrackButton = form.querySelector(".boton-agregar-track");
+const list = document.querySelector(".lista-admin");
+const fields = form.elements;
 
-let artistas = [];
+let artists = [];
 // Cantidad de productos de cada artista (por id), para bloquear su baja.
-let productosPorArtista = new Map();
+let productCountByArtist = new Map();
 // Artista que se está editando; null = alta.
-let editando = null;
+let editing = null;
 // true con una cuenta de artista: solo ve y edita su perfil.
-let soloPropio = false;
+let ownOnly = false;
 // Para que los id de los campos de cada fila no se repitan.
-let siguienteFila = 0;
+let nextRowId = 0;
 
 // ---------- Canciones ----------
 
-function filasTracks() {
-  return [...listaTracks.children].map((fila) => ({
-    fila,
-    titulo: fila.querySelector('[name="track-titulo"]'),
-    duracion: fila.querySelector('[name="track-duracion"]'),
+function getTrackRows() {
+  return [...trackList.children].map((row) => ({
+    row,
+    title: row.querySelector('[name="track-titulo"]'),
+    duration: row.querySelector('[name="track-duracion"]'),
   }));
 }
 
 // Las filas sin título ni duración se ignoran al validar y guardar.
-const filaVacia = ({ titulo, duracion }) => !titulo.value.trim() && !duracion.value.trim();
+const isEmptyRow = ({ title, duration }) => !title.value.trim() && !duration.value.trim();
 
-function numerarFilas() {
-  filasTracks().forEach(({ fila }, indice) => {
-    const numero = indice + 1;
-    fila.querySelector(".track-numero").textContent = numero;
-    fila.querySelector(".etiqueta-titulo").textContent = `Título de la canción ${numero}`;
-    fila.querySelector(".etiqueta-duracion").textContent = `Duración de la canción ${numero}`;
-    fila.querySelector(".quitar-track").setAttribute("aria-label", `Quitar la canción ${numero}`);
+function numberRows() {
+  getTrackRows().forEach(({ row }, index) => {
+    const number = index + 1;
+    row.querySelector(".track-numero").textContent = number;
+    row.querySelector(".etiqueta-titulo").textContent = `Título de la canción ${number}`;
+    row.querySelector(".etiqueta-duracion").textContent = `Duración de la canción ${number}`;
+    row.querySelector(".quitar-track").setAttribute("aria-label", `Quitar la canción ${number}`);
   });
 }
 
-function crearFilaTrack({ titulo = "", duracion = "" } = {}) {
-  const id = siguienteFila++;
-  const campoTitulo = crearElemento("input", {
-    atributos: {
+function createTrackRow({ titulo: title = "", duracion: duration = "" } = {}) {
+  const id = nextRowId++;
+  const titleField = createElement("input", {
+    attributes: {
       type: "text",
       id: `track-titulo-${id}`,
       name: "track-titulo",
       placeholder: "Título",
       maxlength: "80",
-      value: titulo,
+      value: title,
     },
   });
-  const campoDuracion = crearElemento("input", {
-    clase: "track-duracion-admin",
-    atributos: {
+  const durationField = createElement("input", {
+    className: "track-duracion-admin",
+    attributes: {
       type: "text",
       id: `track-duracion-${id}`,
       name: "track-duracion",
       placeholder: "3:24",
       inputmode: "numeric",
       maxlength: "5",
-      value: duracion,
+      value: duration,
     },
   });
-  const quitar = crearElemento("button", {
-    clase: "quitar-track",
-    texto: "✕",
-    atributos: { type: "button" },
+  const removeButton = createElement("button", {
+    className: "quitar-track",
+    text: "✕",
+    attributes: { type: "button" },
   });
 
-  const fila = crearElemento(
+  const row = createElement(
     "li",
-    { clase: "track-admin" },
-    crearElemento("span", { clase: "track-numero", atributos: { "aria-hidden": "true" } }),
-    crearElemento("label", { clase: "sr-only etiqueta-titulo", atributos: { for: campoTitulo.id } }),
-    campoTitulo,
-    crearElemento("label", { clase: "sr-only etiqueta-duracion", atributos: { for: campoDuracion.id } }),
-    campoDuracion,
-    quitar,
+    { className: "track-admin" },
+    createElement("span", { className: "track-numero", attributes: { "aria-hidden": "true" } }),
+    createElement("label", { className: "sr-only etiqueta-titulo", attributes: { for: titleField.id } }),
+    titleField,
+    createElement("label", { className: "sr-only etiqueta-duracion", attributes: { for: durationField.id } }),
+    durationField,
+    removeButton,
   );
 
   // El foco pasa a la fila siguiente (o al botón de agregar) para
   // no perderse cuando la fila desaparece.
-  quitar.addEventListener("click", () => {
-    const destino = fila.nextElementSibling?.querySelector("input") ?? botonAgregarTrack;
-    fila.remove();
-    numerarFilas();
-    destino.focus();
+  removeButton.addEventListener("click", () => {
+    const target = row.nextElementSibling?.querySelector("input") ?? addTrackButton;
+    row.remove();
+    numberRows();
+    target.focus();
   });
-  return fila;
+  return row;
 }
 
-function mostrarTracks(tracks) {
-  listaTracks.replaceChildren(...tracks.map(crearFilaTrack));
-  numerarFilas();
+function renderTracks(tracks) {
+  trackList.replaceChildren(...tracks.map(createTrackRow));
+  numberRows();
 }
 
-botonAgregarTrack.addEventListener("click", () => {
-  const fila = crearFilaTrack();
-  listaTracks.append(fila);
-  numerarFilas();
-  fila.querySelector("input").focus();
+addTrackButton.addEventListener("click", () => {
+  const row = createTrackRow();
+  trackList.append(row);
+  numberRows();
+  row.querySelector("input").focus();
 });
 
 // Al corregir una canción se quita su marca; el error general,
 // cuando ya no queda ninguna marcada.
-listaTracks.addEventListener("input", (evento) => {
-  evento.target.removeAttribute("aria-invalid");
-  if (!listaTracks.querySelector('[aria-invalid="true"]')) errores.mostrar(campos.tracks, null);
+trackList.addEventListener("input", (event) => {
+  event.target.removeAttribute("aria-invalid");
+  if (!trackList.querySelector('[aria-invalid="true"]')) errors.show(fields.tracks, null);
 });
 
-function validarTracks() {
+function validateTracks() {
   let error = null;
-  for (const track of filasTracks()) {
-    const faltaTitulo = !filaVacia(track) && !track.titulo.value.trim();
-    const duracionMal = !filaVacia(track) && !FORMATO_DURACION.test(track.duracion.value.trim());
-    for (const [campo, mal] of [
-      [track.titulo, faltaTitulo],
-      [track.duracion, duracionMal],
+  for (const track of getTrackRows()) {
+    const missingTitle = !isEmptyRow(track) && !track.title.value.trim();
+    const invalidDuration = !isEmptyRow(track) && !DURATION_FORMAT.test(track.duration.value.trim());
+    for (const [field, isInvalid] of [
+      [track.title, missingTitle],
+      [track.duration, invalidDuration],
     ]) {
-      if (mal) campo.setAttribute("aria-invalid", "true");
-      else campo.removeAttribute("aria-invalid");
+      if (isInvalid) field.setAttribute("aria-invalid", "true");
+      else field.removeAttribute("aria-invalid");
     }
     error ??=
-      (faltaTitulo && "Cada canción necesita un título.") ||
-      (duracionMal && "La duración va en minutos y segundos, por ejemplo 3:24.") ||
+      (missingTitle && "Cada canción necesita un título.") ||
+      (invalidDuration && "La duración va en minutos y segundos, por ejemplo 3:24.") ||
       null;
   }
   return error;
 }
 
-function leerTracks() {
-  return filasTracks()
-    .filter((track) => !filaVacia(track))
-    .map(({ titulo, duracion }) => ({ titulo: titulo.value.trim(), duracion: duracion.value.trim() }));
+function getTracks() {
+  return getTrackRows()
+    .filter((track) => !isEmptyRow(track))
+    .map(({ title, duration }) => ({ titulo: title.value.trim(), duracion: duration.value.trim() }));
 }
 
 // ---------- Formulario ----------
 
 // Cada regla devuelve el error del campo o un valor falso.
-const errores = prepararErrores(formulario, {
-  nombre: (campo) => !campo.value.trim() && "Escribí el nombre del artista.",
-  genero: (campo) => !campo.value && "Elegí el género.",
-  imagen: (campo) => campo.files[0] && validarImagen(campo.files[0]),
-  tracks: validarTracks,
+const errors = setupFieldErrors(form, {
+  nombre: (field) => !field.value.trim() && "Escribí el nombre del artista.",
+  genero: (field) => !field.value && "Elegí el género.",
+  imagen: (field) => field.files[0] && validateImage(field.files[0]),
+  tracks: validateTracks,
 });
-const imagen = prepararImagen(formulario, errores, rutaDesdeRaiz("assets/img/artistas/sin-imagen.svg"));
-const pedirConfirmacion = prepararModalEliminar(document.querySelector(".modal-eliminar"));
+const imageField = setupImageField(form, errors, getRootPath("assets/img/artistas/sin-imagen.svg"));
+const confirmDelete = setupDeleteModal(document.querySelector(".modal-eliminar"));
 
-function limpiarFormulario() {
-  editando = null;
-  formulario.reset();
-  errores.limpiar();
-  imagen.mostrar(null);
-  mostrarTracks([]);
-  tituloFormulario.textContent = "Nuevo artista";
-  botonGuardar.textContent = "Agregar artista";
-  botonCancelar.hidden = true;
+function resetForm() {
+  editing = null;
+  form.reset();
+  errors.clear();
+  imageField.show(null);
+  renderTracks([]);
+  formTitle.textContent = "Nuevo artista";
+  saveButton.textContent = "Agregar artista";
+  cancelButton.hidden = true;
 }
 
-// `enfocar`: lleva el foco al formulario (al tocar "Editar").
-function editar(artista, { enfocar = true } = {}) {
-  editando = artista;
-  campos.nombre.value = artista.nombre;
-  campos.genero.value = artista.genero;
-  campos.bio.value = artista.bio ?? "";
-  errores.limpiar();
-  imagen.mostrar(artista.imagen);
-  mostrarTracks(artista.tracks ?? []);
-  tituloFormulario.textContent = soloPropio ? "Tu perfil" : `Editar “${artista.nombre}”`;
-  botonGuardar.textContent = "Guardar cambios";
+// `focus`: lleva el foco al formulario (al tocar "Editar").
+function editArtist(artist, { focus = true } = {}) {
+  editing = artist;
+  fields.nombre.value = artist.nombre;
+  fields.genero.value = artist.genero;
+  fields.bio.value = artist.bio ?? "";
+  errors.clear();
+  imageField.show(artist.imagen);
+  renderTracks(artist.tracks ?? []);
+  formTitle.textContent = ownOnly ? "Tu perfil" : `Editar “${artist.nombre}”`;
+  saveButton.textContent = "Guardar cambios";
   // Una cuenta de artista no tiene alta: no hay edición que cancelar.
-  botonCancelar.hidden = soloPropio;
-  mostrarMensaje(mensaje, "");
+  cancelButton.hidden = ownOnly;
+  showMessage(message, "");
   // El formulario queda arriba de la lista: se lleva el foco ahí.
-  if (enfocar) tituloFormulario.focus();
+  if (focus) formTitle.focus();
 }
 
-botonCancelar.addEventListener("click", () => {
-  limpiarFormulario();
-  mostrarMensaje(mensaje, "");
-  campos.nombre.focus();
+cancelButton.addEventListener("click", () => {
+  resetForm();
+  showMessage(message, "");
+  fields.nombre.focus();
 });
 
-formulario.addEventListener("submit", async (evento) => {
-  evento.preventDefault();
-  mostrarMensaje(mensaje, "");
-  if (!errores.validar()) return;
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  showMessage(message, "");
+  if (!errors.validate()) return;
 
-  const eraEdicion = Boolean(editando);
-  const { artista, error } = await enviando(formulario, "Guardando…", () =>
-    guardarArtista(
+  const wasEditing = Boolean(editing);
+  const { artist, error } = await withSubmitting(form, "Guardando…", () =>
+    saveArtist(
       {
-        id: editando?.id,
-        nombre: campos.nombre.value,
-        genero: campos.genero.value,
-        bio: campos.bio.value,
-        tracks: leerTracks(),
+        id: editing?.id,
+        nombre: fields.nombre.value,
+        genero: fields.genero.value,
+        bio: fields.bio.value,
+        tracks: getTracks(),
       },
-      imagen.datos(),
+      imageField.getData(),
     ),
   );
   if (error) {
-    mostrarMensaje(mensaje, error);
+    showMessage(message, error);
     return;
   }
 
-  artistas = eraEdicion
-    ? artistas.map((actual) => (actual.id === artista.id ? artista : actual))
-    : [...artistas, artista];
-  dibujarLista();
+  artists = wasEditing
+    ? artists.map((current) => (current.id === artist.id ? artist : current))
+    : [...artists, artist];
+  renderList();
   // La cuenta de artista sigue editando su perfil, ya actualizado.
-  if (soloPropio) editar(artista, { enfocar: false });
-  else limpiarFormulario();
-  mostrarToast(
-    eraEdicion ? `Guardamos los cambios de “${artista.nombre}”.` : `Agregamos a “${artista.nombre}” al catálogo.`,
+  if (ownOnly) editArtist(artist, { focus: false });
+  else resetForm();
+  showToast(
+    wasEditing ? `Guardamos los cambios de “${artist.nombre}”.` : `Agregamos a “${artist.nombre}” al catálogo.`,
   );
 });
 
 // ---------- Lista ----------
 
-const textoCantidad = (cantidad, singular, plural) => `${cantidad} ${cantidad === 1 ? singular : plural}`;
+const getCountText = (count, singular, plural) => `${count} ${count === 1 ? singular : plural}`;
 
-async function eliminar(artista) {
-  const cantidadProductos = productosPorArtista.get(artista.id) ?? 0;
-  const nombre = crearElemento("strong", { texto: `“${artista.nombre}”` });
+async function removeArtist(artist) {
+  const productCount = productCountByArtist.get(artist.id) ?? 0;
+  const name = createElement("strong", { text: `“${artist.nombre}”` });
 
-  if (cantidadProductos) {
-    await pedirConfirmacion({
-      titulo: "No se puede eliminar",
-      texto: [
-        nombre,
-        ` tiene ${textoCantidad(cantidadProductos, "producto", "productos")} en la tienda. `,
-        soloPropio
+  if (productCount) {
+    await confirmDelete({
+      title: "No se puede eliminar",
+      text: [
+        name,
+        ` tiene ${getCountText(productCount, "producto", "productos")} en la tienda. `,
+        ownOnly
           ? "Eliminalos desde Mi merch y volvé a intentar."
           : "Eliminalos o asignalos a otro artista desde Administrar productos y volvé a intentar.",
       ],
-      bloqueado: true,
+      blocked: true,
     });
     return;
   }
 
-  const eliminado = await pedirConfirmacion({
-    titulo: "¿Eliminar artista?",
-    texto: [
+  const deleted = await confirmDelete({
+    title: "¿Eliminar artista?",
+    text: [
       "Vas a eliminar a ",
-      nombre,
+      name,
       ". También se quita de Mis artistas de quienes lo siguen. Esta acción no se puede deshacer.",
     ],
-    eliminar: () => eliminarArtista(artista),
+    onDelete: () => deleteArtist(artist),
   });
-  if (!eliminado) return;
+  if (!deleted) return;
 
-  if (soloPropio) {
-    mostrarSinPerfil("Eliminaste tu perfil de artista. Tu cuenta sigue activa como usuario.");
-    mostrarToast("Eliminamos tu perfil de artista.");
+  if (ownOnly) {
+    showNoProfile("Eliminaste tu perfil de artista. Tu cuenta sigue activa como usuario.");
+    showToast("Eliminamos tu perfil de artista.");
     return;
   }
-  if (editando?.id === artista.id) limpiarFormulario();
-  artistas = artistas.filter((actual) => actual.id !== artista.id);
-  dibujarLista();
-  mostrarToast(`Eliminamos a “${artista.nombre}”.`);
+  if (editing?.id === artist.id) resetForm();
+  artists = artists.filter((current) => current.id !== artist.id);
+  renderList();
+  showToast(`Eliminamos a “${artist.nombre}”.`);
   // El botón que abrió el modal ya no existe: el foco pasa al título de la lista.
   document.querySelector("#titulo-lista").focus();
 }
 
-function crearItem(artista) {
-  const botonEditar = crearElemento("button", {
-    clase: "boton-admin",
-    texto: "Editar",
-    atributos: { type: "button", "aria-label": `Editar ${artista.nombre}` },
+function createItem(artist) {
+  const editButton = createElement("button", {
+    className: "boton-admin",
+    text: "Editar",
+    attributes: { type: "button", "aria-label": `Editar ${artist.nombre}` },
   });
-  const botonEliminar = crearElemento("button", {
-    clase: "boton-admin boton-admin-eliminar",
-    texto: "Eliminar",
-    atributos: { type: "button", "aria-label": `Eliminar ${artista.nombre}` },
+  const deleteButton = createElement("button", {
+    className: "boton-admin boton-admin-eliminar",
+    text: "Eliminar",
+    attributes: { type: "button", "aria-label": `Eliminar ${artist.nombre}` },
   });
-  botonEditar.addEventListener("click", () => editar(artista));
-  botonEliminar.addEventListener("click", () => eliminar(artista));
+  editButton.addEventListener("click", () => editArtist(artist));
+  deleteButton.addEventListener("click", () => removeArtist(artist));
 
-  const detalle = [
-    artista.genero,
-    textoCantidad(artista.tracks?.length ?? 0, "canción", "canciones"),
-    textoCantidad(productosPorArtista.get(artista.id) ?? 0, "producto", "productos"),
+  const detail = [
+    artist.genero,
+    getCountText(artist.tracks?.length ?? 0, "canción", "canciones"),
+    getCountText(productCountByArtist.get(artist.id) ?? 0, "producto", "productos"),
   ];
 
-  return crearElemento(
+  return createElement(
     "li",
-    { clase: "item-admin" },
-    crearImagen(artista.imagen, { clase: "item-admin-imagen item-admin-avatar", tipo: "artista" }),
-    crearElemento(
+    { className: "item-admin" },
+    createImage(artist.imagen, { className: "item-admin-imagen item-admin-avatar", type: "artista" }),
+    createElement(
       "div",
-      { clase: "item-admin-datos" },
-      crearElemento("p", { clase: "item-admin-titulo", texto: artista.nombre }),
-      crearElemento("p", { clase: "item-admin-detalle", texto: detalle.join(" · ") }),
+      { className: "item-admin-datos" },
+      createElement("p", { className: "item-admin-titulo", text: artist.nombre }),
+      createElement("p", { className: "item-admin-detalle", text: detail.join(" · ") }),
     ),
-    crearElemento("div", { clase: "item-admin-acciones" }, botonEditar, botonEliminar),
+    createElement("div", { className: "item-admin-acciones" }, editButton, deleteButton),
   );
 }
 
-function dibujarLista() {
-  if (!artistas.length) {
-    lista.replaceChildren(
-      crearElemento("li", { clase: "admin-vacio", texto: "Todavía no hay artistas. Cargá el primero." }),
+function renderList() {
+  if (!artists.length) {
+    list.replaceChildren(
+      createElement("li", { className: "admin-vacio", text: "Todavía no hay artistas. Cargá el primero." }),
     );
     return;
   }
-  lista.replaceChildren(...artistas.map(crearItem));
+  list.replaceChildren(...artists.map(createItem));
 }
 
 // ---------- Inicio ----------
 
-async function iniciar(usuario) {
-  soloPropio = !usuario.esAdmin;
-  if (soloPropio) {
-    titularPagina({
-      titulo: "Mi perfil de artista",
-      subtitulo: "Actualizá tu información, tu imagen y tus canciones.",
+async function init(user) {
+  ownOnly = !user.esAdmin;
+  if (ownOnly) {
+    setPageTitle({
+      title: "Mi perfil de artista",
+      subtitle: "Actualizá tu información, tu imagen y tus canciones.",
     });
     document.querySelector("#titulo-lista").textContent = "Así te ven";
   }
 
-  mostrarTracks([]);
-  lista.replaceChildren(crearElemento("li", {}, crearCargando("Cargando artistas…")));
+  renderTracks([]);
+  list.replaceChildren(createElement("li", {}, createLoader("Cargando artistas…")));
   try {
-    const [todos, generos, productos] = await Promise.all([
-      soloPropio ? obtenerMiArtista(usuario).then((artista) => (artista ? [artista] : [])) : obtenerArtistasAdmin(),
-      obtenerGeneros(),
-      obtenerProductos(),
+    const [allArtists, genres, products] = await Promise.all([
+      ownOnly ? getMyArtist(user).then((artist) => (artist ? [artist] : [])) : getAdminArtists(),
+      getGenres(),
+      getProducts(),
     ]);
-    if (soloPropio && !todos.length) {
-      mostrarSinPerfil("Tu cuenta no tiene un perfil de artista. Si creés que es un error, escribinos desde Contacto.");
+    if (ownOnly && !allArtists.length) {
+      showNoProfile("Tu cuenta no tiene un perfil de artista. Si creés que es un error, escribinos desde Contacto.");
       return;
     }
-    completarOpciones(
-      campos.genero,
-      generos.map((genero) => ({ valor: genero.nombre, texto: genero.nombre })),
+    fillOptions(
+      fields.genero,
+      genres.map((genre) => ({ value: genre.nombre, text: genre.nombre })),
     );
-    productosPorArtista = new Map();
-    for (const producto of productos) {
-      productosPorArtista.set(producto.artista_id, (productosPorArtista.get(producto.artista_id) ?? 0) + 1);
+    productCountByArtist = new Map();
+    for (const product of products) {
+      productCountByArtist.set(product.artista_id, (productCountByArtist.get(product.artista_id) ?? 0) + 1);
     }
-    artistas = todos;
-    dibujarLista();
-    if (soloPropio) editar(artistas[0], { enfocar: false });
+    artists = allArtists;
+    renderList();
+    if (ownOnly) editArtist(artists[0], { focus: false });
   } catch (error) {
     console.error(error);
-    lista.replaceChildren(
-      crearElemento("li", { clase: "admin-vacio", texto: "No pudimos cargar los artistas. Probá de nuevo en un rato." }),
+    list.replaceChildren(
+      createElement("li", { className: "admin-vacio", text: "No pudimos cargar los artistas. Probá de nuevo en un rato." }),
     );
   }
 }
 
-const usuario = protegerPanel();
-if (usuario) iniciar(usuario);
+const user = guardPanel();
+if (user) init(user);

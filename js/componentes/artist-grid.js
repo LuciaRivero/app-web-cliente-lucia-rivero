@@ -5,23 +5,23 @@
      más alto). Sin order, en el orden de la tabla.
    ========================================================= */
 
-import { obtenerArtistas } from "../servicios/datos.js";
+import { getArtists } from "../servicios/datos.js";
 import { DataGrid } from "./data-grid.js";
-import { crearTarjetaArtista } from "./tarjetas.js";
+import { createArtistCard } from "./tarjetas.js";
 
 class ArtistGrid extends DataGrid {
-  get claseCss() {
+  get cssClass() {
     return "grilla-artistas";
   }
 
-  async cargar() {
-    const artistas = await obtenerArtistas();
+  async load() {
+    const artists = await getArtists();
     // Se ordena una copia: la lista de datos.js la comparten todas las grillas.
-    return this.getAttribute("order") === "recientes" ? [...artistas].sort((a, b) => b.id - a.id) : artistas;
+    return this.getAttribute("order") === "recientes" ? [...artists].sort((a, b) => b.id - a.id) : artists;
   }
 
-  crearTarjeta(artista) {
-    return crearTarjetaArtista(artista);
+  createCard(artist) {
+    return createArtistCard(artist);
   }
 }
 

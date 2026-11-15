@@ -5,86 +5,86 @@
 
 // Crea un elemento con clase, texto y atributos en una sola llamada.
 // El texto va siempre por textContent para que nunca se interprete como HTML.
-export function crearElemento(etiqueta, { clase, texto, atributos = {} } = {}, ...hijos) {
-  const elemento = document.createElement(etiqueta);
-  if (clase) elemento.className = clase;
-  if (texto !== undefined) elemento.textContent = texto;
-  for (const [nombre, valor] of Object.entries(atributos)) {
-    elemento.setAttribute(nombre, valor);
+export function createElement(tag, { className, text, attributes = {} } = {}, ...children) {
+  const element = document.createElement(tag);
+  if (className) element.className = className;
+  if (text !== undefined) element.textContent = text;
+  for (const [name, value] of Object.entries(attributes)) {
+    element.setAttribute(name, value);
   }
-  elemento.append(...hijos);
-  return elemento;
+  element.append(...children);
+  return element;
 }
 
 // "1 resultado" / "3 resultados"
-export function textoResultados(cantidad) {
-  return `${cantidad} ${cantidad === 1 ? "resultado" : "resultados"}`;
+export function getResultsText(count) {
+  return `${count} ${count === 1 ? "resultado" : "resultados"}`;
 }
 
 // Término de búsqueda que viene en la URL (?q=...), sin espacios sobrantes.
-export function leerConsulta() {
+export function getSearchQuery() {
   return new URLSearchParams(location.search).get("q")?.trim() ?? "";
 }
 
 // Indicador de carga: un disco de vinilo que gira (estilos en
-// css/componentes/cargando.css). `chico` es la versión en línea
+// css/componentes/cargando.css). `small` es la versión en línea
 // para lugares angostos, como la fila de chips de género.
-export function crearCargando(texto = "Cargando…", { chico = false } = {}) {
-  return crearElemento(
+export function createLoader(text = "Cargando…", { small = false } = {}) {
+  return createElement(
     "div",
-    { clase: chico ? "cargando cargando-chico" : "cargando", atributos: { role: "status" } },
-    crearElemento("span", { clase: "spinner-disco", atributos: { "aria-hidden": "true" } }),
-    crearElemento("span", { texto }),
+    { className: small ? "cargando cargando-chico" : "cargando", attributes: { role: "status" } },
+    createElement("span", { className: "spinner-disco", attributes: { "aria-hidden": "true" } }),
+    createElement("span", { text }),
   );
 }
 
 // Muestra el resultado de un formulario en su <p class="mensaje-formulario">
 // (con aria-live, así el lector de pantalla lo anuncia).
-// `tipo` es "error" o "exito" y define el color.
-export function mostrarMensaje(elemento, texto, tipo = "error") {
-  elemento.dataset.tipo = tipo;
-  elemento.textContent = texto;
+// `type` es "error" o "exito" y define el color.
+export function showMessage(element, text, type = "error") {
+  element.dataset.tipo = type;
+  element.textContent = text;
 }
 
 // Aviso breve que aparece abajo de la pantalla y se va solo
-// (estilos en css/componentes/toast.css). `tipo` es "exito" o
+// (estilos en css/componentes/toast.css). `type` es "exito" o
 // "error". La región tiene role="status", así el lector de
 // pantalla lo anuncia sin mover el foco.
-const DURACION_TOAST = 4000;
-let regionToasts = null;
+const TOAST_DURATION = 4000;
+let toastRegion = null;
 
-export function mostrarToast(texto, tipo = "exito") {
-  const toast = crearElemento("div", { clase: "toast", texto, atributos: { "data-tipo": tipo } });
+export function showToast(text, type = "exito") {
+  const toast = createElement("div", { className: "toast", text, attributes: { "data-tipo": type } });
   setTimeout(() => {
     toast.classList.add("toast-saliendo");
     toast.addEventListener("animationend", () => toast.remove(), { once: true });
-  }, DURACION_TOAST);
+  }, TOAST_DURATION);
 
-  if (regionToasts) {
-    regionToasts.append(toast);
+  if (toastRegion) {
+    toastRegion.append(toast);
     return;
   }
   // La región se crea con el primer aviso. Algunos lectores de
   // pantalla no anuncian lo que llega junto con la región: el
   // texto se agrega un momento después.
-  regionToasts = crearElemento("div", { clase: "toasts", atributos: { role: "status" } });
-  document.body.append(regionToasts);
-  setTimeout(() => regionToasts.append(toast), 100);
+  toastRegion = createElement("div", { className: "toasts", attributes: { role: "status" } });
+  document.body.append(toastRegion);
+  setTimeout(() => toastRegion.append(toast), 100);
 }
 
 // Mientras un formulario espera al servidor, su botón de envío
-// queda deshabilitado (evita envíos dobles) y muestra `texto`.
-export async function enviando(formulario, texto, tarea) {
-  const boton = formulario.querySelector('[type="submit"]');
-  const original = boton.textContent;
-  boton.disabled = true;
-  boton.textContent = texto;
-  formulario.setAttribute("aria-busy", "true");
+// queda deshabilitado (evita envíos dobles) y muestra `text`.
+export async function withSubmitting(form, text, task) {
+  const button = form.querySelector('[type="submit"]');
+  const original = button.textContent;
+  button.disabled = true;
+  button.textContent = text;
+  form.setAttribute("aria-busy", "true");
   try {
-    return await tarea();
+    return await task();
   } finally {
-    boton.disabled = false;
-    boton.textContent = original;
-    formulario.removeAttribute("aria-busy");
+    button.disabled = false;
+    button.textContent = original;
+    form.removeAttribute("aria-busy");
   }
 }
