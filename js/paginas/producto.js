@@ -4,121 +4,121 @@
    portada, nombre, género, bio, tracks, merch, <title> y
    migas de pan. Sin ?id= muestra el artista 1; con un id que
    no existe, el aviso "Artista no encontrado".
-   Conecta "Seguir" (ver prepararBotonSeguir en tarjetas.js) y
+   Conecta "Seguir" (ver setupFollowButton en tarjetas.js) y
    "Compartir": usa la Web Share API (el menú de compartir del
    sistema) y, donde no existe, copia el link al portapapeles.
    ========================================================= */
 
-import { obtenerArtistas, obtenerProductos } from "../servicios/datos.js";
-import { mostrarImagen, prepararBotonSeguir } from "../componentes/tarjetas.js";
-import { crearElemento } from "../utilidades/dom.js";
+import { getArtists, getProducts } from "../servicios/datos.js";
+import { showImage, setupFollowButton } from "../componentes/tarjetas.js";
+import { createElement } from "../utilidades/dom.js";
 
-const ID_POR_DEFECTO = 1;
+const DEFAULT_ID = 1;
 
-const perfil = document.querySelector(".perfil-artista");
-const noEncontrado = document.querySelector(".artista-no-encontrado");
-const botonSeguir = perfil.querySelector(".boton-seguir");
-const botonCompartir = perfil.querySelector(".boton-compartir");
-const aviso = perfil.querySelector(".aviso-compartir");
+const profile = document.querySelector(".perfil-artista");
+const notFound = document.querySelector(".artista-no-encontrado");
+const followButton = profile.querySelector(".boton-seguir");
+const shareButton = profile.querySelector(".boton-compartir");
+const notice = profile.querySelector(".aviso-compartir");
 
-function leerId() {
-  const parametro = new URLSearchParams(location.search).get("id");
-  return parametro === null ? ID_POR_DEFECTO : Number(parametro);
+function getArtistId() {
+  const param = new URLSearchParams(location.search).get("id");
+  return param === null ? DEFAULT_ID : Number(param);
 }
 
-function crearTrack(track, indice) {
-  return crearElemento(
+function createTrack(track, index) {
+  return createElement(
     "li",
     {},
-    crearElemento(
+    createElement(
       "button",
-      { clase: "track", atributos: { type: "button" } },
-      crearElemento("span", { clase: "track-num", texto: indice + 1 }),
-      crearElemento(
+      { className: "track", attributes: { type: "button" } },
+      createElement("span", { className: "track-num", text: index + 1 }),
+      createElement(
         "span",
-        { clase: "track-info" },
-        crearElemento("span", { clase: "track-titulo", texto: track.titulo }),
-        crearElemento("span", { clase: "track-duracion", texto: track.duracion }),
+        { className: "track-info" },
+        createElement("span", { className: "track-titulo", text: track.titulo }),
+        createElement("span", { className: "track-duracion", text: track.duracion }),
       ),
     ),
   );
 }
 
-function mostrarArtista(artista, cantidadMerch) {
-  document.title = `${artista.nombre} | Whiplash`;
+function renderArtist(artist, merchCount) {
+  document.title = `${artist.nombre} | Whiplash`;
   document
     .querySelector('meta[name="description"]')
-    ?.setAttribute("content", `Perfil del artista ${artista.nombre} en Whiplash - Música independiente y merch`);
+    ?.setAttribute("content", `Perfil del artista ${artist.nombre} en Whiplash - Música independiente y merch`);
 
   // <site-breadcrumbs> ya se armó con los textos provisorios del HTML.
-  const miga = document.querySelector(".miga-genero");
-  if (miga) miga.textContent = artista.genero;
-  const actual = document.querySelector('.migas-de-pan [aria-current="page"]');
-  if (actual) actual.textContent = artista.nombre;
+  const genreCrumb = document.querySelector(".miga-genero");
+  if (genreCrumb) genreCrumb.textContent = artist.genero;
+  const currentCrumb = document.querySelector('.migas-de-pan [aria-current="page"]');
+  if (currentCrumb) currentCrumb.textContent = artist.nombre;
 
-  const portada = perfil.querySelector(".portada-artista img");
-  mostrarImagen(portada, artista.imagen, "artista");
-  portada.alt = `Portada del artista ${artista.nombre}`;
-  portada.hidden = false;
+  const cover = profile.querySelector(".portada-artista img");
+  showImage(cover, artist.imagen, "artista");
+  cover.alt = `Portada del artista ${artist.nombre}`;
+  cover.hidden = false;
 
-  perfil.querySelector("#titulo-artista").textContent = artista.nombre;
-  perfil.querySelector(".genero-artista").textContent = artista.genero;
-  perfil.querySelector(".bio-artista").textContent = artista.bio ?? "";
+  profile.querySelector("#titulo-artista").textContent = artist.nombre;
+  profile.querySelector(".genero-artista").textContent = artist.genero;
+  profile.querySelector(".bio-artista").textContent = artist.bio ?? "";
 
-  const tracks = artista.tracks ?? [];
-  perfil.querySelector(".tracks").hidden = !tracks.length;
-  perfil.querySelector(".lista-tracks").replaceChildren(...tracks.map(crearTrack));
+  const tracks = artist.tracks ?? [];
+  profile.querySelector(".tracks").hidden = !tracks.length;
+  profile.querySelector(".lista-tracks").replaceChildren(...tracks.map(createTrack));
 
   // No todos los artistas tienen merch: en ese caso, un aviso.
-  const merch = cantidadMerch
-    ? crearElemento("product-grid", { atributos: { artist: artista.id, "with-purchase": "" } })
-    : crearElemento("p", { clase: "sin-merch", texto: "Este artista todavía no tiene merch a la venta." });
-  perfil.querySelector(".merch-artista").append(merch);
+  const merch = merchCount
+    ? createElement("product-grid", { attributes: { artist: artist.id, "with-purchase": "" } })
+    : createElement("p", { className: "sin-merch", text: "Este artista todavía no tiene merch a la venta." });
+  profile.querySelector(".merch-artista").append(merch);
 
-  prepararBotonSeguir(botonSeguir, artista);
-  perfil.removeAttribute("aria-busy");
+  setupFollowButton(followButton, artist);
+  profile.removeAttribute("aria-busy");
 }
 
-function mostrarNoEncontrado() {
+function showNotFound() {
   document.title = "Artista no encontrado | Whiplash";
-  const actual = document.querySelector('.migas-de-pan [aria-current="page"]');
-  if (actual) actual.textContent = "Artista no encontrado";
-  perfil.hidden = true;
-  noEncontrado.hidden = false;
+  const currentCrumb = document.querySelector('.migas-de-pan [aria-current="page"]');
+  if (currentCrumb) currentCrumb.textContent = "Artista no encontrado";
+  profile.hidden = true;
+  notFound.hidden = false;
 }
 
-async function compartir() {
-  const datos = { title: document.title, url: location.href };
-  aviso.textContent = "";
+async function share() {
+  const data = { title: document.title, url: location.href };
+  notice.textContent = "";
 
   if (navigator.share) {
     try {
-      await navigator.share(datos);
+      await navigator.share(data);
     } catch (error) {
       // AbortError: el usuario cerró el menú sin compartir.
-      if (error.name !== "AbortError") aviso.textContent = "No pudimos compartir este perfil.";
+      if (error.name !== "AbortError") notice.textContent = "No pudimos compartir este perfil.";
     }
     return;
   }
 
   try {
-    await navigator.clipboard.writeText(datos.url);
-    aviso.textContent = "Copiamos el link del perfil al portapapeles.";
+    await navigator.clipboard.writeText(data.url);
+    notice.textContent = "Copiamos el link del perfil al portapapeles.";
   } catch {
-    aviso.textContent = "No pudimos copiar el link. Copialo desde la barra de direcciones.";
+    notice.textContent = "No pudimos copiar el link. Copialo desde la barra de direcciones.";
   }
 }
 
-botonCompartir.addEventListener("click", compartir);
+shareButton.addEventListener("click", share);
 
 try {
-  const id = leerId();
-  const [artistas, productos] = await Promise.all([obtenerArtistas(), obtenerProductos()]);
-  const artista = artistas.find((actual) => actual.id === id);
-  const cantidadMerch = productos.filter((producto) => producto.artista_id === id).length;
-  if (artista) mostrarArtista(artista, cantidadMerch);
-  else mostrarNoEncontrado();
+  const id = getArtistId();
+  const [artists, products] = await Promise.all([getArtists(), getProducts()]);
+  const artist = artists.find((current) => current.id === id);
+  const merchCount = products.filter((product) => product.artista_id === id).length;
+  if (artist) renderArtist(artist, merchCount);
+  else showNotFound();
 } catch (error) {
   console.error(error);
-  mostrarNoEncontrado();
+  showNotFound();
 }

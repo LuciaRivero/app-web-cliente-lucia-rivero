@@ -6,26 +6,26 @@
    - href: enlace relativo a la página, como cualquier <a>.
    ========================================================= */
 
-import { crearElemento } from "../utilidades/dom.js";
+import { createElement } from "../utilidades/dom.js";
 
-let contador = 0;
+let counter = 0;
 
 class PromoBanner extends HTMLElement {
   connectedCallback() {
     if (this.childElementCount) return;
 
-    const idTitulo = `titulo-promo-${++contador}`;
+    const titleId = `titulo-promo-${++counter}`;
 
     this.append(
-      crearElemento(
+      createElement(
         "section",
-        { clase: "promo", atributos: { "aria-labelledby": idTitulo } },
-        crearElemento("h2", { texto: this.getAttribute("heading"), atributos: { id: idTitulo } }),
-        crearElemento("p", { texto: this.getAttribute("text") }),
-        crearElemento("a", {
-          clase: "boton",
-          texto: this.getAttribute("link-text"),
-          atributos: { href: this.getAttribute("href") },
+        { className: "promo", attributes: { "aria-labelledby": titleId } },
+        createElement("h2", { text: this.getAttribute("heading"), attributes: { id: titleId } }),
+        createElement("p", { text: this.getAttribute("text") }),
+        createElement("a", {
+          className: "boton",
+          text: this.getAttribute("link-text"),
+          attributes: { href: this.getAttribute("href") },
         }),
       ),
     );

@@ -6,98 +6,98 @@
      en la misma página; "Todos" vuelve a mostrarlas todas.
    ========================================================= */
 
-import { obtenerArtistas, obtenerGenerosConArtistas } from "../servicios/datos.js";
-import { urlArtista, urlGenero } from "../componentes/tarjetas.js";
-import { crearCargando, crearElemento } from "../utilidades/dom.js";
+import { getArtists, getGenresWithArtists } from "../servicios/datos.js";
+import { getArtistUrl, getGenreUrl } from "../componentes/tarjetas.js";
+import { createLoader, createElement } from "../utilidades/dom.js";
 
 const info = document.querySelector(".info-resultados");
-const grilla = document.querySelector(".grilla-generos");
+const grid = document.querySelector(".grilla-generos");
 
 // "Mostrando 1 género" / "Mostrando 11 géneros"
-function textoGeneros(cantidad) {
-  return `Mostrando ${cantidad} ${cantidad === 1 ? "género" : "géneros"}`;
+function getGenresText(count) {
+  return `Mostrando ${count} ${count === 1 ? "género" : "géneros"}`;
 }
 
 // "Deathcore: 5 artistas"
-function textoGenero(tarjeta) {
-  const cantidad = Number(tarjeta.dataset.artistas);
-  return `${tarjeta.dataset.genero}: ${cantidad} ${cantidad === 1 ? "artista" : "artistas"}`;
+function getGenreText(card) {
+  const count = Number(card.dataset.artistas);
+  return `${card.dataset.genero}: ${count} ${count === 1 ? "artista" : "artistas"}`;
 }
 
-function crearTarjetaGenero(genero, artistas) {
-  const tarjeta = crearElemento("article", { clase: "tarjeta-genero" }, crearElemento("h3", { texto: genero.nombre }));
-  tarjeta.dataset.genero = genero.nombre;
-  tarjeta.dataset.artistas = artistas.length;
+function createGenreCard(genre, artists) {
+  const card = createElement("article", { className: "tarjeta-genero" }, createElement("h3", { text: genre.nombre }));
+  card.dataset.genero = genre.nombre;
+  card.dataset.artistas = artists.length;
 
-  tarjeta.append(
-    crearElemento(
+  card.append(
+    createElement(
       "ul",
       {},
-      ...artistas.map((artista) =>
-        crearElemento(
+      ...artists.map((artist) =>
+        createElement(
           "li",
           {},
-          crearElemento("a", { texto: artista.nombre, atributos: { href: urlArtista(artista.id) } }),
+          createElement("a", { text: artist.nombre, attributes: { href: getArtistUrl(artist.id) } }),
         ),
       ),
     ),
-    crearElemento("a", {
-      clase: "boton",
-      texto: "Ver artistas",
-      atributos: { href: urlGenero(genero.nombre), "aria-label": `Ver artistas de ${genero.nombre}` },
+    createElement("a", {
+      className: "boton",
+      text: "Ver artistas",
+      attributes: { href: getGenreUrl(genre.nombre), "aria-label": `Ver artistas de ${genre.nombre}` },
     }),
   );
-  return tarjeta;
+  return card;
 }
 
-let tarjetas = [];
-let elegido = null;
+let cards = [];
+let selected = null;
 
 // Con un género elegido queda visible solo su tarjeta.
-function filtrar() {
-  const visible = tarjetas.find((tarjeta) => tarjeta.dataset.genero === elegido);
-  for (const tarjeta of tarjetas) {
-    tarjeta.hidden = Boolean(elegido) && tarjeta !== visible;
+function filterCards() {
+  const visible = cards.find((card) => card.dataset.genero === selected);
+  for (const card of cards) {
+    card.hidden = Boolean(selected) && card !== visible;
   }
-  info.textContent = elegido && visible ? textoGenero(visible) : textoGeneros(tarjetas.length);
+  info.textContent = selected && visible ? getGenreText(visible) : getGenresText(cards.length);
 }
 
 // Si se elige un chip antes de que lleguen los artistas, el
 // filtro se aplica cuando lleguen.
 document.addEventListener("genre-change", ({ detail }) => {
-  elegido = detail.genre;
-  if (tarjetas.length) filtrar();
+  selected = detail.genre;
+  if (cards.length) filterCards();
 });
 
-async function mostrarGeneros() {
-  const cargando = crearCargando("Cargando géneros…");
-  grilla.setAttribute("aria-busy", "true");
-  grilla.append(cargando);
+async function renderGenres() {
+  const loader = createLoader("Cargando géneros…");
+  grid.setAttribute("aria-busy", "true");
+  grid.append(loader);
 
-  let generos;
-  let artistas;
+  let genres;
+  let artists;
   try {
-    [generos, artistas] = await Promise.all([obtenerGenerosConArtistas(), obtenerArtistas()]);
+    [genres, artists] = await Promise.all([getGenresWithArtists(), getArtists()]);
   } catch (error) {
     console.error(error);
     info.textContent = "No pudimos cargar los géneros. Probá de nuevo en un rato.";
     return;
   } finally {
-    cargando.remove();
-    grilla.removeAttribute("aria-busy");
+    loader.remove();
+    grid.removeAttribute("aria-busy");
   }
 
   // --orden escalona la animación de entrada (css/componentes/cargando.css).
-  tarjetas = generos.map((genero, indice) => {
-    const tarjeta = crearTarjetaGenero(
-      genero,
-      artistas.filter((artista) => artista.genero === genero.nombre),
+  cards = genres.map((genre, index) => {
+    const card = createGenreCard(
+      genre,
+      artists.filter((artist) => artist.genero === genre.nombre),
     );
-    tarjeta.style.setProperty("--orden", indice);
-    return tarjeta;
+    card.style.setProperty("--orden", index);
+    return card;
   });
-  grilla.append(...tarjetas);
-  filtrar();
+  grid.append(...cards);
+  filterCards();
 }
 
-mostrarGeneros();
+renderGenres();

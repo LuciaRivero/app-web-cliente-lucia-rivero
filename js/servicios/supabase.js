@@ -7,63 +7,63 @@
    ========================================================= */
 
 export const SUPABASE_URL = "https://lbhqamxjaejauypzrahy.supabase.co";
-export const SUPABASE_CLAVE = "sb_publishable_YkL38FsurTLrT-cB7XF5PA_0c-jA0za";
+export const SUPABASE_KEY = "sb_publishable_YkL38FsurTLrT-cB7XF5PA_0c-jA0za";
 
 // Error con el código de Supabase (error_code o code) para que
 // cada servicio lo traduzca a un mensaje en español.
-export class ErrorSupabase extends Error {
-  constructor(mensaje, { codigo = "", estado = 0 } = {}) {
-    super(mensaje);
-    this.codigo = codigo;
-    this.estado = estado;
+export class SupabaseError extends Error {
+  constructor(message, { code = "", status = 0 } = {}) {
+    super(message);
+    this.code = code;
+    this.status = status;
   }
 }
 
-// `archivo` (un File) se manda tal cual, para subirlo a Storage;
-// `cuerpo` se manda como JSON.
-async function pedir(url, { metodo = "GET", cuerpo, archivo, token, prefer, mantener = false } = {}) {
-  const encabezados = { apikey: SUPABASE_CLAVE };
-  if (token) encabezados.Authorization = `Bearer ${token}`;
-  if (cuerpo !== undefined) encabezados["Content-Type"] = "application/json";
-  if (archivo) encabezados["Content-Type"] = archivo.type;
-  if (prefer) encabezados.Prefer = prefer;
+// `file` (un File) se manda tal cual, para subirlo a Storage;
+// `body` se manda como JSON.
+async function fetchSupabase(url, { method = "GET", body, file, token, prefer, keepalive = false } = {}) {
+  const headers = { apikey: SUPABASE_KEY };
+  if (token) headers.Authorization = `Bearer ${token}`;
+  if (body !== undefined) headers["Content-Type"] = "application/json";
+  if (file) headers["Content-Type"] = file.type;
+  if (prefer) headers.Prefer = prefer;
 
-  let respuesta;
+  let response;
   try {
-    respuesta = await fetch(url, {
-      method: metodo,
-      headers: encabezados,
-      body: archivo ?? (cuerpo === undefined ? undefined : JSON.stringify(cuerpo)),
+    response = await fetch(url, {
+      method,
+      headers,
+      body: file ?? (body === undefined ? undefined : JSON.stringify(body)),
       // keepalive: el pedido termina aunque la página cambie
       // (por ejemplo, cerrar sesión y volver a la home).
-      keepalive: mantener,
+      keepalive,
     });
   } catch {
-    throw new ErrorSupabase("No hay conexión con el servidor.", { codigo: "sin_conexion" });
+    throw new SupabaseError("No hay conexión con el servidor.", { code: "sin_conexion" });
   }
 
-  const texto = await respuesta.text();
-  const datos = texto ? JSON.parse(texto) : null;
-  if (!respuesta.ok) {
-    throw new ErrorSupabase(datos?.msg ?? datos?.message ?? datos?.error_description ?? respuesta.statusText, {
-      codigo: datos?.error_code ?? datos?.code ?? datos?.error ?? "",
-      estado: respuesta.status,
+  const text = await response.text();
+  const data = text ? JSON.parse(text) : null;
+  if (!response.ok) {
+    throw new SupabaseError(data?.msg ?? data?.message ?? data?.error_description ?? response.statusText, {
+      code: data?.error_code ?? data?.code ?? data?.error ?? "",
+      status: response.status,
     });
   }
-  return datos;
+  return data;
 }
 
-// Tablas: pedirTabla("artistas?select=*&order=id")
-export function pedirTabla(consulta, opciones) {
-  return pedir(`${SUPABASE_URL}/rest/v1/${consulta}`, opciones);
+// Tablas: fetchTable("artistas?select=*&order=id")
+export function fetchTable(query, options) {
+  return fetchSupabase(`${SUPABASE_URL}/rest/v1/${query}`, options);
 }
 
-// Auth: pedirAuth("token?grant_type=password", { metodo: "POST", cuerpo })
-export function pedirAuth(ruta, opciones) {
-  return pedir(`${SUPABASE_URL}/auth/v1/${ruta}`, opciones);
+// Auth: fetchAuth("token?grant_type=password", { method: "POST", body })
+export function fetchAuth(path, options) {
+  return fetchSupabase(`${SUPABASE_URL}/auth/v1/${path}`, options);
 }
 
-// Storage: pedirStorage("object/productos/foto.jpg", { metodo: "POST", archivo, token })
-export function pedirStorage(ruta, opciones) {
-  return pedir(`${SUPABASE_URL}/storage/v1/${ruta}`, opciones);
+// Storage: fetchStorage("object/productos/foto.jpg", { method: "POST", file, token })
+export function fetchStorage(path, options) {
+  return fetchSupabase(`${SUPABASE_URL}/storage/v1/${path}`, options);
 }

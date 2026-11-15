@@ -6,25 +6,25 @@
      agregar al carrito en lugar del enlace "Ver producto".
    ========================================================= */
 
-import { obtenerProductosConArtista } from "../servicios/datos.js";
+import { getProductsWithArtist } from "../servicios/datos.js";
 import { DataGrid } from "./data-grid.js";
-import { crearProductoMerch } from "./tarjetas.js";
+import { createMerchProduct } from "./tarjetas.js";
 
 class ProductGrid extends DataGrid {
-  get claseCss() {
+  get cssClass() {
     return "grilla-merch";
   }
 
-  async cargar() {
-    const productos = await obtenerProductosConArtista();
-    const artista = this.getAttribute("artist");
-    return artista
-      ? productos.filter((producto) => producto.artista_id === Number(artista))
-      : productos;
+  async load() {
+    const products = await getProductsWithArtist();
+    const artist = this.getAttribute("artist");
+    return artist
+      ? products.filter((product) => product.artista_id === Number(artist))
+      : products;
   }
 
-  crearTarjeta(producto) {
-    return crearProductoMerch(producto, { conCompra: this.hasAttribute("with-purchase") });
+  createCard(product) {
+    return createMerchProduct(product, { withPurchase: this.hasAttribute("with-purchase") });
   }
 }
 

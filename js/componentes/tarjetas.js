@@ -8,86 +8,86 @@
    ========================================================= */
 
 import {
-  alternarSeguir,
-  estaSiguiendo,
-  guardarSeguirPendiente,
+  toggleFollow,
+  isFollowing,
+  savePendingFollow,
 } from "../servicios/artistas-seguidos.js";
-import { agregarAlCarrito } from "../servicios/carrito.js";
-import { rutaDesdeRaiz } from "../servicios/datos.js";
-import { usuarioActual } from "../servicios/sesion.js";
-import { crearElemento } from "../utilidades/dom.js";
+import { addToCart } from "../servicios/carrito.js";
+import { getRootPath } from "../servicios/datos.js";
+import { getCurrentUser } from "../servicios/sesion.js";
+import { createElement } from "../utilidades/dom.js";
 
-const URL_PRODUCTO = rutaDesdeRaiz("pages/producto.html");
-const URL_CUENTA = rutaDesdeRaiz("pages/cuenta.html");
-const URL_EXPLORAR = rutaDesdeRaiz("pages/explorar.html");
+const PRODUCT_URL = getRootPath("pages/producto.html");
+const ACCOUNT_URL = getRootPath("pages/cuenta.html");
+const EXPLORE_URL = getRootPath("pages/explorar.html");
 // Imagen que se ve cuando un producto o artista no tiene una:
 // la del tipo de producto, o la de artista.
-const IMAGEN_REEMPLAZO = {
-  Disco: rutaDesdeRaiz("assets/img/productos/disco.svg"),
-  Entrada: rutaDesdeRaiz("assets/img/productos/entrada.svg"),
-  Remera: rutaDesdeRaiz("assets/img/productos/remera.svg"),
-  artista: rutaDesdeRaiz("assets/img/artistas/sin-imagen.svg"),
+const FALLBACK_IMAGES = {
+  Disco: getRootPath("assets/img/productos/disco.svg"),
+  Entrada: getRootPath("assets/img/productos/entrada.svg"),
+  Remera: getRootPath("assets/img/productos/remera.svg"),
+  artista: getRootPath("assets/img/artistas/sin-imagen.svg"),
 };
 // Opciones del formulario de compra según el tipo de producto.
 // Las entradas no tienen opciones: se elige la cantidad.
-const OPCIONES_COMPRA = {
-  Disco: { etiqueta: "Formato", nombre: "formato", valores: ["Vinilo", "CD", "Digital"] },
-  Remera: { etiqueta: "Talle", nombre: "talle", valores: ["S", "M", "L", "XL"] },
+const PURCHASE_OPTIONS = {
+  Disco: { label: "Formato", name: "formato", values: ["Vinilo", "CD", "Digital"] },
+  Remera: { label: "Talle", name: "talle", values: ["S", "M", "L", "XL"] },
 };
 
 // Perfil de un artista: pages/producto.html?id=3. El merch no tiene
 // página propia, así que sus enlaces llevan al perfil de su artista.
-export function urlArtista(id) {
-  return `${URL_PRODUCTO}?id=${id}`;
+export function getArtistUrl(id) {
+  return `${PRODUCT_URL}?id=${id}`;
 }
 
 // Explorar con un género ya elegido en los filtros:
 // pages/explorar.html?genero=Deathcore.
-export function urlGenero(genero) {
-  return `${URL_EXPLORAR}?genero=${encodeURIComponent(genero)}`;
+export function getGenreUrl(genre) {
+  return `${EXPLORE_URL}?genero=${encodeURIComponent(genre)}`;
 }
 
-export function formatearPrecio(precio) {
-  return `$${precio.toLocaleString("es-AR")}`;
+export function formatPrice(price) {
+  return `$${price.toLocaleString("es-AR")}`;
 }
 
-// `tipo`: "artista" o el tipo del producto ("Disco", "Entrada",
+// `type`: "artista" o el tipo del producto ("Disco", "Entrada",
 // "Remera"). Un tipo desconocido usa la imagen de disco.
-export function imagenReemplazo(tipo) {
-  return IMAGEN_REEMPLAZO[tipo] ?? IMAGEN_REEMPLAZO.Disco;
+export function getFallbackImage(type) {
+  return FALLBACK_IMAGES[type] ?? FALLBACK_IMAGES.Disco;
 }
 
-// Pone en `img` la imagen de un producto o artista (ver `tipo` en
-// imagenReemplazo()). Sin imagen guardada, o si la guardada no carga
+// Pone en `img` la imagen de un producto o artista (ver `type` en
+// getFallbackImage()). Sin imagen guardada, o si la guardada no carga
 // (URL rota, archivo borrado), muestra la de reemplazo de su tipo.
-export function mostrarImagen(img, imagen, tipo) {
-  const reemplazo = imagenReemplazo(tipo);
-  img.src = imagen ? rutaDesdeRaiz(imagen) : reemplazo;
+export function showImage(img, image, type) {
+  const fallback = getFallbackImage(type);
+  img.src = image ? getRootPath(image) : fallback;
   img.addEventListener(
     "error",
     () => {
-      img.src = reemplazo;
+      img.src = fallback;
     },
     { once: true },
   );
   return img;
 }
 
-export function crearImagen(imagen, { clase, alt = "", tipo } = {}) {
-  return mostrarImagen(crearElemento("img", { clase, atributos: { alt } }), imagen, tipo);
+export function createImage(image, { className, alt = "", type } = {}) {
+  return showImage(createElement("img", { className, attributes: { alt } }), image, type);
 }
 
-function crearFigura(imagen, alt, titulo, tipo) {
-  return crearElemento(
+function createFigure(image, alt, title, type) {
+  return createElement(
     "figure",
     {},
-    crearImagen(imagen, { alt, tipo }),
-    crearElemento("figcaption", { texto: titulo }),
+    createImage(image, { alt, type }),
+    createElement("figcaption", { text: title }),
   );
 }
 
-function crearFiguraConEnlace(href, imagen, alt, titulo, tipo) {
-  return crearElemento("a", { atributos: { href } }, crearFigura(imagen, alt, titulo, tipo));
+function createLinkedFigure(href, image, alt, title, type) {
+  return createElement("a", { attributes: { href } }, createFigure(image, alt, title, type));
 }
 
 // Botón de alternar: aria-pressed dice si ya se sigue al artista
@@ -95,219 +95,219 @@ function crearFiguraConEnlace(href, imagen, alt, titulo, tipo) {
 // artista pendiente y lleva a Mi cuenta: al ingresar se sigue.
 // El estado llega de Supabase: hasta entonces se muestra "Seguir".
 // Lo usan las tarjetas y el perfil.
-export function prepararBotonSeguir(boton, artista) {
-  const mostrarEstado = (siguiendo) => {
-    boton.setAttribute("aria-pressed", String(siguiendo));
-    boton.textContent = siguiendo ? "Siguiendo" : "Seguir";
+export function setupFollowButton(button, artist) {
+  const showState = (following) => {
+    button.setAttribute("aria-pressed", String(following));
+    button.textContent = following ? "Siguiendo" : "Seguir";
   };
-  boton.setAttribute("aria-label", `Seguir a ${artista.nombre}`);
-  mostrarEstado(false);
-  if (usuarioActual()) {
-    estaSiguiendo(artista.id)
-      .then(mostrarEstado)
+  button.setAttribute("aria-label", `Seguir a ${artist.nombre}`);
+  showState(false);
+  if (getCurrentUser()) {
+    isFollowing(artist.id)
+      .then(showState)
       .catch((error) => console.error(error));
   }
-  boton.addEventListener("click", async () => {
-    if (!usuarioActual()) {
-      guardarSeguirPendiente(artista.id);
-      location.href = URL_CUENTA;
+  button.addEventListener("click", async () => {
+    if (!getCurrentUser()) {
+      savePendingFollow(artist.id);
+      location.href = ACCOUNT_URL;
       return;
     }
     // Mientras se guarda, el botón no acepta otro clic.
-    boton.disabled = true;
+    button.disabled = true;
     try {
-      mostrarEstado(await alternarSeguir(artista.id));
+      showState(await toggleFollow(artist.id));
     } catch (error) {
       console.error("No se pudo actualizar el artista seguido", error);
     } finally {
-      boton.disabled = false;
+      button.disabled = false;
     }
   });
-  return boton;
+  return button;
 }
 
-export function crearTarjetaArtista(artista) {
-  return crearElemento(
+export function createArtistCard(artist) {
+  return createElement(
     "article",
-    { clase: "tarjeta-artista" },
-    crearFiguraConEnlace(
-      urlArtista(artista.id),
-      artista.imagen,
-      `Imagen de ${artista.nombre}`,
-      artista.nombre,
+    { className: "tarjeta-artista" },
+    createLinkedFigure(
+      getArtistUrl(artist.id),
+      artist.imagen,
+      `Imagen de ${artist.nombre}`,
+      artist.nombre,
       "artista",
     ),
-    crearElemento("p", { clase: "genero-artista", texto: artista.genero }),
-    prepararBotonSeguir(
-      crearElemento("button", { clase: "boton-seguir-artista", atributos: { type: "button" } }),
-      artista,
+    createElement("p", { className: "genero-artista", text: artist.genero }),
+    setupFollowButton(
+      createElement("button", { className: "boton-seguir-artista", attributes: { type: "button" } }),
+      artist,
     ),
   );
 }
 
 // Texto visible corto ("Formato") + el producto solo para lectores
 // de pantalla ("Formato de Andén (LP)"), para distinguir cada tarjeta.
-function crearTitulo(etiqueta, texto, producto, atributos = {}) {
-  return crearElemento(
-    etiqueta,
-    { clase: "titulo-opcion", atributos },
-    texto,
-    crearElemento("span", { clase: "sr-only", texto: ` de ${producto.titulo}` }),
+function createOptionTitle(tag, text, product, attributes = {}) {
+  return createElement(
+    tag,
+    { className: "titulo-opcion", attributes },
+    text,
+    createElement("span", { className: "sr-only", text: ` de ${product.titulo}` }),
   );
 }
 
 // Opciones como pastillas: radios nativos (teclado y lector de
 // pantalla funcionan solos) con el círculo oculto por CSS.
-function crearPastillas(producto, opciones) {
-  return crearElemento(
+function createPills(product, options) {
+  return createElement(
     "fieldset",
-    { clase: "opciones-compra" },
-    crearTitulo("legend", opciones.etiqueta, producto),
-    crearElemento(
+    { className: "opciones-compra" },
+    createOptionTitle("legend", options.label, product),
+    createElement(
       "div",
-      { clase: "lista-opciones" },
-      ...opciones.valores.map((valor, indice) => {
-        const radio = crearElemento("input", {
-          atributos: { type: "radio", name: opciones.nombre, value: valor },
+      { className: "lista-opciones" },
+      ...options.values.map((value, index) => {
+        const radio = createElement("input", {
+          attributes: { type: "radio", name: options.name, value },
         });
-        radio.checked = indice === 0;
-        return crearElemento("label", { clase: "opcion-compra" }, radio, crearElemento("span", { texto: valor }));
+        radio.checked = index === 0;
+        return createElement("label", { className: "opcion-compra" }, radio, createElement("span", { text: value }));
       }),
     ),
   );
 }
 
 // Cantidad de entradas con botones − y + (mismo estilo que el carrito).
-function crearCantidad(producto) {
-  const idCampo = `cantidad-${producto.id}`;
-  const input = crearElemento("input", {
-    atributos: { type: "number", id: idCampo, name: "cantidad", value: "1", min: "1", max: "10" },
+function createQuantityPicker(product) {
+  const fieldId = `cantidad-${product.id}`;
+  const input = createElement("input", {
+    attributes: { type: "number", id: fieldId, name: "cantidad", value: "1", min: "1", max: "10" },
   });
-  const restar = crearElemento("button", {
-    texto: "−",
-    atributos: { type: "button", "aria-label": "Restar una entrada" },
+  const decrease = createElement("button", {
+    text: "−",
+    attributes: { type: "button", "aria-label": "Restar una entrada" },
   });
-  const sumar = crearElemento("button", {
-    texto: "+",
-    atributos: { type: "button", "aria-label": "Sumar una entrada" },
+  const increase = createElement("button", {
+    text: "+",
+    attributes: { type: "button", "aria-label": "Sumar una entrada" },
   });
 
   const min = Number(input.min);
   const max = Number(input.max);
-  function actualizar() {
+  function update() {
     // Si se escribe a mano un número fuera de rango, se corrige.
-    const valor = Math.min(max, Math.max(min, Math.round(input.valueAsNumber) || min));
-    if (input.valueAsNumber !== valor) input.value = valor;
-    restar.disabled = valor <= min;
-    sumar.disabled = valor >= max;
+    const value = Math.min(max, Math.max(min, Math.round(input.valueAsNumber) || min));
+    if (input.valueAsNumber !== value) input.value = value;
+    decrease.disabled = value <= min;
+    increase.disabled = value >= max;
   }
-  restar.addEventListener("click", () => {
+  decrease.addEventListener("click", () => {
     input.stepDown();
-    actualizar();
+    update();
   });
-  sumar.addEventListener("click", () => {
+  increase.addEventListener("click", () => {
     input.stepUp();
-    actualizar();
+    update();
   });
-  input.addEventListener("change", actualizar);
-  actualizar();
+  input.addEventListener("change", update);
+  update();
 
-  return crearElemento(
+  return createElement(
     "div",
-    { clase: "fila-cantidad" },
-    crearTitulo("label", "Cantidad", producto, { for: idCampo }),
-    crearElemento("div", { clase: "selector-cantidad" }, restar, input, sumar),
+    { className: "fila-cantidad" },
+    createOptionTitle("label", "Cantidad", product, { for: fieldId }),
+    createElement("div", { className: "selector-cantidad" }, decrease, input, increase),
   );
 }
 
 // Guarda el producto con la opción elegida (formato, talle) o la
 // cantidad de entradas; el botón confirma visualmente y avisa al
 // lector de pantalla, sin recargar la página.
-function confirmarAgregado(formulario, producto, boton, aviso) {
-  formulario.addEventListener("submit", (evento) => {
-    evento.preventDefault();
-    if (boton.classList.contains("agregado")) return;
+function setupAddToCart(form, product, button, notice) {
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (button.classList.contains("agregado")) return;
 
-    const campos = new FormData(formulario);
-    const opciones = OPCIONES_COMPRA[producto.tipo];
-    const opcion = opciones ? campos.get(opciones.nombre) : null;
-    const cantidad = Number(campos.get("cantidad")) || 1;
-    agregarAlCarrito(producto.id, opcion, cantidad);
+    const fields = new FormData(form);
+    const options = PURCHASE_OPTIONS[product.tipo];
+    const option = options ? fields.get(options.name) : null;
+    const quantity = Number(fields.get("cantidad")) || 1;
+    addToCart(product.id, option, quantity);
 
-    boton.classList.add("agregado");
-    boton.textContent = "Agregado ✓";
-    aviso.textContent = "Producto agregado al carrito";
+    button.classList.add("agregado");
+    button.textContent = "Agregado ✓";
+    notice.textContent = "Producto agregado al carrito";
     setTimeout(() => {
-      boton.classList.remove("agregado");
-      boton.textContent = "Agregar al carrito";
-      aviso.textContent = "";
+      button.classList.remove("agregado");
+      button.textContent = "Agregar al carrito";
+      notice.textContent = "";
     }, 1800);
   });
 }
 
 // Formulario de la página del artista: pastillas con las opciones
 // del tipo (formato, talle) o la cantidad para las entradas.
-function crearFormularioCompra(producto) {
-  const opciones = OPCIONES_COMPRA[producto.tipo];
-  const boton = crearElemento("button", {
-    clase: "boton-agregar",
-    texto: "Agregar al carrito",
-    atributos: { type: "submit" },
+function createPurchaseForm(product) {
+  const options = PURCHASE_OPTIONS[product.tipo];
+  const button = createElement("button", {
+    className: "boton-agregar",
+    text: "Agregar al carrito",
+    attributes: { type: "submit" },
   });
-  const aviso = crearElemento("p", { clase: "sr-only", atributos: { "aria-live": "polite" } });
+  const notice = createElement("p", { className: "sr-only", attributes: { "aria-live": "polite" } });
 
-  const formulario = crearElemento(
+  const form = createElement(
     "form",
-    { clase: "compra-merch", atributos: { action: "#", method: "post" } },
-    opciones ? crearPastillas(producto, opciones) : crearCantidad(producto),
-    boton,
-    aviso,
+    { className: "compra-merch", attributes: { action: "#", method: "post" } },
+    options ? createPills(product, options) : createQuantityPicker(product),
+    button,
+    notice,
   );
-  confirmarAgregado(formulario, producto, boton, aviso);
-  return formulario;
+  setupAddToCart(form, product, button, notice);
+  return form;
 }
 
-// conCompra: en lugar del enlace "Ver producto" muestra el formulario
+// withPurchase: en lugar del enlace "Ver producto" muestra el formulario
 // para agregar al carrito (se usa en la página del artista).
-export function crearProductoMerch(producto, { conCompra = false } = {}) {
-  const alt = producto.artista
-    ? `${producto.tipo} ${producto.titulo} de ${producto.artista.nombre}`
-    : `${producto.tipo} ${producto.titulo}`;
+export function createMerchProduct(product, { withPurchase = false } = {}) {
+  const alt = product.artist
+    ? `${product.tipo} ${product.titulo} de ${product.artist.nombre}`
+    : `${product.tipo} ${product.titulo}`;
 
-  const portada = conCompra
-    ? crearFigura(producto.imagen, alt, producto.titulo, producto.tipo)
-    : crearFiguraConEnlace(urlArtista(producto.artista_id), producto.imagen, alt, producto.titulo, producto.tipo);
+  const cover = withPurchase
+    ? createFigure(product.imagen, alt, product.titulo, product.tipo)
+    : createLinkedFigure(getArtistUrl(product.artista_id), product.imagen, alt, product.titulo, product.tipo);
 
-  const accion = conCompra
-    ? crearFormularioCompra(producto)
-    : crearElemento("a", {
-        clase: "boton boton-compra",
-        texto: "Ver producto",
-        atributos: { href: urlArtista(producto.artista_id) },
+  const action = withPurchase
+    ? createPurchaseForm(product)
+    : createElement("a", {
+        className: "boton boton-compra",
+        text: "Ver producto",
+        attributes: { href: getArtistUrl(product.artista_id) },
       });
 
-  return crearElemento(
+  return createElement(
     "article",
-    { clase: "producto-merch" },
-    portada,
-    crearElemento("p", { clase: "tipo-merch", texto: producto.tipo }),
-    crearElemento("p", { clase: "precio", texto: formatearPrecio(producto.precio) }),
-    accion,
+    { className: "producto-merch" },
+    cover,
+    createElement("p", { className: "tipo-merch", text: product.tipo }),
+    createElement("p", { className: "precio", text: formatPrice(product.precio) }),
+    action,
   );
 }
 
 // Fila compacta para el desplegable del buscador.
-// `tipo`: "artista" o el tipo del producto, para la imagen de reemplazo.
-export function crearResultadoBuscador({ href, imagen, tipo, titulo, detalle }) {
-  return crearElemento(
+// `type`: "artista" o el tipo del producto, para la imagen de reemplazo.
+export function createSearchResult({ href, image, type, title, detail }) {
+  return createElement(
     "a",
-    { clase: "resultado-buscador", atributos: { href } },
-    crearImagen(imagen, { tipo }),
-    crearElemento(
+    { className: "resultado-buscador", attributes: { href } },
+    createImage(image, { type }),
+    createElement(
       "span",
       {},
-      crearElemento("strong", { texto: titulo }),
-      crearElemento("small", { texto: detalle }),
+      createElement("strong", { text: title }),
+      createElement("small", { text: detail }),
     ),
   );
 }

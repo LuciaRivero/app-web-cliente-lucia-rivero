@@ -11,242 +11,242 @@
    ========================================================= */
 
 import {
-  completarOpciones,
-  mostrarSinPerfil,
-  prepararErrores,
-  prepararImagen,
-  prepararModalEliminar,
-  protegerPanel,
-  titularPagina,
+  fillOptions,
+  showNoProfile,
+  setupFieldErrors,
+  setupImageField,
+  setupDeleteModal,
+  guardPanel,
+  setPageTitle,
 } from "../componentes/panel-admin.js";
-import { crearImagen, formatearPrecio, imagenReemplazo } from "../componentes/tarjetas.js";
-import { obtenerMiArtista } from "../servicios/artistas-admin.js";
-import { validarImagen } from "../servicios/catalogo-admin.js";
-import { obtenerArtistas } from "../servicios/datos.js";
+import { createImage, formatPrice, getFallbackImage } from "../componentes/tarjetas.js";
+import { getMyArtist } from "../servicios/artistas-admin.js";
+import { validateImage } from "../servicios/catalogo-admin.js";
+import { getArtists } from "../servicios/datos.js";
 import {
-  TIPOS_PRODUCTO,
-  eliminarProducto,
-  guardarProducto,
-  obtenerProductosAdmin,
+  PRODUCT_TYPES,
+  deleteProduct,
+  saveProduct,
+  getAdminProducts,
 } from "../servicios/productos-admin.js";
-import { crearCargando, crearElemento, enviando, mostrarMensaje, mostrarToast } from "../utilidades/dom.js";
+import { createLoader, createElement, withSubmitting, showMessage, showToast } from "../utilidades/dom.js";
 
-const formulario = document.querySelector(".formulario-admin form");
-const tituloFormulario = document.querySelector("#titulo-formulario");
-const mensaje = document.querySelector(".formulario-admin .mensaje-formulario");
-const botonGuardar = formulario.querySelector('[type="submit"]');
-const botonCancelar = formulario.querySelector(".boton-cancelar");
-const lista = document.querySelector(".lista-admin");
-const campos = formulario.elements;
+const form = document.querySelector(".formulario-admin form");
+const formTitle = document.querySelector("#titulo-formulario");
+const message = document.querySelector(".formulario-admin .mensaje-formulario");
+const saveButton = form.querySelector('[type="submit"]');
+const cancelButton = form.querySelector(".boton-cancelar");
+const list = document.querySelector(".lista-admin");
+const fields = form.elements;
 
-let artistasPorId = new Map();
-let productos = [];
+let artistsById = new Map();
+let products = [];
 // Producto que se está editando; null = alta.
-let editando = null;
+let editing = null;
 
 // Cada regla devuelve el error del campo o un valor falso.
-const errores = prepararErrores(formulario, {
-  titulo: (campo) => !campo.value.trim() && "Escribí el título del producto.",
-  tipo: (campo) => !campo.value && "Elegí el tipo de producto.",
-  precio: (campo) => {
-    const precio = Number(campo.value);
+const errors = setupFieldErrors(form, {
+  titulo: (field) => !field.value.trim() && "Escribí el título del producto.",
+  tipo: (field) => !field.value && "Elegí el tipo de producto.",
+  precio: (field) => {
+    const price = Number(field.value);
     return (
-      (campo.value === "" || !Number.isInteger(precio) || precio < 0) &&
+      (field.value === "" || !Number.isInteger(price) || price < 0) &&
       "Ingresá un número entero mayor o igual a 0."
     );
   },
-  artista_id: (campo) => !campo.value && "Elegí el artista.",
-  imagen: (campo) => campo.files[0] && validarImagen(campo.files[0]),
+  artista_id: (field) => !field.value && "Elegí el artista.",
+  imagen: (field) => field.files[0] && validateImage(field.files[0]),
 });
 // Sin imagen, la vista previa muestra la de reemplazo del tipo elegido.
-const imagen = prepararImagen(formulario, errores, () => imagenReemplazo(campos.tipo.value));
-campos.tipo.addEventListener("change", () => imagen.actualizarReemplazo());
-const pedirConfirmacion = prepararModalEliminar(document.querySelector(".modal-eliminar"));
+const imageField = setupImageField(form, errors, () => getFallbackImage(fields.tipo.value));
+fields.tipo.addEventListener("change", () => imageField.updateFallback());
+const confirmDelete = setupDeleteModal(document.querySelector(".modal-eliminar"));
 
 // ---------- Formulario ----------
 
-function limpiarFormulario() {
-  editando = null;
-  formulario.reset();
-  errores.limpiar();
-  imagen.mostrar(null);
-  tituloFormulario.textContent = "Nuevo producto";
-  botonGuardar.textContent = "Agregar producto";
-  botonCancelar.hidden = true;
+function resetForm() {
+  editing = null;
+  form.reset();
+  errors.clear();
+  imageField.show(null);
+  formTitle.textContent = "Nuevo producto";
+  saveButton.textContent = "Agregar producto";
+  cancelButton.hidden = true;
 }
 
-function editar(producto) {
-  editando = producto;
-  campos.titulo.value = producto.titulo;
-  campos.tipo.value = producto.tipo;
-  campos.precio.value = producto.precio;
-  campos.artista_id.value = producto.artista_id;
-  errores.limpiar();
-  imagen.mostrar(producto.imagen);
-  tituloFormulario.textContent = `Editar “${producto.titulo}”`;
-  botonGuardar.textContent = "Guardar cambios";
-  botonCancelar.hidden = false;
-  mostrarMensaje(mensaje, "");
+function editProduct(product) {
+  editing = product;
+  fields.titulo.value = product.titulo;
+  fields.tipo.value = product.tipo;
+  fields.precio.value = product.precio;
+  fields.artista_id.value = product.artista_id;
+  errors.clear();
+  imageField.show(product.imagen);
+  formTitle.textContent = `Editar “${product.titulo}”`;
+  saveButton.textContent = "Guardar cambios";
+  cancelButton.hidden = false;
+  showMessage(message, "");
   // El formulario queda arriba de la lista: se lleva el foco ahí.
-  tituloFormulario.focus();
+  formTitle.focus();
 }
 
-botonCancelar.addEventListener("click", () => {
-  limpiarFormulario();
-  mostrarMensaje(mensaje, "");
-  campos.titulo.focus();
+cancelButton.addEventListener("click", () => {
+  resetForm();
+  showMessage(message, "");
+  fields.titulo.focus();
 });
 
-formulario.addEventListener("submit", async (evento) => {
-  evento.preventDefault();
-  mostrarMensaje(mensaje, "");
-  if (!errores.validar()) return;
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  showMessage(message, "");
+  if (!errors.validate()) return;
 
-  const eraEdicion = Boolean(editando);
-  const { producto, error } = await enviando(formulario, "Guardando…", () =>
-    guardarProducto(
+  const wasEditing = Boolean(editing);
+  const { product, error } = await withSubmitting(form, "Guardando…", () =>
+    saveProduct(
       {
-        id: editando?.id,
-        titulo: campos.titulo.value,
-        tipo: campos.tipo.value,
-        precio: Number(campos.precio.value),
-        artista_id: Number(campos.artista_id.value),
+        id: editing?.id,
+        titulo: fields.titulo.value,
+        tipo: fields.tipo.value,
+        precio: Number(fields.precio.value),
+        artista_id: Number(fields.artista_id.value),
       },
-      imagen.datos(),
+      imageField.getData(),
     ),
   );
   if (error) {
-    mostrarMensaje(mensaje, error);
+    showMessage(message, error);
     return;
   }
 
-  productos = eraEdicion
-    ? productos.map((actual) => (actual.id === producto.id ? producto : actual))
-    : [...productos, producto];
-  dibujarLista();
-  limpiarFormulario();
-  mostrarToast(
-    eraEdicion ? `Guardamos los cambios de “${producto.titulo}”.` : `Agregamos “${producto.titulo}” a la tienda.`,
+  products = wasEditing
+    ? products.map((current) => (current.id === product.id ? product : current))
+    : [...products, product];
+  renderList();
+  resetForm();
+  showToast(
+    wasEditing ? `Guardamos los cambios de “${product.titulo}”.` : `Agregamos “${product.titulo}” a la tienda.`,
   );
 });
 
 // ---------- Lista ----------
 
-async function eliminar(producto) {
-  const eliminado = await pedirConfirmacion({
-    titulo: "¿Eliminar producto?",
-    texto: [
+async function removeProduct(product) {
+  const deleted = await confirmDelete({
+    title: "¿Eliminar producto?",
+    text: [
       "Vas a eliminar ",
-      crearElemento("strong", { texto: `“${producto.titulo}”` }),
+      createElement("strong", { text: `“${product.titulo}”` }),
       ". También se quita de los carritos donde esté. Esta acción no se puede deshacer.",
     ],
-    eliminar: () => eliminarProducto(producto),
+    onDelete: () => deleteProduct(product),
   });
-  if (!eliminado) return;
+  if (!deleted) return;
 
-  if (editando?.id === producto.id) limpiarFormulario();
-  productos = productos.filter((actual) => actual.id !== producto.id);
-  dibujarLista();
-  mostrarToast(`Eliminamos “${producto.titulo}”.`);
+  if (editing?.id === product.id) resetForm();
+  products = products.filter((current) => current.id !== product.id);
+  renderList();
+  showToast(`Eliminamos “${product.titulo}”.`);
   // El botón que abrió el modal ya no existe: el foco pasa al título de la lista.
   document.querySelector("#titulo-lista").focus();
 }
 
-function crearItem(producto) {
-  const artista = artistasPorId.get(producto.artista_id);
-  const botonEditar = crearElemento("button", {
-    clase: "boton-admin",
-    texto: "Editar",
-    atributos: { type: "button", "aria-label": `Editar ${producto.titulo}` },
+function createItem(product) {
+  const artist = artistsById.get(product.artista_id);
+  const editButton = createElement("button", {
+    className: "boton-admin",
+    text: "Editar",
+    attributes: { type: "button", "aria-label": `Editar ${product.titulo}` },
   });
-  const botonEliminar = crearElemento("button", {
-    clase: "boton-admin boton-admin-eliminar",
-    texto: "Eliminar",
-    atributos: { type: "button", "aria-label": `Eliminar ${producto.titulo}` },
+  const deleteButton = createElement("button", {
+    className: "boton-admin boton-admin-eliminar",
+    text: "Eliminar",
+    attributes: { type: "button", "aria-label": `Eliminar ${product.titulo}` },
   });
-  botonEditar.addEventListener("click", () => editar(producto));
-  botonEliminar.addEventListener("click", () => eliminar(producto));
+  editButton.addEventListener("click", () => editProduct(product));
+  deleteButton.addEventListener("click", () => removeProduct(product));
 
-  return crearElemento(
+  return createElement(
     "li",
-    { clase: "item-admin" },
-    crearImagen(producto.imagen, { clase: "item-admin-imagen", tipo: producto.tipo }),
-    crearElemento(
+    { className: "item-admin" },
+    createImage(product.imagen, { className: "item-admin-imagen", type: product.tipo }),
+    createElement(
       "div",
-      { clase: "item-admin-datos" },
-      crearElemento("p", { clase: "item-admin-titulo", texto: producto.titulo }),
-      crearElemento("p", {
-        clase: "item-admin-detalle",
-        texto: [producto.tipo, artista?.nombre, formatearPrecio(producto.precio)].filter(Boolean).join(" · "),
+      { className: "item-admin-datos" },
+      createElement("p", { className: "item-admin-titulo", text: product.titulo }),
+      createElement("p", {
+        className: "item-admin-detalle",
+        text: [product.tipo, artist?.nombre, formatPrice(product.precio)].filter(Boolean).join(" · "),
       }),
     ),
-    crearElemento("div", { clase: "item-admin-acciones" }, botonEditar, botonEliminar),
+    createElement("div", { className: "item-admin-acciones" }, editButton, deleteButton),
   );
 }
 
-function dibujarLista() {
-  if (!productos.length) {
-    lista.replaceChildren(
-      crearElemento("li", { clase: "admin-vacio", texto: "Todavía no hay productos. Cargá el primero." }),
+function renderList() {
+  if (!products.length) {
+    list.replaceChildren(
+      createElement("li", { className: "admin-vacio", text: "Todavía no hay productos. Cargá el primero." }),
     );
     return;
   }
-  lista.replaceChildren(...productos.map(crearItem));
+  list.replaceChildren(...products.map(createItem));
 }
 
 // ---------- Inicio ----------
 
 // Cuenta de artista: el único artista posible es el suyo. Va como
-// opción seleccionada por defecto, así formulario.reset() la mantiene.
-function fijarArtista(artista) {
-  campos.artista_id.replaceChildren(
-    crearElemento("option", { texto: artista.nombre, atributos: { value: artista.id, selected: "" } }),
+// opción seleccionada por defecto, así form.reset() la mantiene.
+function lockArtist(artist) {
+  fields.artista_id.replaceChildren(
+    createElement("option", { text: artist.nombre, attributes: { value: artist.id, selected: "" } }),
   );
-  campos.artista_id.disabled = true;
+  fields.artista_id.disabled = true;
 }
 
-async function iniciar(usuario) {
-  const soloPropio = !usuario.esAdmin;
-  if (soloPropio) {
-    titularPagina({
-      titulo: "Mi merch",
-      subtitulo: "Cargá tus productos, editá los que ya están en la tienda o eliminalos.",
+async function init(user) {
+  const ownOnly = !user.esAdmin;
+  if (ownOnly) {
+    setPageTitle({
+      title: "Mi merch",
+      subtitle: "Cargá tus productos, editá los que ya están en la tienda o eliminalos.",
     });
   }
 
-  completarOpciones(
-    campos.tipo,
-    TIPOS_PRODUCTO.map((tipo) => ({ valor: tipo, texto: tipo })),
+  fillOptions(
+    fields.tipo,
+    PRODUCT_TYPES.map((type) => ({ value: type, text: type })),
   );
-  lista.replaceChildren(crearElemento("li", {}, crearCargando("Cargando productos…")));
+  list.replaceChildren(createElement("li", {}, createLoader("Cargando productos…")));
   try {
-    const [artistas, todos, miArtista] = await Promise.all([
-      obtenerArtistas(),
-      obtenerProductosAdmin(),
-      soloPropio ? obtenerMiArtista(usuario) : null,
+    const [artists, allProducts, myArtist] = await Promise.all([
+      getArtists(),
+      getAdminProducts(),
+      ownOnly ? getMyArtist(user) : null,
     ]);
-    if (soloPropio && !miArtista) {
-      mostrarSinPerfil("Tu cuenta no tiene un perfil de artista, así que no podés cargar merch.");
+    if (ownOnly && !myArtist) {
+      showNoProfile("Tu cuenta no tiene un perfil de artista, así que no podés cargar merch.");
       return;
     }
-    artistasPorId = new Map(artistas.map((artista) => [artista.id, artista]));
-    if (soloPropio) {
-      fijarArtista(miArtista);
+    artistsById = new Map(artists.map((artist) => [artist.id, artist]));
+    if (ownOnly) {
+      lockArtist(myArtist);
     } else {
-      completarOpciones(
-        campos.artista_id,
-        artistas.map((artista) => ({ valor: artista.id, texto: artista.nombre })),
+      fillOptions(
+        fields.artista_id,
+        artists.map((artist) => ({ value: artist.id, text: artist.nombre })),
       );
     }
-    productos = soloPropio ? todos.filter((producto) => producto.artista_id === miArtista.id) : todos;
-    dibujarLista();
+    products = ownOnly ? allProducts.filter((product) => product.artista_id === myArtist.id) : allProducts;
+    renderList();
   } catch (error) {
     console.error(error);
-    lista.replaceChildren(
-      crearElemento("li", { clase: "admin-vacio", texto: "No pudimos cargar los productos. Probá de nuevo en un rato." }),
+    list.replaceChildren(
+      createElement("li", { className: "admin-vacio", text: "No pudimos cargar los productos. Probá de nuevo en un rato." }),
     );
   }
 }
 
-const usuario = protegerPanel();
-if (usuario) iniciar(usuario);
+const user = guardPanel();
+if (user) init(user);

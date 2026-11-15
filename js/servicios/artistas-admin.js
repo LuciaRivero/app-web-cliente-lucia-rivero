@@ -6,45 +6,45 @@
    de artista solo puede editar o borrar su propio perfil.
    ========================================================= */
 
-import { eliminarFila, guardarFila, obtenerFilas } from "./catalogo-admin.js";
-import { pedirTabla } from "./supabase.js";
+import { deleteRow, saveRow, getRows } from "./catalogo-admin.js";
+import { fetchTable } from "./supabase.js";
 
 // "3:24", "12:05": minutos y segundos.
-export const FORMATO_DURACION = /^\d{1,2}:[0-5]\d$/;
+export const DURATION_FORMAT = /^\d{1,2}:[0-5]\d$/;
 
-const ARTISTAS = {
-  tabla: "artistas",
+const ARTISTS = {
+  table: "artistas",
   bucket: "artistas",
-  mensajes: {
+  messages: {
     // productos.artista_id no tiene on delete cascade: un artista
     // con productos no se puede borrar (la página ya lo avisa antes).
     23503: "No se puede eliminar: el artista tiene productos. Eliminalos o reasignalos primero.",
   },
 };
 
-export function obtenerArtistasAdmin() {
-  return obtenerFilas(ARTISTAS.tabla);
+export function getAdminArtists() {
+  return getRows(ARTISTS.table);
 }
 
 // Perfil de la cuenta de artista (artistas.user_id), o null si
 // no tiene (por ejemplo, porque el admin lo eliminó).
-export async function obtenerMiArtista(usuario) {
-  const [artista] = await pedirTabla(`artistas?select=*&user_id=eq.${usuario.id}`);
-  return artista ?? null;
+export async function getMyArtist(user) {
+  const [artist] = await fetchTable(`artistas?select=*&user_id=eq.${user.id}`);
+  return artist ?? null;
 }
 
-// `artista` sin id = alta; con id = edición. Ver guardarFila().
+// `artist` sin id = alta; con id = edición. Ver saveRow().
 // `tracks`: [{ titulo, duracion }], en el orden en que se muestran.
-export async function guardarArtista({ id, nombre, genero, bio, tracks }, imagen) {
-  const { fila, error } = await guardarFila(
-    ARTISTAS,
+export async function saveArtist({ id, nombre, genero, bio, tracks }, image) {
+  const { row, error } = await saveRow(
+    ARTISTS,
     { id, nombre: nombre.trim(), genero, bio: bio.trim() || null, tracks },
-    imagen,
+    image,
   );
-  return { artista: fila, error };
+  return { artist: row, error };
 }
 
 // Sus seguidores se borran con él (on delete cascade en seguidos).
-export function eliminarArtista(artista) {
-  return eliminarFila(ARTISTAS, artista);
+export function deleteArtist(artist) {
+  return deleteRow(ARTISTS, artist);
 }

@@ -5,197 +5,197 @@
    - En mobile, .boton-buscar muestra y oculta el formulario.
    ========================================================= */
 
-import { buscar, rutaDesdeRaiz } from "../servicios/datos.js";
-import { crearResultadoBuscador, formatearPrecio, urlArtista } from "./tarjetas.js";
-import { crearElemento, leerConsulta, textoResultados } from "../utilidades/dom.js";
+import { search, getRootPath } from "../servicios/datos.js";
+import { createSearchResult, formatPrice, getArtistUrl } from "./tarjetas.js";
+import { createElement, getSearchQuery, getResultsText } from "../utilidades/dom.js";
 
-const MAXIMO_POR_GRUPO = 4;
-const ESPERA_MS = 200;
+const MAX_PER_GROUP = 4;
+const DELAY_MS = 200;
 
-export function iniciarBuscador() {
-  const encabezado = document.querySelector(".encabezado-sitio");
-  const formulario = document.querySelector(".buscador");
-  if (!encabezado || !formulario) return;
+export function initSearch() {
+  const header = document.querySelector(".encabezado-sitio");
+  const form = document.querySelector(".buscador");
+  if (!header || !form) return;
 
-  const input = formulario.querySelector('input[type="search"]');
-  const urlExplorar = rutaDesdeRaiz("pages/explorar.html");
+  const input = form.querySelector('input[type="search"]');
+  const exploreUrl = getRootPath("pages/explorar.html");
 
-  const panel = crearElemento("div", {
-    clase: "buscador-resultados",
-    atributos: { id: "buscador-resultados" },
+  const panel = createElement("div", {
+    className: "buscador-resultados",
+    attributes: { id: "buscador-resultados" },
   });
   panel.hidden = true;
-  formulario.append(panel);
+  form.append(panel);
   input.setAttribute("aria-controls", panel.id);
   input.setAttribute("aria-expanded", "false");
   input.setAttribute("autocomplete", "off");
 
   // Lector de pantalla: anuncia cuántos resultados hay.
-  const anuncio = crearElemento("p", { clase: "sr-only", atributos: { "aria-live": "polite" } });
-  formulario.append(anuncio);
+  const announcement = createElement("p", { className: "sr-only", attributes: { "aria-live": "polite" } });
+  form.append(announcement);
 
   // Si se está en Explorar con ?q=, el campo arranca con esa búsqueda.
-  const consultaActual = leerConsulta();
-  if (consultaActual) input.value = consultaActual;
+  const currentQuery = getSearchQuery();
+  if (currentQuery) input.value = currentQuery;
 
-  function abrir() {
+  function open() {
     panel.hidden = false;
     input.setAttribute("aria-expanded", "true");
   }
 
-  function cerrar() {
+  function close() {
     panel.hidden = true;
     input.setAttribute("aria-expanded", "false");
   }
 
-  function urlBusqueda(termino) {
-    return `${urlExplorar}?q=${encodeURIComponent(termino)}`;
+  function getSearchUrl(term) {
+    return `${exploreUrl}?q=${encodeURIComponent(term)}`;
   }
 
-  function crearGrupo(titulo, elementos) {
-    return crearElemento(
+  function createGroup(title, elements) {
+    return createElement(
       "div",
-      { clase: "grupo-resultados" },
-      crearElemento("p", { clase: "titulo-grupo", texto: titulo }),
-      ...elementos,
+      { className: "grupo-resultados" },
+      createElement("p", { className: "titulo-grupo", text: title }),
+      ...elements,
     );
   }
 
-  function mostrarAviso(texto) {
-    panel.replaceChildren(crearElemento("p", { clase: "sin-resultados", texto }));
-    abrir();
+  function showNotice(text) {
+    panel.replaceChildren(createElement("p", { className: "sin-resultados", text }));
+    open();
   }
 
-  function mostrar(termino, { artistas, productos }) {
-    const total = artistas.length + productos.length;
+  function render(term, { artists, products }) {
+    const total = artists.length + products.length;
 
     if (total === 0) {
-      mostrarAviso(`No encontramos nada para “${termino}”.`);
-      anuncio.textContent = "Sin resultados";
+      showNotice(`No encontramos nada para “${term}”.`);
+      announcement.textContent = "Sin resultados";
       return;
     }
 
     panel.replaceChildren();
 
-    if (artistas.length) {
-      const filas = artistas.slice(0, MAXIMO_POR_GRUPO).map((artista) =>
-        crearResultadoBuscador({
-          href: urlArtista(artista.id),
-          imagen: artista.imagen,
-          tipo: "artista",
-          titulo: artista.nombre,
-          detalle: artista.genero,
+    if (artists.length) {
+      const rows = artists.slice(0, MAX_PER_GROUP).map((artist) =>
+        createSearchResult({
+          href: getArtistUrl(artist.id),
+          image: artist.imagen,
+          type: "artista",
+          title: artist.nombre,
+          detail: artist.genero,
         }),
       );
-      panel.append(crearGrupo("Artistas", filas));
+      panel.append(createGroup("Artistas", rows));
     }
 
-    if (productos.length) {
-      const filas = productos.slice(0, MAXIMO_POR_GRUPO).map((producto) =>
-        crearResultadoBuscador({
-          href: urlArtista(producto.artista_id),
-          imagen: producto.imagen,
-          tipo: producto.tipo,
-          titulo: producto.titulo,
-          detalle: [producto.artista?.nombre, formatearPrecio(producto.precio)]
+    if (products.length) {
+      const rows = products.slice(0, MAX_PER_GROUP).map((product) =>
+        createSearchResult({
+          href: getArtistUrl(product.artista_id),
+          image: product.imagen,
+          type: product.tipo,
+          title: product.titulo,
+          detail: [product.artist?.nombre, formatPrice(product.precio)]
             .filter(Boolean)
             .join(" · "),
         }),
       );
-      panel.append(crearGrupo("Merch", filas));
+      panel.append(createGroup("Merch", rows));
     }
 
     panel.append(
-      crearElemento("a", {
-        clase: "ver-todos",
-        texto: total === 1 ? "Ver 1 resultado" : `Ver los ${total} resultados`,
-        atributos: { href: urlBusqueda(termino) },
+      createElement("a", {
+        className: "ver-todos",
+        text: total === 1 ? "Ver 1 resultado" : `Ver los ${total} resultados`,
+        attributes: { href: getSearchUrl(term) },
       }),
     );
 
-    anuncio.textContent = textoResultados(total);
-    abrir();
+    announcement.textContent = getResultsText(total);
+    open();
   }
 
   // Cada búsqueda lleva un número; si llega la respuesta de una
   // búsqueda vieja (el usuario siguió escribiendo) se descarta.
-  let ultimaBusqueda = 0;
-  let temporizador;
+  let lastSearch = 0;
+  let timer;
 
   input.addEventListener("input", () => {
-    clearTimeout(temporizador);
-    const termino = input.value.trim();
+    clearTimeout(timer);
+    const term = input.value.trim();
 
-    if (!termino) {
-      ultimaBusqueda++;
-      cerrar();
+    if (!term) {
+      lastSearch++;
+      close();
       return;
     }
 
-    temporizador = setTimeout(async () => {
-      const numero = ++ultimaBusqueda;
+    timer = setTimeout(async () => {
+      const searchId = ++lastSearch;
       try {
-        const resultados = await buscar(termino);
-        if (numero === ultimaBusqueda) mostrar(termino, resultados);
+        const results = await search(term);
+        if (searchId === lastSearch) render(term, results);
       } catch (error) {
         console.error(error);
-        if (numero === ultimaBusqueda) mostrarAviso("No pudimos buscar en este momento.");
+        if (searchId === lastSearch) showNotice("No pudimos buscar en este momento.");
       }
-    }, ESPERA_MS);
+    }, DELAY_MS);
   });
 
-  formulario.addEventListener("submit", (evento) => {
-    evento.preventDefault();
-    const termino = input.value.trim();
-    if (termino) location.href = urlBusqueda(termino);
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const term = input.value.trim();
+    if (term) location.href = getSearchUrl(term);
   });
 
   // Teclado: flechas para moverse entre resultados, Escape para cerrar.
-  formulario.addEventListener("keydown", (evento) => {
-    if (evento.key === "Escape") {
-      cerrar();
+  form.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      close();
       input.focus();
       return;
     }
 
-    if (panel.hidden || !["ArrowDown", "ArrowUp"].includes(evento.key)) return;
+    if (panel.hidden || !["ArrowDown", "ArrowUp"].includes(event.key)) return;
 
-    const enlaces = [...panel.querySelectorAll("a")];
-    if (!enlaces.length) return;
-    evento.preventDefault();
+    const links = [...panel.querySelectorAll("a")];
+    if (!links.length) return;
+    event.preventDefault();
 
-    const actual = enlaces.indexOf(document.activeElement);
-    if (evento.key === "ArrowDown") {
-      enlaces[(actual + 1) % enlaces.length].focus();
-    } else if (actual <= 0) {
+    const current = links.indexOf(document.activeElement);
+    if (event.key === "ArrowDown") {
+      links[(current + 1) % links.length].focus();
+    } else if (current <= 0) {
       input.focus();
     } else {
-      enlaces[actual - 1].focus();
+      links[current - 1].focus();
     }
   });
 
   input.addEventListener("focus", () => {
-    if (input.value.trim() && panel.childElementCount) abrir();
+    if (input.value.trim() && panel.childElementCount) open();
   });
 
   // Se cierra cuando el foco o el clic salen del buscador.
-  formulario.addEventListener("focusout", (evento) => {
-    if (!formulario.contains(evento.relatedTarget)) cerrar();
+  form.addEventListener("focusout", (event) => {
+    if (!form.contains(event.relatedTarget)) close();
   });
 
-  document.addEventListener("click", (evento) => {
-    if (!formulario.contains(evento.target)) cerrar();
+  document.addEventListener("click", (event) => {
+    if (!form.contains(event.target)) close();
   });
 
   // Mobile: la lupa abre y cierra el formulario.
-  const botonBuscar = document.querySelector(".boton-buscar");
-  if (botonBuscar) {
-    botonBuscar.setAttribute("aria-expanded", "false");
-    botonBuscar.addEventListener("click", (evento) => {
-      evento.stopPropagation();
-      const abierto = encabezado.classList.toggle("buscador-abierto");
-      botonBuscar.setAttribute("aria-expanded", String(abierto));
-      if (abierto) input.focus();
+  const searchButton = document.querySelector(".boton-buscar");
+  if (searchButton) {
+    searchButton.setAttribute("aria-expanded", "false");
+    searchButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const isOpen = header.classList.toggle("buscador-abierto");
+      searchButton.setAttribute("aria-expanded", String(isOpen));
+      if (isOpen) input.focus();
     });
   }
 }

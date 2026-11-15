@@ -4,8 +4,8 @@
    y copyright con el año actual.
    ========================================================= */
 
-import { rutaDesdeRaiz } from "../servicios/datos.js";
-import { crearElemento } from "../utilidades/dom.js";
+import { getRootPath } from "../servicios/datos.js";
+import { createElement } from "../utilidades/dom.js";
 import { FOOTER_NAV } from "./navigation.js";
 
 class SiteFooter extends HTMLElement {
@@ -27,14 +27,14 @@ class SiteFooter extends HTMLElement {
     `;
 
     this.querySelector("nav").append(
-      crearElemento(
+      createElement(
         "ul",
         {},
         ...FOOTER_NAV.map((link) =>
-          crearElemento(
+          createElement(
             "li",
             {},
-            crearElemento("a", { texto: link.texto, atributos: { href: rutaDesdeRaiz(link.ruta) } }),
+            createElement("a", { text: link.text, attributes: { href: getRootPath(link.path) } }),
           ),
         ),
       ),

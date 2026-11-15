@@ -11,182 +11,182 @@
    sale del menú.
    ========================================================= */
 
-import { rutaDesdeRaiz } from "../servicios/datos.js";
-import { cerrarSesion } from "../servicios/sesion.js";
-import { crearElemento } from "../utilidades/dom.js";
+import { getRootPath } from "../servicios/datos.js";
+import { signOut } from "../servicios/sesion.js";
+import { createElement } from "../utilidades/dom.js";
 
-const ICONOS = rutaDesdeRaiz("assets/img/iconos/iconos.svg");
+const ICONS = getRootPath("assets/img/iconos/iconos.svg");
 const SVG_NS = "http://www.w3.org/2000/svg";
-const ID_PANEL = "menu-usuario-panel";
+const PANEL_ID = "menu-usuario-panel";
 
 // `id` es el valor de current de <site-header> que marca la opción
-// con aria-current="page". `para` limita quién la ve: "admin" (admin
+// con aria-current="page". `for` limita quién la ve: "admin" (admin
 // global) o "artista" (cuenta de artista que no es admin). Las dos
 // versiones usan las mismas páginas, filtradas según quién entra.
-const OPCIONES = [
-  { id: "cuenta", texto: "Mi perfil", ruta: "pages/cuenta.html", icono: "perfil" },
-  { id: "admin", texto: "Administrar productos", ruta: "pages/admin.html", icono: "administrar", para: "admin" },
+const OPTIONS = [
+  { id: "cuenta", text: "Mi perfil", path: "pages/cuenta.html", icon: "perfil" },
+  { id: "admin", text: "Administrar productos", path: "pages/admin.html", icon: "administrar", for: "admin" },
   {
     id: "admin-artistas",
-    texto: "Administrar artistas",
-    ruta: "pages/admin-artistas.html",
-    icono: "microfono",
-    para: "admin",
+    text: "Administrar artistas",
+    path: "pages/admin-artistas.html",
+    icon: "microfono",
+    for: "admin",
   },
   {
     id: "admin-artistas",
-    texto: "Mi perfil de artista",
-    ruta: "pages/admin-artistas.html",
-    icono: "microfono",
-    para: "artista",
+    text: "Mi perfil de artista",
+    path: "pages/admin-artistas.html",
+    icon: "microfono",
+    for: "artista",
   },
-  { id: "admin", texto: "Mi merch", ruta: "pages/admin.html", icono: "administrar", para: "artista" },
-  { id: "ayuda", texto: "Ayuda", ruta: "pages/ayuda.html", icono: "ayuda" },
+  { id: "admin", text: "Mi merch", path: "pages/admin.html", icon: "administrar", for: "artista" },
+  { id: "ayuda", text: "Ayuda", path: "pages/ayuda.html", icon: "ayuda" },
 ];
 
-function corresponde(opcion, usuario) {
-  if (opcion.para === "admin") return usuario.esAdmin;
-  if (opcion.para === "artista") return usuario.esArtista && !usuario.esAdmin;
+function isVisibleFor(option, user) {
+  if (option.for === "admin") return user.esAdmin;
+  if (option.for === "artista") return user.esArtista && !user.esAdmin;
   return true;
 }
 
 // "Ana Torres" → "AT", "Ana" → "A"
-export function iniciales(nombre) {
-  return nombre
+export function getInitials(name) {
+  return name
     .trim()
     .split(/\s+/)
     .slice(0, 2)
-    .map((palabra) => palabra[0].toUpperCase())
+    .map((word) => word[0].toUpperCase())
     .join("");
 }
 
 // El ícono va con createElementNS: los <svg> y <use> creados
 // con createElement no se dibujan.
-function crearIcono(id) {
+function createIcon(id) {
   const svg = document.createElementNS(SVG_NS, "svg");
   svg.setAttribute("class", "icono-menu-usuario");
   svg.setAttribute("aria-hidden", "true");
-  const uso = document.createElementNS(SVG_NS, "use");
-  uso.setAttribute("href", `${ICONOS}#${id}`);
-  svg.append(uso);
+  const use = document.createElementNS(SVG_NS, "use");
+  use.setAttribute("href", `${ICONS}#${id}`);
+  svg.append(use);
   return svg;
 }
 
 // La imagen del usuario si tiene una; si no, sus iniciales.
 // Es decorativa: el nombre ya está en el texto que la acompaña.
-function crearAvatar(usuario, clase = "") {
-  const avatar = crearElemento("span", {
-    clase: `avatar ${clase}`.trim(),
-    atributos: { "aria-hidden": "true" },
+function createAvatar(user, className = "") {
+  const avatar = createElement("span", {
+    className: `avatar ${className}`.trim(),
+    attributes: { "aria-hidden": "true" },
   });
-  if (usuario.imagen) {
-    avatar.append(crearElemento("img", { atributos: { src: usuario.imagen, alt: "" } }));
+  if (user.imagen) {
+    avatar.append(createElement("img", { attributes: { src: user.imagen, alt: "" } }));
   } else {
-    avatar.textContent = iniciales(usuario.nombre);
+    avatar.textContent = getInitials(user.nombre);
   }
   return avatar;
 }
 
-export function crearMenuUsuario(usuario, { actual = null } = {}) {
-  const boton = crearElemento(
+export function createUserMenu(user, { current = null } = {}) {
+  const button = createElement(
     "button",
     {
-      clase: "boton-usuario",
-      atributos: {
+      className: "boton-usuario",
+      attributes: {
         type: "button",
         "aria-expanded": "false",
-        "aria-controls": ID_PANEL,
-        "aria-label": `Menú de ${usuario.nombre}`,
+        "aria-controls": PANEL_ID,
+        "aria-label": `Menú de ${user.nombre}`,
       },
     },
-    crearAvatar(usuario),
+    createAvatar(user),
   );
 
-  const perfil = crearElemento(
+  const profile = createElement(
     "div",
-    { clase: "menu-usuario-perfil" },
-    crearAvatar(usuario, "avatar-grande"),
-    crearElemento(
+    { className: "menu-usuario-perfil" },
+    createAvatar(user, "avatar-grande"),
+    createElement(
       "div",
-      { clase: "menu-usuario-datos" },
-      crearElemento("p", { clase: "menu-usuario-nombre", texto: usuario.nombre }),
-      crearElemento("p", { clase: "menu-usuario-email", texto: usuario.email }),
+      { className: "menu-usuario-datos" },
+      createElement("p", { className: "menu-usuario-nombre", text: user.nombre }),
+      createElement("p", { className: "menu-usuario-email", text: user.email }),
     ),
   );
 
-  const opciones = crearElemento(
+  const options = createElement(
     "ul",
-    { clase: "menu-usuario-opciones" },
-    ...OPCIONES.filter((opcion) => corresponde(opcion, usuario)).map(({ id, texto, ruta, icono }) => {
-      const enlace = crearElemento(
+    { className: "menu-usuario-opciones" },
+    ...OPTIONS.filter((option) => isVisibleFor(option, user)).map(({ id, text, path, icon }) => {
+      const link = createElement(
         "a",
-        { clase: "menu-usuario-opcion", atributos: { href: rutaDesdeRaiz(ruta) } },
-        crearIcono(icono),
-        crearElemento("span", { texto }),
+        { className: "menu-usuario-opcion", attributes: { href: getRootPath(path) } },
+        createIcon(icon),
+        createElement("span", { text }),
       );
-      if (id === actual) enlace.setAttribute("aria-current", "page");
-      return crearElemento("li", {}, enlace);
+      if (id === current) link.setAttribute("aria-current", "page");
+      return createElement("li", {}, link);
     }),
   );
 
-  const salir = crearElemento(
+  const signOutButton = createElement(
     "button",
-    { clase: "menu-usuario-opcion menu-usuario-salir", atributos: { type: "button" } },
-    crearIcono("salir"),
-    crearElemento("span", { texto: "Cerrar sesión" }),
+    { className: "menu-usuario-opcion menu-usuario-salir", attributes: { type: "button" } },
+    createIcon("salir"),
+    createElement("span", { text: "Cerrar sesión" }),
   );
 
-  const panel = crearElemento(
+  const panel = createElement(
     "div",
-    { clase: "menu-usuario-panel", atributos: { id: ID_PANEL, hidden: "" } },
-    perfil,
-    opciones,
-    salir,
+    { className: "menu-usuario-panel", attributes: { id: PANEL_ID, hidden: "" } },
+    profile,
+    options,
+    signOutButton,
   );
 
-  const menu = crearElemento("div", { clase: "menu-usuario" }, boton, panel);
+  const menu = createElement("div", { className: "menu-usuario" }, button, panel);
 
   // El listener del documento solo existe con el menú abierto,
   // así no se acumulan cuando el encabezado vuelve a dibujarlo.
-  function clicAfuera(evento) {
-    if (!menu.contains(evento.target)) cerrar();
+  function closeOnOutsideClick(event) {
+    if (!menu.contains(event.target)) close();
   }
 
-  function abrir() {
+  function open() {
     panel.hidden = false;
-    boton.setAttribute("aria-expanded", "true");
-    document.addEventListener("click", clicAfuera);
+    button.setAttribute("aria-expanded", "true");
+    document.addEventListener("click", closeOnOutsideClick);
   }
 
-  function cerrar({ devolverFoco = false } = {}) {
+  function close({ returnFocus = false } = {}) {
     if (panel.hidden) return;
     panel.hidden = true;
-    boton.setAttribute("aria-expanded", "false");
-    document.removeEventListener("click", clicAfuera);
-    if (devolverFoco) boton.focus();
+    button.setAttribute("aria-expanded", "false");
+    document.removeEventListener("click", closeOnOutsideClick);
+    if (returnFocus) button.focus();
   }
 
-  boton.addEventListener("click", () => {
-    if (panel.hidden) abrir();
-    else cerrar();
+  button.addEventListener("click", () => {
+    if (panel.hidden) open();
+    else close();
   });
 
-  menu.addEventListener("keydown", (evento) => {
-    if (evento.key === "Escape" && !panel.hidden) {
-      evento.stopPropagation();
-      cerrar({ devolverFoco: true });
+  menu.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !panel.hidden) {
+      event.stopPropagation();
+      close({ returnFocus: true });
     }
   });
 
-  menu.addEventListener("focusout", (evento) => {
-    if (evento.relatedTarget && !menu.contains(evento.relatedTarget)) cerrar();
+  menu.addEventListener("focusout", (event) => {
+    if (event.relatedTarget && !menu.contains(event.relatedTarget)) close();
   });
 
   // Igual que el ingreso, cerrar sesión termina en la home.
-  salir.addEventListener("click", () => {
-    cerrar();
-    cerrarSesion();
-    location.href = rutaDesdeRaiz("index.html");
+  signOutButton.addEventListener("click", () => {
+    close();
+    signOut();
+    location.href = getRootPath("index.html");
   });
 
   return menu;

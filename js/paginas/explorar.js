@@ -9,58 +9,58 @@
      los artistas y el merch que coinciden con la búsqueda.
    ========================================================= */
 
-import { buscar, obtenerArtistas } from "../servicios/datos.js";
-import { crearProductoMerch } from "../componentes/tarjetas.js";
-import { crearElemento, leerConsulta, textoResultados } from "../utilidades/dom.js";
+import { search, getArtists } from "../servicios/datos.js";
+import { createMerchProduct } from "../componentes/tarjetas.js";
+import { createElement, getSearchQuery, getResultsText } from "../utilidades/dom.js";
 
-async function mostrarBusqueda() {
-  const termino = leerConsulta();
-  if (!termino) return;
+async function renderSearch() {
+  const term = getSearchQuery();
+  if (!term) return;
 
   const info = document.querySelector(".info-resultados");
-  const seccion = document.querySelector(".explorar-resultados");
-  const grillaArtistas = seccion.querySelector("artist-grid");
+  const section = document.querySelector(".explorar-resultados");
+  const artistGrid = section.querySelector("artist-grid");
 
-  document.title = `“${termino}” | Explorar | Whiplash`;
+  document.title = `“${term}” | Explorar | Whiplash`;
   // Los chips y "Cargar más" son del listado general, no de una búsqueda.
   document.querySelector(".barra-filtros")?.setAttribute("hidden", "");
   document.querySelector(".boton-inferior")?.setAttribute("hidden", "");
 
   // Mientras busca, la grilla muestra el disco de carga en lugar
   // del listado general.
-  info.textContent = `Buscando “${termino}”…`;
-  grillaArtistas.mostrarCargando("Buscando…");
+  info.textContent = `Buscando “${term}”…`;
+  artistGrid.showLoading("Buscando…");
 
-  let resultados;
+  let results;
   try {
-    resultados = await buscar(termino);
+    results = await search(term);
   } catch (error) {
     console.error(error);
     info.textContent = "No pudimos cargar los resultados. Probá de nuevo en un rato.";
-    grillaArtistas.mostrar([]);
+    artistGrid.render([]);
     return;
   }
 
-  const { artistas, productos } = resultados;
-  const total = artistas.length + productos.length;
+  const { artists, products } = results;
+  const total = artists.length + products.length;
   info.textContent =
     total === 0
-      ? `No encontramos resultados para “${termino}”.`
-      : `${textoResultados(total)} para “${termino}”`;
+      ? `No encontramos resultados para “${term}”.`
+      : `${getResultsText(total)} para “${term}”`;
 
-  grillaArtistas.mostrar(artistas);
-  grillaArtistas.hidden = artistas.length === 0;
+  artistGrid.render(artists);
+  artistGrid.hidden = artists.length === 0;
 
-  if (productos.length) {
-    seccion.append(
-      crearElemento("h2", { clase: "titulo-resultados-merch", texto: "Merch" }),
-      crearElemento(
+  if (products.length) {
+    section.append(
+      createElement("h2", { className: "titulo-resultados-merch", text: "Merch" }),
+      createElement(
         "div",
-        { clase: "grilla-merch" },
-        ...productos.map((producto, indice) => {
-          const tarjeta = crearProductoMerch(producto);
-          tarjeta.style.setProperty("--orden", indice);
-          return tarjeta;
+        { className: "grilla-merch" },
+        ...products.map((product, index) => {
+          const card = createMerchProduct(product);
+          card.style.setProperty("--orden", index);
+          return card;
         }),
       ),
     );
@@ -68,17 +68,17 @@ async function mostrarBusqueda() {
 }
 
 // "Mostrando 6 de 14 artistas" / "Mostrando 3 artistas"
-function textoMostrando(cantidad, total) {
-  return total > cantidad
-    ? `Mostrando ${cantidad} de ${total} artistas`
-    : `Mostrando ${cantidad} ${cantidad === 1 ? "artista" : "artistas"}`;
+function getShowingText(count, total) {
+  return total > count
+    ? `Mostrando ${count} de ${total} artistas`
+    : `Mostrando ${count} ${count === 1 ? "artista" : "artistas"}`;
 }
 
 // El género elegido queda en la URL (?genero=...), así recargar o
 // compartir la página mantiene el filtro.
-function guardarGeneroEnUrl(genero) {
+function saveGenreInUrl(genre) {
   const url = new URL(location.href);
-  if (genero) url.searchParams.set("genero", genero);
+  if (genre) url.searchParams.set("genero", genre);
   else url.searchParams.delete("genero");
   history.replaceState(null, "", url);
 }
@@ -87,69 +87,69 @@ function guardarGeneroEnUrl(genero) {
 // más" suma otros tantos por vez. Con un género elegido se ven todos
 // los de ese género y "Cargar más" se oculta; "Todos" vuelve a lo que
 // ya se había cargado.
-function iniciarListado() {
+function initListing() {
   const info = document.querySelector(".info-resultados");
-  const grillaArtistas = document.querySelector(".explorar-resultados artist-grid");
+  const artistGrid = document.querySelector(".explorar-resultados artist-grid");
   const chips = document.querySelector(".barra-filtros genre-chips");
-  const botonMas = document.querySelector(".boton-inferior");
-  const paso = Number(grillaArtistas.getAttribute("limit"));
-  let visibles = paso;
-  let artistas = null;
-  let genero = new URLSearchParams(location.search).get("genero")?.trim() || null;
+  const moreButton = document.querySelector(".boton-inferior");
+  const step = Number(artistGrid.getAttribute("limit"));
+  let visibleCount = step;
+  let artists = null;
+  let genre = new URLSearchParams(location.search).get("genero")?.trim() || null;
 
-  if (genero) chips.setAttribute("selected", genero);
+  if (genre) chips.setAttribute("selected", genre);
 
-  function actualizar() {
-    const cantidad = Math.min(visibles, artistas.length);
-    info.textContent = textoMostrando(cantidad, artistas.length);
-    botonMas.hidden = cantidad >= artistas.length;
+  function updateInfo() {
+    const count = Math.min(visibleCount, artists.length);
+    info.textContent = getShowingText(count, artists.length);
+    moreButton.hidden = count >= artists.length;
   }
 
-  function mostrarGenero() {
-    if (!genero) {
-      grillaArtistas.mostrar(artistas.slice(0, visibles));
-      actualizar();
+  function renderGenre() {
+    if (!genre) {
+      artistGrid.render(artists.slice(0, visibleCount));
+      updateInfo();
       return;
     }
-    const lista = artistas.filter((artista) => artista.genero === genero);
-    grillaArtistas.mostrar(lista);
-    info.textContent = lista.length
-      ? textoMostrando(lista.length, lista.length)
+    const filtered = artists.filter((artist) => artist.genero === genre);
+    artistGrid.render(filtered);
+    info.textContent = filtered.length
+      ? getShowingText(filtered.length, filtered.length)
       : "Todavía no hay artistas de este género.";
-    botonMas.hidden = true;
+    moreButton.hidden = true;
   }
 
   // Es el mismo pedido que hace la grilla (datos.js lo guarda). Si
   // llegó un género, esta lista reemplaza a la que arma la grilla.
-  obtenerArtistas()
-    .then((lista) => {
-      artistas = lista;
-      if (genero) mostrarGenero();
-      else actualizar();
+  getArtists()
+    .then((list) => {
+      artists = list;
+      if (genre) renderGenre();
+      else updateInfo();
     })
     .catch((error) => {
       console.error(error);
       info.textContent = "No pudimos cargar los artistas. Probá de nuevo en un rato.";
     });
 
-  botonMas.addEventListener("click", () => {
-    const nuevas = grillaArtistas.agregar(artistas.slice(visibles, visibles + paso));
-    visibles += nuevas.length;
-    actualizar();
+  moreButton.addEventListener("click", () => {
+    const added = artistGrid.appendItems(artists.slice(visibleCount, visibleCount + step));
+    visibleCount += added.length;
+    updateInfo();
     // El foco pasa a la primera tarjeta nueva para seguir desde ahí
     // (si el botón se ocultó, el foco no se pierde).
-    nuevas[0]?.querySelector("a")?.focus();
+    added[0]?.querySelector("a")?.focus();
   });
 
   // Si los artistas todavía no llegaron, el género queda guardado
   // y se aplica cuando lleguen.
   document.addEventListener("genre-change", ({ detail }) => {
-    genero = detail.genre;
-    guardarGeneroEnUrl(genero);
-    if (artistas) mostrarGenero();
+    genre = detail.genre;
+    saveGenreInUrl(genre);
+    if (artists) renderGenre();
   });
 }
 
 // Con ?q= la página muestra una búsqueda en lugar del listado general.
-if (leerConsulta()) mostrarBusqueda();
-else iniciarListado();
+if (getSearchQuery()) renderSearch();
+else initListing();
